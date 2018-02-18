@@ -3,10 +3,35 @@
   <head>
     <meta charset="utf-8">
     <title>Collage Page</title>
+    <link rel = "stylesheet" href = "css/collage.css" />
+    <script src = "js/collage.js"></script>
   </head>
   <body>
     <div id = "header">
-      <h1>Collage for Topic "TOPIC"</h1>      
+      <h1 id = "topic">Collage for Topic "TOPIC"</h1>
+    </div>
+    <div id = "container">
+      <div id = "main_collage">
+        <img id = "main_img" />
+      </div>
+      <button> Export Collage </button>
+    </div>
+    <div id = "error">
+      <h2>Insufficient number of images found</h2>
+    </div>
+    <div id = "input">
+      <!-- oninput handles the requirement that unless the textbox has something valid, button is disabled -->
+      <input id = "text_input" oninput="handleDisable()" type = "text" placeholder = "Enter Topic"/>
+      <button id = "build" disabled>Build Another Collage</button>
+    </div>
+    <div id = "history">
+      <img onclick = "toggleCollage(event)" alt = "topic1" id = "img1" src = "https://pmcdeadline2.files.wordpress.com/2018/01/pyeongchang-winter-olympics-2018-logo.jpg?w=446&h=299&crop=1"/>
+      <img onclick = "toggleCollage(event)" alt = "topic2" id = "img2" src = "https://pmcdeadline2.files.wordpress.com/2018/02/john-henry-krueger-feb-17-2018-olympics.jpg?w=446&h=299&crop=1"/>
+      <img onclick = "toggleCollage(event)" alt = "topic3" id = "img3" src = "http://www.abc.net.au/news/image/7749956-3x2-940x627.jpg"/>
+      <img onclick = "toggleCollage(event)" alt = "topic4" id = "img4" src = "http://images.performgroup.com/di/library/omnisport/49/8a/chennathan02162018usnewsgettyftr_1h1waqneppew91r0by9ebcz7k5.jpg?t=-1578859623&w=960&quality=70"/>
+      <img onclick = "toggleCollage(event)" alt = "topic5" id = "img5" src = "https://reflectionsintheword.files.wordpress.com/2010/11/para-olympics-fall.jpg?w=990"/>
+      <img onclick = "toggleCollage(event)" alt = "topic6" id = "img6" src = "https://pmcdeadline2.files.wordpress.com/2018/01/pyeongchang-winter-olympics-2018-logo.jpg?w=446&h=299&crop=1"/>
+      <img onclick = "toggleCollage(event)" alt = "topic7" id = "img7" src = "https://pmcdeadline2.files.wordpress.com/2018/01/pyeongchang-winter-olympics-2018-logo.jpg?w=446&h=299&crop=1"/>
     </div>
   </body>
 </html>
