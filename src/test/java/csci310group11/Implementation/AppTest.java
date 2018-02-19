@@ -35,4 +35,10 @@ public class AppTest
     {
         assertTrue( true );
     }
+    
+    public void testApi() {
+    		GoogleCustomSearchApi api = new GoogleCustomSearchApi();
+    		System.out.println(api.execute("dog", null));
+    		
+    }
 }
