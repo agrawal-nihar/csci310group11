@@ -8,3 +8,8 @@ function handleDisable(){
     button.disabled = false;
   }
 }
+
+function buildCollage(){
+	var title = document.getElementById("text_input").value;
+	window.location="collage.html?title=" + title;
+}
