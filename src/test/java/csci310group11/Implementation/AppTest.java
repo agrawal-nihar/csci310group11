@@ -35,4 +35,15 @@ public class AppTest
     {
         assertTrue( true );
     }
+    
+    public void testApi() {
+    		GoogleCustomSearchApi api = new GoogleCustomSearchApi();
+    		try {
+				System.out.println(api.execute("dog").size());
+			} catch (InsufficientImagesFoundError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    }
 }
