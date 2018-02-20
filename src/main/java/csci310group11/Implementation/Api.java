@@ -1,5 +1,8 @@
 package csci310group11.Implementation;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
+
 public interface Api {
 
 	static final int HTTP_REQUEST_TIMEOUT = 3 * 600000;
@@ -18,11 +21,12 @@ public interface Api {
 	static final String IMAGE_SIZE = "Medium";
 	static final String SEARCH_TYPE = "image";
 	/**
-	 * generate search results' urls from Google Custom Search API
+	 * generate search results' urls from Google Custom Search API, 
+	 * if there is insufficient images, it will throw `InsufficientImagesError`
 	 * 
 	 * @param query
-	 * @param requestType
 	 * @return results' Json String
+	 * @throws InsufficientImagesFoundError 
 	 */
-	String execute(String query, RequestType requestType);
+	List<BufferedImage> execute(String query) throws InsufficientImagesFoundError;
 }
