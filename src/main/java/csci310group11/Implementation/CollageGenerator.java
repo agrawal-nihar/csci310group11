@@ -4,10 +4,19 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+
 import javax.imageio.ImageIO;
 
 public class CollageGenerator {
-	
+	private ArrayList<String> imageUrls; //change to <BufferedImage> if necessary
+	private ArrayList<BufferedImage> borderedImages;
+
+	public CollageGenerator(ArrayList<String> urls) {
+		this.images = new ArrayList<BufferedImage> borderedImages;
+		this.imageUrls = new ArrayList<String>();
+		this.imageUrls = urls;
+	}
+
 	private String downloadCollage(Collage collage) {
 		String filename = "";
 		BufferedImage image = collage.getCollageImage();
@@ -31,25 +40,25 @@ public class CollageGenerator {
 		return filename;
 	}
 
-	public BufferedImage addBorderToImages(BufferedImage image) {
+	
+
+	public void addBorderToImages(BufferedImage image) {
 		int width = image.getWidth();
 		int height = image.getHeight();
 		
 		BufferedImage borderedImage = new BufferedImage(width + 6, height + 6, image.getType());
-		
-		
-		
-		return borderedImage;
+		this.borderedImages.add(borderedImage);
 	}
 	
 	/**
 	 * Resize: 1/20th of collage
 	 */
-	
+	public void resizeImage(BufferedImage image) {
+
+	}
+
 	/*
-	 * make images 1/2*totalarea and lay in center of each quad
-	 * rest of images must be 2/13 * totalarea
-	 * lay so that they all make it onto the page
+	 * Cover corners, lay inside and see what happens
 	 * 
 	 */
 }
