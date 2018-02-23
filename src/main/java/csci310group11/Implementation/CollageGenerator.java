@@ -3,8 +3,9 @@ package csci310group11.Implementation;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
+import java.io.*;
+import java.awt.image.*;
+import javax.imageio.*;
 
 import javafx.scene.layout.BorderImage;
 
@@ -67,7 +68,19 @@ public class CollageGenerator {
 			graphics.dispose(); //not sure if needed
 		}
 	}
-
+  
+  public void downloadCollage(Collage collage) {
+		try {
+			BufferedImage image = collage.getCollageImage(); //getter?
+			String fileName = collage.getTopic();
+			fileName += "_" + collage.id  + ".png";    //if collage has a unique id?
+			File outputFile = new File(fileName);
+			ImageIO.write(image, "png", outputFile);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 

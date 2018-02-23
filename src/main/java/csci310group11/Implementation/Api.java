@@ -23,7 +23,6 @@ public interface Api {
 	/**
 	 * generate search results' urls from Google Custom Search API, 
 	 * if there is insufficient images, it will throw `InsufficientImagesError`
-	 * 
 	 * @param query
 	 * @return results' Json String
 	 * @throws InsufficientImagesFoundError 
