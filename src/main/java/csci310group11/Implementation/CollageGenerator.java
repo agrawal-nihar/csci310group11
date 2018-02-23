@@ -96,8 +96,6 @@ public class CollageGenerator {
 			graphics.dispose(); // not sure if needed check with both
 		}
 	}
-	
-	
 
 	/*
 	 * Cover corners, lay inside and see what happens
