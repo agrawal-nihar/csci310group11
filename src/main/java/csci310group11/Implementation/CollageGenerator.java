@@ -1,19 +1,24 @@
 package csci310group11.Implementation;
 
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
 
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 public class CollageGenerator {
 	private ArrayList<String> imageUrls; //change to <BufferedImage> if necessary
+	private ArrayList<BufferedImage> images;
 	private ArrayList<BufferedImage> borderedImages;
 
 	public CollageGenerator(ArrayList<String> urls) {
-		this.images = new ArrayList<BufferedImage> borderedImages;
 		this.imageUrls = new ArrayList<String>();
+		this.images = new ArrayList<BufferedImage>();
+		this.borderedImages = new ArrayList<BufferedImage>();
+
 		this.imageUrls = urls;
 		for(int i=0; i < imageUrls.size(); i++) {
 			URL url = new URL(imageUrls.get(i));
@@ -51,6 +56,9 @@ public class CollageGenerator {
 		int height = image.getHeight();
 		
 		BufferedImage borderedImage = new BufferedImage(width + 6, height + 6, image.getType());
+		//paint image onto new borderedImage
+
+
 		this.borderedImages.add(borderedImage);
 	}
 	
