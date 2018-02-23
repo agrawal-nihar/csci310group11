@@ -13,22 +13,16 @@ import javax.imageio.ImageIO;
 import javafx.scene.layout.BorderImage;
 
 public class CollageGenerator {
-	private ArrayList<String> imageUrls; //change to <BufferedImage> if necessary
-	private ArrayList<BufferedImage> images;
+	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
 	private ArrayList<BufferedImage> borderedImages;
 	private BufferedImage collage;
 
-	public CollageGenerator(ArrayList<String> urls) {
-		this.imageUrls = new ArrayList<String>();
+	public CollageGenerator(ArrayList<BufferedImage> images) {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collage = new BufferedImage();
 
-		this.imageUrls = urls;
-		for(int i=0; i < imageUrls.size(); i++) {
-			URL url = new URL(imageUrls.get(i));
-			this.images.add(ImageIO.read(url));
-		}
+		this.images = images;
 		this.resizeImages();
 		this.addBorderToImages();
 		this.compileCollage();
