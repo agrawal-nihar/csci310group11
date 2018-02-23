@@ -65,8 +65,16 @@ public class CollageGenerationServlet extends HttpServlet {
 		}
 	}
 	
+	//removes all previous collages
 	private void removePreviousCollages() {
-		System.out.println("Hello fuck you nihar // in removePreivousCollages");
+		File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
+		File[] allCollages = assetsDirectory.listFiles();
+		
+		for (int i = 0; i < allCollages.length; i++) {
+			allCollages[i].delete();
+		}
+		
+		assetsDirectory.delete();
 	}
 	
 	//Download collage to client's storage -- localhost!
