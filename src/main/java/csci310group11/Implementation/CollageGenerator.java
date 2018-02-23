@@ -40,6 +40,35 @@ public class CollageGenerator {
 	}
 
 	/**
+	 * Resizes all the BufferedImages inside of images to be 1/20th of the size of the overall collage.
+	 * 
+	 * Takes the original image and draws it into a new BufferedImage with the proper dimensions
+	 * 
+	 * Notes:
+	 * Should we set collage size 1st or make collage based of images entered
+	 */
+	private void resizeImages() {
+		//1/20th of collage dimensions
+		int resizeWidth = this.collage.getWidth()/20;
+		int resizeHeight = this.collage.getHeight()/20;
+		
+		//Iterate through all images
+		for(int i=0; i < images.size(); i++) {
+			BuffereImage img = images.get(i);
+			//New BufferedImage with 1/20th dimensions of collage
+			BufferedImage resizeImg = new BufferedImage(resizeWidth, resizeHeight, img.getType());
+
+			//Draws the img image into the size of the resizeImg
+			Graphics2D graphics = resizeImg.getGraphics();
+			graphics.drawImage(img, 0, 0, resizeWidth, resizeHeight, null);
+
+			//replace BufferedImage in images with resizedImg
+			images.set(i, resizeImg);
+			graphics.dispose(); //not sure if needed
+		}
+	}
+
+	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 
 	 * Creates a new BufferedImage that is 6px taller and wider than the original BufferedImage in images.
@@ -63,17 +92,12 @@ public class CollageGenerator {
 
 			//Paint original image onto new borderedImage	
 			graphics.drawImage(image, 2, 2, null);
-			this.borderedImages.add(borderedImage);
-			
+			this.borderedImages.add(borderedImage);	
+			graphics.dispose(); // not sure if needed check with both
 		}
 	}
 	
-	/**
-	 * Resize: 1/20th of collage
-	 */
-	private void resizeImages() {
-
-	}
+	
 
 	/*
 	 * Cover corners, lay inside and see what happens
