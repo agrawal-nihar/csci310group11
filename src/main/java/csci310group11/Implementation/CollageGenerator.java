@@ -10,6 +10,10 @@ public class CollageGenerator {
 		this.images = new ArrayList<BufferedImage> borderedImages;
 		this.imageUrls = new ArrayList<String>();
 		this.imageUrls = urls;
+		for(int i=0; i < imageUrls.size(); i++) {
+			URL url = new URL(imageUrls.get(i));
+			this.borderedImages.add(ImageIO.read(url));
+		}
 	}
 
 	public void addBorderToImages(BufferedImage image) {
