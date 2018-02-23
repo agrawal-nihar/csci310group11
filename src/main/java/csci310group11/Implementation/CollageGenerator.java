@@ -1,5 +1,7 @@
 package csci310group11.Implementation;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -71,12 +73,12 @@ public class CollageGenerator {
 		
 		//Iterate through all images
 		for(int i=0; i < images.size(); i++) {
-			BuffereImage img = images.get(i);
+			BufferedImage img = images.get(i);
 			//New BufferedImage with 1/20th dimensions of collage
 			BufferedImage resizeImg = new BufferedImage(resizeWidth, resizeHeight, img.getType());
 
 			//Draws the img image into the size of the resizeImg
-			Graphics2D graphics = resizeImg.getGraphics();
+			Graphics2D graphics = resizeImg.createGraphics();
 			graphics.drawImage(img, 0, 0, resizeWidth, resizeHeight, null);
 
 			//replace BufferedImage in images with resizedImg
@@ -103,7 +105,7 @@ public class CollageGenerator {
 			BufferedImage borderedImage = new BufferedImage(width + 6, height + 6, image.getType());
 
 			//Setting larger image to all white
-			Graphics2D graphics = borderedImage.getGraphics();
+			Graphics2D graphics = borderedImage.createGraphics();
 			graphics.setPaint(new Color(0,0,0));
 			graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
 
