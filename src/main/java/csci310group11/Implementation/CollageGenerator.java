@@ -8,10 +8,6 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
-import javafx.scene.layout.BorderImage;
-
 public class CollageGenerator {
 	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
 	private ArrayList<BufferedImage> borderedImages;
@@ -98,8 +94,8 @@ public class CollageGenerator {
 	 * new BufferedImage to create a 3px "border". Adds the bordred BuffereImage to this.borderedImages.
 	 */
 	private void addBorderToImages() {
-		for(int i=0; i < image.size(); i++) {
-			BufferedImage image = image.get(i);
+		for(int i=0; i < images.size(); i++) {
+			BufferedImage image = images.get(i);
 			int width = image.getWidth();
 			int height = image.getHeight();
 			
