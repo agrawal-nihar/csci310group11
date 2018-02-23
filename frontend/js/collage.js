@@ -35,8 +35,13 @@ function buildAnotherCollage(){
   var topicHeader = document.getElementById("topic");
   topicHeader.innerHTML = "Collage for Topic " + title;
   //need to change mainCollage
-//  var mainCollage = document.getElementById("main_collage");
-//  mainCollage.style.background = "url('" + src + "')";
-//  mainCollage.style.backgroundRepeat = "no-repeat";
-//  mainCollage.style.backgroundSize = "cover";
+  var xHttp = new XMLHttpRequest();
+  xHttp.open("GET", "BuildCollage?title="+title, false);
+  xHttp.send();
+}
+
+function exportCollage(){
+	var xHttp = new XMLHttpRequest();
+	xHttp.open("GET", "ExportCollage", false);
+	xHttp.send();
 }

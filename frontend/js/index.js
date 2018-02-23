@@ -12,4 +12,7 @@ function handleDisable(){
 function buildCollage(){
 	var title = document.getElementById("text_input").value;
 	window.location="collage.html?title=" + title;
+	var xHttp = new XMLHttpRequest();
+	xHttp.open("GET", "BuildCollage?title="+title, false);
+	xHttp.send();
 }
