@@ -1,6 +1,9 @@
 package backend;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,7 +36,8 @@ public class CollageGenerationServlet extends HttpServlet {
 			
 			String topic = request.getParameter("topic");
 			if (topic != null) {
-				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL
+				String url = null;
+				//String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
 				request.setAttribute("url", url);			
 			}
 			
@@ -44,7 +48,7 @@ public class CollageGenerationServlet extends HttpServlet {
 
 			String url = request.getParameter(Constants.URL);
 			if (url != null) {
-				Server.downloadCollageToUserLocalStorage(url); //MAKE STATIC METHOD
+				downloadCollageToUserStorage(url); //MAKE STATIC METHOD
 				
 			}
 			
@@ -56,9 +60,44 @@ public class CollageGenerationServlet extends HttpServlet {
 		String userTokenString = request.getParameter(Constants.USER_TOKEN);
 		Integer userToken = Integer.parseInt(userTokenString);
 		if (userToken == Constants.INVALID_TOKEN) {
-			Server.removePreviousCollages();
+			removePreviousCollages();
 			request.setAttribute(Constants.UPDATED_USER_TOKEN, Constants.VALID_TOKEN); //MUST BE READ IN ON FRONTEND
 		}
+	}
+	
+	//removes all previous collages
+	private void removePreviousCollages() {
+		File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
+		File[] allCollages = assetsDirectory.listFiles();
+		
+		for (int i = 0; i < allCollages.length; i++) {
+			allCollages[i].delete();
+		}
+		
+		assetsDirectory.delete();
+	}
+	
+	//Download collage to client's storage -- localhost!
+	private void downloadCollageToUserStorage(String url) throws IOException
+	{
+		url = "/Users/Nagrawal/Desktop/cat.png";
+		File collage = new File(url);
+		if (!collage.exists()) {
+			throw new IOException("Collage not found on server"); //replace with Constant string
+		}
+		
+		File downloadDestination = new File(System.getProperty("user.home") + "/Downloads/" + System.currentTimeMillis() + ".png");
+			
+		Path sourcePath = collage.toPath();
+		Path destinationPath = downloadDestination.toPath();
+		try {
+			Files.copy(sourcePath, destinationPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
+		//System.out.println(“File downloaded at client successfully”);
 	}
 	
 }
