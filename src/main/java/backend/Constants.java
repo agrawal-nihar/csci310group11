@@ -12,4 +12,6 @@ public class Constants {
 	public static Integer INVALID_TOKEN = 0;
 	public static Integer VALID_TOKEN = 1;
 	public static String UPDATED_USER_TOKEN = "updatedUserToken";
+	
+	public static String FILE_NOT_FOUND_MESSAGE = "File not found on server.";
 }
