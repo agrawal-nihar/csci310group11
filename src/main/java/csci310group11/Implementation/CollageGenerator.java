@@ -17,7 +17,7 @@ public class CollageGenerator {
 	public CollageGenerator(ArrayList<BufferedImage> images) {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
-		this.collage = new BufferedImage();
+		this.collage = new Collage(new BufferedImage(200, 200, "PNG"), topic);
 
 		this.images = images;
 		this.resizeImages();
@@ -31,7 +31,7 @@ public class CollageGenerator {
 	 * @return the BufferedImage collage
 	 */
 	public BufferedImage getCollage() {
-		return this.collage;
+		return this.collage.getCollageImage();
 	}
 
 	/**
