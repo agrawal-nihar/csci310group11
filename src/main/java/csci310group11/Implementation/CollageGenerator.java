@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 
 public class CollageGenerator {
 
@@ -15,15 +16,20 @@ public class CollageGenerator {
 	private ArrayList<BufferedImage> borderedImages;
 	private Collage collage;
 
-	public CollageGenerator(ArrayList<BufferedImage> images) {
+	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
-		this.collage = new Collage(new BufferedImage(200, 200, "PNG"), topic);
+		//this.collage = new Collage(new BufferedImage(200, 200, "PNG"), topic);
+	}
 
-		this.images = images;
+	public String collageGeneratorDriver(String topic) {
+		String url = "";
+
+		//API CALL HERE images = ArrayList<BufferedImages>
 		this.resizeImages();
 		this.addBorderToImages();
 		this.compileCollage();
+		return url;
 	}
 
 	private String downloadCollage(Collage collage) {
@@ -68,8 +74,9 @@ public class CollageGenerator {
 	 */
 	private void resizeImages() {
 		//1/20th of collage dimensions
-		int resizeWidth = this.collage.getWidth()/20;
-		int resizeHeight = this.collage.getHeight()/20;
+		BufferedImage collageImage = this.collage.getCollageImage();
+		int resizeWidth = collageImage.getWidth()/20;
+		int resizeHeight = collageImage.getHeight()/20;
 		
 		//Iterate through all images
 		for(int i=0; i < images.size(); i++) {
@@ -86,11 +93,6 @@ public class CollageGenerator {
 			graphics.dispose(); //not sure if needed
 		}
 	}
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> this.collage as Collage
 	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 
