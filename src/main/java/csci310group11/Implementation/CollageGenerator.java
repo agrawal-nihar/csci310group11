@@ -19,7 +19,7 @@ public class CollageGenerator {
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
-		//this.collage = new Collage(new BufferedImage(200, 200, "PNG"), topic);
+		this.collage = new Collage();
 	}
 
 	public String collageGeneratorDriver(String topic) {
@@ -30,29 +30,6 @@ public class CollageGenerator {
 		this.addBorderToImages();
 		this.compileCollage();
 		return url;
-	}
-
-	private String downloadCollage(Collage collage) {
-		String filename = "";
-		BufferedImage image = collage.getCollageImage();
-	
-		try {
-			//get destination path in assets folder of server
-			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
-			assetsDirectory.mkdir(); //no exception if directory already exists
-			
-			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
-			filename += "topicName";
-			filename += System.currentTimeMillis() + ".png";    
-			File outputFile = new File(filename);
-			ImageIO.write(image, "png", outputFile);
-			
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return filename;
 	}
 
 	/**
