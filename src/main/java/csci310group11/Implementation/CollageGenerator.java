@@ -6,7 +6,8 @@ import java.awt.image.BufferedImage;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
@@ -58,7 +59,7 @@ public class CollageGenerator {
 	 * Takes the original image and draws it into a new BufferedImage with the proper dimensions
 	 * 
 	 * Notes:
-	 * Should we set collage size 1st or make collage based of images entered
+	 * Should we set collage size 1st or make collage based of images entered?
 	 */
 	private void resizeImages() {
 		//1/20th of collage dimensions
@@ -111,6 +112,28 @@ public class CollageGenerator {
 		}
 	}
 
+	//Dummy method
+	// public BufferedImage addBorderToImage(BufferedImage image) {
+		
+	// 	int width = image.getWidth();
+	// 	int height = image.getHeight();
+		
+	// 	//Create image with enough space for 3px border
+	// 	BufferedImage borderedImage = new BufferedImage(width + Constants.BORDER_WIDTH, height + Constants.BORDER_WIDTH, image.getType());
+
+	// 	//Setting larger image to all white
+	// 	Graphics2D graphics = borderedImage.createGraphics();
+	// 	graphics.setPaint(Color.WHITE);
+	// 	graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
+
+	// 	//Paint original image onto new borderedImage	
+	// 	graphics.drawImage(image, Constants.BORDER_WIDTH/2, Constants.BORDER_WIDTH/2, null);	
+	// 	graphics.dispose(); // not sure if needed check with both
+	// 	return borderedImage;
+	// }
+
+
+
 	/*
 	 * Cover corners, lay inside and see what happens
 	 * 
@@ -141,4 +164,25 @@ public class CollageGenerator {
 		
 		return filename;
 	}
+
+	
+
+
+	// public static void main(String[] args) throws MalformedURLException {
+	// 	CollageGenerator cg = new CollageGenerator();
+	// 	try {
+	// 		URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
+	// 		BufferedImage image = ImageIO.read(url);
+	// 		BufferedImage borderedImage = cg.addBorderToImage(image);
+	// 		File outFile = new File("borderedImage.png");
+	// 		ImageIO.write(borderedImage, "png", outFile);
+			
+
+	// 	} catch (IOException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
+
+	// }
+
 }
