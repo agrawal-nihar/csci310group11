@@ -22,14 +22,25 @@ public class CollageGenerator {
 		this.collage = new Collage();
 	}
 
+	/**
+	 * Driver method to complete Collage creation process.
+	 * This method will call the GoogleCustomSearchAPI and retrieve the images to be compiled.
+	 * Each image will be resized, then given a border.
+	 * Each image will be complied into one BufferedImage stored in a Collage Object.
+	 * 
+	 * The Collage Object will be downloaded to the Server storage space and the url will be returned to the Servlet
+	 * to be sent back out to the frontend.
+	 * 
+	 * @param topic the String of terms inputted by the user; this will be passed to the API to make th search
+	 * @return URL of the collage on the server's storage system
+	 */
 	public String collageGeneratorDriver(String topic) {
-		String url = "";
 
 		//API CALL HERE images = ArrayList<BufferedImages>
 		this.resizeImages();
 		this.addBorderToImages();
 		this.compileCollage();
-		return url;
+		return this.downloadCollage(this.collage);
 	}
 
 	/**
@@ -70,6 +81,7 @@ public class CollageGenerator {
 			graphics.dispose(); //not sure if needed
 		}
 	}
+	
 	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 
