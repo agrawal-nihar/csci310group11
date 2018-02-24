@@ -106,18 +106,6 @@ public class CollageGenerator {
 	private void compileCollage() {
 
 	}
-  public void downloadCollage(Collage collage) {
-		try {
-			BufferedImage image = collage.getCollageImage(); //getter?
-			String fileName = collage.getTopic();
-			fileName += ".png";    //if collage has a unique id?
-			File outputFile = new File(fileName);
-			ImageIO.write(image, "png", outputFile);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	private String downloadCollage(Collage collage) {
 		String filename = "";
