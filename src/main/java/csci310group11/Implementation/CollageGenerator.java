@@ -1,7 +1,6 @@
 package csci310group11.Implementation;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -11,9 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CollageGenerator {
+
 	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
 	private ArrayList<BufferedImage> borderedImages;
-	private BufferedImage collage;
+	private Collage collage;
 
 	public CollageGenerator(ArrayList<BufferedImage> images) {
 		this.images = new ArrayList<BufferedImage>();
@@ -86,7 +86,11 @@ public class CollageGenerator {
 			graphics.dispose(); //not sure if needed
 		}
 	}
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> this.collage as Collage
 	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 
@@ -122,5 +126,40 @@ public class CollageGenerator {
 	 */
 	private void compileCollage() {
 
+	}
+  public void downloadCollage(Collage collage) {
+		try {
+			BufferedImage image = collage.getCollageImage(); //getter?
+			String fileName = collage.getTopic();
+			fileName += ".png";    //if collage has a unique id?
+			File outputFile = new File(fileName);
+			ImageIO.write(image, "png", outputFile);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String downloadCollage(Collage collage) {
+		String filename = "";
+		BufferedImage image = collage.getCollageImage();
+	
+		try {
+			//get destination path in assets folder of server
+			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
+			assetsDirectory.mkdir(); //no exception if directory already exists
+			
+			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
+			filename += "topicName";
+			filename += System.currentTimeMillis() + ".png";    
+			File outputFile = new File(filename);
+			ImageIO.write(image, "png", outputFile);
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return filename;
 	}
 }
