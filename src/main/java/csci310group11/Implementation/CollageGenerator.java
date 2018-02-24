@@ -2,6 +2,8 @@ package csci310group11.Implementation;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -113,24 +115,24 @@ public class CollageGenerator {
 	}
 
 	//Dummy method
-	// public BufferedImage addBorderToImage(BufferedImage image) {
+	public BufferedImage addBorderToImage(BufferedImage image) {
 		
-	// 	int width = image.getWidth();
-	// 	int height = image.getHeight();
+		int width = image.getWidth();
+		int height = image.getHeight();
 		
-	// 	//Create image with enough space for 3px border
-	// 	BufferedImage borderedImage = new BufferedImage(width + Constants.BORDER_WIDTH, height + Constants.BORDER_WIDTH, image.getType());
+		//Create image with enough space for 3px border
+		BufferedImage borderedImage = new BufferedImage(width + Constants.BORDER_WIDTH, height + Constants.BORDER_WIDTH, image.getType());
 
-	// 	//Setting larger image to all white
-	// 	Graphics2D graphics = borderedImage.createGraphics();
-	// 	graphics.setPaint(Color.WHITE);
-	// 	graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
+		//Setting larger image to all white
+		Graphics2D graphics = borderedImage.createGraphics();
+		graphics.setPaint(Color.WHITE);
+		graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
 
-	// 	//Paint original image onto new borderedImage	
-	// 	graphics.drawImage(image, Constants.BORDER_WIDTH/2, Constants.BORDER_WIDTH/2, null);	
-	// 	graphics.dispose(); // not sure if needed check with both
-	// 	return borderedImage;
-	// }
+		//Paint original image onto new borderedImage	
+		graphics.drawImage(image, Constants.BORDER_WIDTH/2, Constants.BORDER_WIDTH/2, null);	
+		graphics.dispose(); // not sure if needed check with both
+		return borderedImage;
+	}
 
 
 
@@ -139,7 +141,26 @@ public class CollageGenerator {
 	 * 
 	 */
 	private void compileCollage() {
+		//Rotation
+		
+	}
 
+	public void rotateImage(BufferedImage image) {
+		AffineTransform at = new AffineTransform();
+		
+		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
+		System.out.println("Degrees: " + degree);
+		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
+		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		image = op.filter(image, null);
+		
+		try {
+			File outFile = new File("borderedImage.png");
+			ImageIO.write(image, "png", outFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private String downloadCollage(Collage collage) {
@@ -168,21 +189,21 @@ public class CollageGenerator {
 	
 
 
-	// public static void main(String[] args) throws MalformedURLException {
-	// 	CollageGenerator cg = new CollageGenerator();
-	// 	try {
-	// 		URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
-	// 		BufferedImage image = ImageIO.read(url);
-	// 		BufferedImage borderedImage = cg.addBorderToImage(image);
-	// 		File outFile = new File("borderedImage.png");
-	// 		ImageIO.write(borderedImage, "png", outFile);
+	public static void main(String[] args) throws MalformedURLException {
+		CollageGenerator cg = new CollageGenerator();
+		try {
+			URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
+			BufferedImage image = ImageIO.read(url);
+			BufferedImage borderedImage = cg.addBorderToImage(image);
+			cg.rotateImage(borderedImage);
+			
 			
 
-	// 	} catch (IOException e) {
-	// 		// TODO Auto-generated catch block
-	// 		e.printStackTrace();
-	// 	}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-	// }
+	}
 
 }
