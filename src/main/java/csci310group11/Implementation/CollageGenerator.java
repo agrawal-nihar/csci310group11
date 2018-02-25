@@ -143,7 +143,15 @@ public class CollageGenerator {
 	 * Record location inside of collage
 	 */
 	private void compileCollage() {
-		//Rotation
+		BufferedImage collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D graphics = collageImage.createGraphics();
+		graphics.setPaint(Color.RED); //check for "whitespace"
+		graphics.fillRect(0, 0, collageImage.getWidth(), collageImage.getHeight());
+		for(int r=0; r < 4; r++) { //rows of images
+			for(int c = 0; c < 5; c++) { //cols of images
+			
+			}
+		}
 		
 	}
 
@@ -191,21 +199,21 @@ public class CollageGenerator {
 	
 
 
-	public static void main(String[] args) throws MalformedURLException {
-		CollageGenerator cg = new CollageGenerator();
-		try {
-			URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
-			BufferedImage image = ImageIO.read(url);
-			BufferedImage borderedImage = cg.addBorderToImage(image);
-			cg.rotateImage(borderedImage);
+	// public static void main(String[] args) throws MalformedURLException {
+	// 	CollageGenerator cg = new CollageGenerator();
+	// 	try {
+	// 		URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
+	// 		BufferedImage image = ImageIO.read(url);
+	// 		BufferedImage borderedImage = cg.addBorderToImage(image);
+	// 		cg.rotateImage(borderedImage);
 			
 			
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	// 	} catch (IOException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
 
-	}
+	// }
 
 }
