@@ -139,29 +139,31 @@ public class CollageGenerator {
 	/*
 	 * Cover corners, lay inside and see what happens
 	 * 
+	 * Rotate inside of collage to allow for chopping of the corners.
+	 * Record location inside of collage
 	 */
 	private void compileCollage() {
 		//Rotation
 		
 	}
 
-	public void rotateImage(BufferedImage image) {
-		AffineTransform at = new AffineTransform();
+	// public void rotateImage(BufferedImage image) {
+	// 	AffineTransform at = new AffineTransform();
 		
-		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
-		System.out.println("Degrees: " + degree);
-		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
-		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-		image = op.filter(image, null);
+	// 	int degree = (int) (Math.random() * 91 - 45); //-45 to 45
+	// 	System.out.println("Degrees: " + degree);
+	// 	at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
+	// 	AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+	// 	image = op.filter(image, null);
 		
-		try {
-			File outFile = new File("borderedImage.png");
-			ImageIO.write(image, "png", outFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	// 	try {
+	// 		File outFile = new File("borderedImage.png");
+	// 		ImageIO.write(image, "png", outFile);
+	// 	} catch (IOException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
+	// }
 	
 	private String downloadCollage(Collage collage) {
 		String filename = "";
