@@ -22,11 +22,12 @@ public class CollageGenerationServlet extends HttpServlet {
 	
 	private CollageGenerator collageGenerator; //not static, change from DESIGN
 	
-
+	/*
+	 * This servlet will be called whenever the user clicks a any of button in our frontend pages. Depends on what time of
+	 * button it is, it will execute different code based on it. One option is to generate a new collage by calling CollageGenerator
+	 * Other options is when the user has clicked the Export Collage button which will call downloadCollageToUserStorage.
+	 */
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//Verify user is valid user
-		checkUserToken(request);
 		
 		//Determine which action was requested in the HttpServletRequest object
 		String action = request.getParameter(Constants.ACTION_TYPE);
@@ -56,16 +57,11 @@ public class CollageGenerationServlet extends HttpServlet {
 		
 	} //end of service method
 
-	private void checkUserToken(HttpServletRequest request) {
-		String userTokenString = request.getParameter(Constants.USER_TOKEN);
-		Integer userToken = Integer.parseInt(userTokenString);
-		if (userToken == Constants.INVALID_TOKEN) {
-			removePreviousCollages();
-			request.setAttribute(Constants.UPDATED_USER_TOKEN, Constants.VALID_TOKEN); //MUST BE READ IN ON FRONTEND
-		}
-	}
-	
-	//removes all previous collages
+	/*
+	 * When the users has created multiple collages in one session, this function will allow the server to
+	 * delete all the collages that were made in this session. Since all the collages are stored in /assets directory,
+	 * it will delete every file inside of this directory.
+	 */
 	private void removePreviousCollages() {
 		File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
 		File[] allCollages = assetsDirectory.listFiles();
@@ -77,7 +73,11 @@ public class CollageGenerationServlet extends HttpServlet {
 		assetsDirectory.delete();
 	}
 	
-	//Download collage to client's storage -- localhost!
+	/*
+	 * This fucntion allow users to download the collage to their storage. It will download to their Downloads directory
+	 * The downloaded collage will be in png file and the name of the file will be based on the time it was downloaded.
+	 * If the source of image can't be found, it will not download.
+	 */
 	private void downloadCollageToUserStorage(String url) throws IOException
 	{
 		url = "/Users/Nagrawal/Desktop/cat.png";
