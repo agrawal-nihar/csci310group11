@@ -18,11 +18,13 @@ public class CollageGenerator {
 	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
 	private ArrayList<BufferedImage> borderedImages;
 	private Collage collage;
+	private BufferedImage collageImage;
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collage = new Collage();
+		collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 	}
 
 	/**
@@ -143,16 +145,38 @@ public class CollageGenerator {
 	 * Record location inside of collage
 	 */
 	private void compileCollage() {
-		BufferedImage collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D graphics = collageImage.createGraphics();
+		Graphics2D graphics = this.collageImage.createGraphics();
 		graphics.setPaint(Color.RED); //check for "whitespace"
-		graphics.fillRect(0, 0, collageImage.getWidth(), collageImage.getHeight());
+		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
+
 		for(int r=0; r < 4; r++) { //rows of images
 			for(int c = 0; c < 5; c++) { //cols of images
-			
+				BufferedImage currImage = borderedImages.get(4*r + c);
+				this.rotateAndDrawImage(currImage, r, c);
 			}
 		}
 		
+	}
+
+	/**
+	 * Helper method to rotate images. Will draw them onto the collage BufferedImage
+	 */
+	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
+		AffineTransform at = new AffineTransform();
+		
+		int row_interval = 750/4;
+		int col_interval = 1000/4;
+
+		at.translate(row*row_interval, col*col_interval); //translate onto position for collage
+
+		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
+		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
+		Graphics2D graphics = this.collageImage.createGraphics();
+		graphics.drawImage(image, at, null);
+		
+		
+		//AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		//op.filter(image, this.collageImage); //paints onto collageImage
 	}
 
 	// public void rotateImage(BufferedImage image) {
