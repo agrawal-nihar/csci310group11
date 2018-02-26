@@ -4,8 +4,12 @@ package csci310group11.Implementation;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -131,7 +135,7 @@ public class CollageGenerator {
 		int height = image.getHeight();
 		
 		//Create image with enough space for 3px border
-		BufferedImage borderedImage = new BufferedImage(width + Constants.BORDER_WIDTH, height + Constants.BORDER_WIDTH, image.getType());
+		BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
 
 		//Setting larger image to all white
 		Graphics2D graphics = borderedImage.createGraphics();
@@ -139,7 +143,7 @@ public class CollageGenerator {
 		graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
 
 		//Paint original image onto new borderedImage	
-		graphics.drawImage(image, Constants.BORDER_WIDTH/2, Constants.BORDER_WIDTH/2, null);	
+		graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);	
 		graphics.dispose(); // not sure if needed check with both
 		return borderedImage;
 	}
@@ -165,6 +169,21 @@ public class CollageGenerator {
 		}
 		
 	}
+	
+	public void compileCollage(BufferedImage image) {
+		Graphics2D graphics = this.collageImage.createGraphics();
+		graphics.setPaint(Color.RED); //check for "whitespace"
+		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
+
+		this.rotateAndDrawImage(image, 2, 100);
+		try {
+			File outFile = new File("collage.png");
+			ImageIO.write(this.collageImage, "png", outFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Helper method to rotate images. Will draw them onto the collage BufferedImage
@@ -172,38 +191,40 @@ public class CollageGenerator {
 	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
 		AffineTransform at = new AffineTransform();
 		
-		int row_interval = 750/4;
-		int col_interval = 1000/4;
+//		int row_interval = 750/4;
+//		int col_interval = 1000/4;
 
-		at.translate(row*row_interval, col*col_interval); //translate onto position for collage
+		at.translate(col, row); //translate onto position for collage
 
 		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
-		Graphics2D graphics = this.collageImage.createGraphics();
-		graphics.drawImage(image, at, null);
+		//Graphics2D graphics = this.collageImage.createGraphics();
+		//graphics.drawImage(image, at, null);
 		
-		
-		//AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-		//op.filter(image, this.collageImage); //paints onto collageImage
+		//Setting larger image to all white
+		//Graphics2D graphics = borderedImage.createGraphics();
+
+		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		op.filter(image, this.collageImage); //paints onto collageImage
 	}
 
-	// public void rotateImage(BufferedImage image) {
-	// 	AffineTransform at = new AffineTransform();
-		
-	// 	int degree = (int) (Math.random() * 91 - 45); //-45 to 45
-	// 	System.out.println("Degrees: " + degree);
-	// 	at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
-	// 	AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-	// 	image = op.filter(image, null);
-		
-	// 	try {
-	// 		File outFile = new File("borderedImage.png");
-	// 		ImageIO.write(image, "png", outFile);
-	// 	} catch (IOException e) {
-	// 		// TODO Auto-generated catch block
-	// 		e.printStackTrace();
-	// 	}
-	// }
+//	public void rotateImage(BufferedImage image) {
+//		AffineTransform at = new AffineTransform();
+//		
+//		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
+//		System.out.println("Degrees: " + degree);
+//		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
+//		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//		image = op.filter(image, null);
+//		
+//		try {
+//			File outFile = new File("borderedImage.png");
+//			ImageIO.write(image, "png", outFile);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 	private String downloadCollage(Collage collage) {
 		String filename = "";
@@ -231,21 +252,21 @@ public class CollageGenerator {
 	
 
 
-	// public static void main(String[] args) throws MalformedURLException {
-	// 	CollageGenerator cg = new CollageGenerator();
-	// 	try {
-	// 		URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
-	// 		BufferedImage image = ImageIO.read(url);
-	// 		BufferedImage borderedImage = cg.addBorderToImage(image);
-	// 		cg.rotateImage(borderedImage);
+	public static void main(String[] args) throws MalformedURLException {
+		CollageGenerator cg = new CollageGenerator();
+		try {
+			URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
+			BufferedImage image = ImageIO.read(url);
+			BufferedImage borderedImage = cg.addBorderToImage(image);
+			cg.compileCollage(borderedImage);
 			
 			
 
-	// 	} catch (IOException e) {
-	// 		// TODO Auto-generated catch block
-	// 		e.printStackTrace();
-	// 	}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-	// }
+	}
 
 }
