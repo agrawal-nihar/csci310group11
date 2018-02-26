@@ -79,9 +79,9 @@ public class CollageGenerator {
 	 */
 	private void resizeImages() {
 		//1/20th of collage dimensions
-		BufferedImage collageImage = this.collage.getCollageImage();
-		int resizeWidth = collageImage.getWidth()/20;
-		int resizeHeight = collageImage.getHeight()/20;
+		//BufferedImage collageImage = this.collage.getCollageImage();
+		int resizeWidth = this.collageImage.getWidth()/20;
+		int resizeHeight = this.collageImage.getHeight()/20;
 		
 		//Iterate through all images
 		for(int i=0; i < images.size(); i++) {
@@ -99,17 +99,14 @@ public class CollageGenerator {
 		}
 	}
 	
-	public BufferedImage resizeImage(BufferedImage image) {
-		BufferedImage resizeImg = new BufferedImage(20, 40, BufferedImage.TYPE_INT_ARGB);
-
-		//Draws the img image into the size of the resizeImg
-		Graphics2D graphics = resizeImg.createGraphics();
-		graphics.drawImage(image, 0, 0, 20, 40, null);
-
-		graphics.dispose(); //not sure if needed
-		
-		return resizeImg;
-	}
+	// public BufferedImage resizeImage(BufferedImage image) {
+	// 	BufferedImage resizeImg = new BufferedImage(20, 40, BufferedImage.TYPE_INT_ARGB);
+	// 	//Draws the img image into the size of the resizeImg
+	// 	Graphics2D graphics = resizeImg.createGraphics();
+	// 	graphics.drawImage(image, 0, 0, 20, 40, null);
+	// 	graphics.dispose(); //not sure if needed
+	// 	return resizeImg;
+	// }
 	
 	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
@@ -126,39 +123,39 @@ public class CollageGenerator {
 			int height = image.getHeight();
 			
 			//Create image with enough space for 3px border
-			BufferedImage borderedImage = new BufferedImage(width + 6, height + 6, image.getType());
+			BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
 
 			//Setting larger image to all white
 			Graphics2D graphics = borderedImage.createGraphics();
-			graphics.setPaint(new Color(0,0,0));
+			graphics.setPaint(Color.WHITE);
 			graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
 
 			//Paint original image onto new borderedImage	
-			graphics.drawImage(image, 2, 2, null);
+			graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
 			this.borderedImages.add(borderedImage);	
 			graphics.dispose(); // not sure if needed check with both
 		}
 	}
 
 	//Dummy method
-	public BufferedImage addBorderToImage(BufferedImage image) {
+	// public BufferedImage addBorderToImage(BufferedImage image) {
 		
-		int width = image.getWidth();
-		int height = image.getHeight();
+	// 	int width = image.getWidth();
+	// 	int height = image.getHeight();
 		
-		//Create image with enough space for 3px border
-		BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
+	// 	//Create image with enough space for 3px border
+	// 	BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
 
-		//Setting larger image to all white
-		Graphics2D graphics = borderedImage.createGraphics();
-		graphics.setPaint(Color.WHITE);
-		graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
+	// 	//Setting larger image to all white
+	// 	Graphics2D graphics = borderedImage.createGraphics();
+	// 	graphics.setPaint(Color.WHITE);
+	// 	graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
 
-		//Paint original image onto new borderedImage	
-		graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);	
-		graphics.dispose(); // not sure if needed check with both
-		return borderedImage;
-	}
+	// 	//Paint original image onto new borderedImage	
+	// 	graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);	
+	// 	graphics.dispose(); // not sure if needed check with both
+	// 	return borderedImage;
+	// }
 
 
 
@@ -182,20 +179,20 @@ public class CollageGenerator {
 		
 	}
 	
-	public void compileCollage(BufferedImage image) {
-		Graphics2D graphics = this.collageImage.createGraphics();
-		graphics.setPaint(Color.RED); //check for "whitespace"
-		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
+	// public void compileCollage(BufferedImage image) {
+	// 	Graphics2D graphics = this.collageImage.createGraphics();
+	// 	graphics.setPaint(Color.RED); //check for "whitespace"
+	// 	graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
 
-		this.rotateAndDrawImage(image, 0, 0);
-		try {
-			File outFile = new File("collage.png");
-			ImageIO.write(this.collageImage, "png", outFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	// 	this.rotateAndDrawImage(image, 0, 0);
+	// 	try {
+	// 		File outFile = new File("collage.png");
+	// 		ImageIO.write(this.collageImage, "png", outFile);
+	// 	} catch (IOException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
+	// }
 
 	/**
 	 * Helper method to rotate images. Will draw them onto the collage BufferedImage
@@ -203,10 +200,10 @@ public class CollageGenerator {
 	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
 		AffineTransform at = new AffineTransform();
 		
-//		int row_interval = 750/4;
-//		int col_interval = 1000/4;
+		int row_interval = this.collageImage.getHeight()/4 * row;
+		int col_interval = this.collageImage.getWidth()/4 * col;
 
-		at.translate(col, row); //translate onto position for collage
+		at.translate(col_interval, row_interval); //translate onto position for collage
 
 		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
@@ -262,17 +259,46 @@ public class CollageGenerator {
 	}
 
 	
+	public void setImages(ArrayList<BufferedImage> images) {
+		this.images = images;
+	}
 
+	public void dummyDriver() {
+
+		this.resizeImages();
+		this.addBorderToImages();
+		this.compileCollage();
+		
+		try {
+			File outFile = new File("collage.png");
+			ImageIO.write(this.collageImage, "png", outFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	public static void main(String[] args) throws MalformedURLException {
 		CollageGenerator cg = new CollageGenerator();
 		try {
 			URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
 			BufferedImage image = ImageIO.read(url);
-			image = cg.resizeImage(image);
-			BufferedImage borderedImage = cg.addBorderToImage(image);
-			cg.compileCollage(borderedImage);
 			
+			URL url2 = new URL("https://pbs.twimg.com/profile_images/953320896101412864/UdE5mfkP_400x400.jpg");
+			BufferedImage image2 = ImageIO.read(url2);
+
+			ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+			for(int i=0; i < 30; i++) {
+				if(i % 2 == 0) {
+					images.add(image);
+				} else {
+					images.add(image2);
+				}
+			}
+
+			cg.setImages(images);
+			cg.dummyDriver();
 			
 
 		} catch (IOException e) {
