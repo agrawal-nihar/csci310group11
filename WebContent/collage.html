@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <script src = "js/collage.js"></script>
+  
+  <script>
+  	window.onload = function() {
+  		var url_string = window.location.href;
+  	  var url = new URL(url_string);
+  	  var topic = url.searchParams.get("topic");
+  	  var topicHeader = document.getElementById("topic");
+  	  topicHeader.innerHTML = "Collage for Topic " + topic;
+  	  
+  	  var collageUrl = url.searchParams.get("collageUrl");
+  	  var mainCollage = document.getElementById("main_collage");  
+  	  var mainCollageImage = document.getElementById("main_img");  
+  		mainCollageImage.src = collageUrl;
+
+  	 // mainCollage.main_img.src = "url('" + collageUrl + "')";
+  	  mainCollage.style.backgroundRepeat = "no-repeat";
+  	  mainCollage.style.backgroundSize = "cover";
+  	  
+  	 }
+  </script>
+    <meta charset="utf-8">
+    <title>Collage Page</title>
+    <link rel = "stylesheet" href = "css/collage.css" />
+  </head>
+  <body>
+    <div id = "header">
+      <h1 id = "topic"></h1>
+    </div>
+    <div id = "container">
+      <div id = "main_collage" >
+        <img id = "main_img"  src=""/>
+      </div>
+      <button onclick="exportCollage(event)"> Export Collage </button>
+    </div>
+    <div id = "error">
+      <h2>Insufficient number of images found</h2>
+    </div>
+    <div id = "input">
+      <!-- oninput handles the requirement that unless the textbox has something valid, button is disabled; function located in js/collage.js-->
+      <input id = "text_input" oninput="handleDisable()" type = "text" placeholder = "Enter Topic"/>
+      <button id = "build" disabled onclick="buildAnotherCollage()">Build Another Collage</button>
+    </div>
+    <!-- History bar displays all previously created collages during the session-->
+    <div id = "history">
+    </div>
+  </body>
+</html>
