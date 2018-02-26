@@ -80,8 +80,8 @@ public class CollageGenerator {
 	private void resizeImages() {
 		//1/20th of collage dimensions
 		//BufferedImage collageImage = this.collage.getCollageImage();
-		int resizeWidth = this.collageImage.getWidth()/20;
-		int resizeHeight = this.collageImage.getHeight()/20;
+		int resizeWidth = this.collageImage.getWidth()/5;
+		int resizeHeight = this.collageImage.getHeight()/4;
 		
 		//Iterate through all images
 		for(int i=0; i < images.size(); i++) {
@@ -202,6 +202,8 @@ public class CollageGenerator {
 		
 		int row_interval = this.collageImage.getHeight()/4 * row;
 		int col_interval = this.collageImage.getWidth()/4 * col;
+
+		System.out.println("Row: " + row_interval + " | Col: " + col_interval);
 
 		at.translate(col_interval, row_interval); //translate onto position for collage
 
