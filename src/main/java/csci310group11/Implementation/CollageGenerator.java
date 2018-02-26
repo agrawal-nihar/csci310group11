@@ -99,6 +99,18 @@ public class CollageGenerator {
 		}
 	}
 	
+	public BufferedImage resizeImage(BufferedImage image) {
+		BufferedImage resizeImg = new BufferedImage(20, 40, BufferedImage.TYPE_INT_ARGB);
+
+		//Draws the img image into the size of the resizeImg
+		Graphics2D graphics = resizeImg.createGraphics();
+		graphics.drawImage(image, 0, 0, 20, 40, null);
+
+		graphics.dispose(); //not sure if needed
+		
+		return resizeImg;
+	}
+	
 	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 
@@ -175,7 +187,7 @@ public class CollageGenerator {
 		graphics.setPaint(Color.RED); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
 
-		this.rotateAndDrawImage(image, 2, 100);
+		this.rotateAndDrawImage(image, 0, 0);
 		try {
 			File outFile = new File("collage.png");
 			ImageIO.write(this.collageImage, "png", outFile);
@@ -257,6 +269,7 @@ public class CollageGenerator {
 		try {
 			URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
 			BufferedImage image = ImageIO.read(url);
+			image = cg.resizeImage(image);
 			BufferedImage borderedImage = cg.addBorderToImage(image);
 			cg.compileCollage(borderedImage);
 			
