@@ -1,16 +1,13 @@
 package csci310group11.Implementation;
 
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 
 public class CollageGenerator {
@@ -19,11 +16,13 @@ public class CollageGenerator {
 	private ArrayList<BufferedImage> borderedImages;
 	private Collage collage;
 	private BufferedImage collageImage;
+	private GoogleCustomSearchApi api;
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collage = new Collage();
+		this.api = new GoogleCustomSearchApi();
 		collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 	}
 
@@ -41,10 +40,17 @@ public class CollageGenerator {
 	 */
 	public String collageGeneratorDriver(String topic) {
 
-		//API CALL HERE images = ArrayList<BufferedImages>
-		this.resizeImages();
-		this.addBorderToImages();
-		this.compileCollage();
+		try {
+			this.images = (ArrayList<BufferedImage>) this.api.execute(topic);
+			// List<BufferedImage> t = this.api.execute(topic);
+			// this.images = (ArrayList<BufferedImage>) t;
+			this.resizeImages();
+			this.addBorderToImages();
+			this.compileCollage();
+		} catch (InsufficientImagesFoundError iife) {
+			System.out.println("iife: " + iife.getMessage());
+		}
+		
 		return this.downloadCollage(this.collage);
 	}
 
