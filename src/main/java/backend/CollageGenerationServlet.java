@@ -22,8 +22,7 @@ import csci310group11.Implementation.CollageGenerator;
 public class CollageGenerationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private CollageGenerator collageGenerator; //not static, change from DESIGN
-	
+	private CollageGenerator collageGenerator; //not static, change from DESIGN 
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Verify user is valid user
@@ -63,7 +62,7 @@ public class CollageGenerationServlet extends HttpServlet {
 	private Boolean checkNewUser(HttpServletRequest request) {
 		String userToken = request.getParameter(Constants.NEW_USER);
 		Boolean newUser = false;
-		if (userToken == Constants.NEW) {
+		if (userToken.equals(Constants.NEW)) {
 			newUser = true;
 			removePreviousCollages();
 		}
