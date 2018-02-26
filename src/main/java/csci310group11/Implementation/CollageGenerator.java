@@ -13,7 +13,13 @@ public class CollageGenerator {
 	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
 	private ArrayList<BufferedImage> borderedImages;
 	private BufferedImage collage;
-
+	
+	/*
+	 * This is constructor of CollageGenerator where it would create two array lists which stores the images that
+	 * was found from the Goolge Search API and other images with borders added to the images to fullfill the requirements.
+	 * It will do every steps that need to be done to make a collage(resize, add borders, and fill up all the space in collage with 
+	 * images).
+	 */
 	public CollageGenerator(ArrayList<BufferedImage> images) {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
@@ -25,7 +31,7 @@ public class CollageGenerator {
 		this.compileCollage();
 	}
 
-	/**
+	/*
 	 * Getter for the collage image
 	 * 
 	 * @return the BufferedImage collage
@@ -34,7 +40,7 @@ public class CollageGenerator {
 		return this.collage;
 	}
 
-	/**
+	/*
 	 * Resizes all the BufferedImages inside of images to be 1/20th of the size of the overall collage.
 	 * 
 	 * Takes the original image and draws it into a new BufferedImage with the proper dimensions
@@ -63,7 +69,12 @@ public class CollageGenerator {
 		}
 	}
   
-	
+	/*
+	 * This function stores the collage that has been created into the server side storage. This will allow
+	 * server to store all the previous collages that has been created in current session and display it onto
+	 * history bar. It will store the images in assets directory with topic with the time it was created to make
+	 * a unique id.  
+	 */
 	private String downloadCollage(Collage collage) {
 		String filename = "";
 		BufferedImage image = collage.getCollageImage();
@@ -86,7 +97,8 @@ public class CollageGenerator {
 		
 		return filename;
 	}
-	/**
+	
+	/*
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 
 	 * Creates a new BufferedImage that is 6px taller and wider than the original BufferedImage in images.
