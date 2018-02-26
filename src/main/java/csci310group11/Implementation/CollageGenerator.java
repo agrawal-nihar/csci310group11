@@ -43,13 +43,15 @@ public class CollageGenerator {
 		try {
 			this.images = (ArrayList<BufferedImage>) this.api.execute(topic);
 			// List<BufferedImage> t = this.api.execute(topic);
-			// this.images = (ArrayList<BufferedImage>) t;
-			this.resizeImages();
-			this.addBorderToImages();
-			this.compileCollage();
+			// this.images = (ArrayList<BufferedImage>) t;	
 		} catch (InsufficientImagesFoundError iife) {
 			System.out.println("iife: " + iife.getMessage());
+			return null;
 		}
+
+		this.resizeImages();
+		this.addBorderToImages();
+		this.compileCollage();
 		
 		return this.downloadCollage(this.collage);
 	}
