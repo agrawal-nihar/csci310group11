@@ -2,23 +2,83 @@
 /* Main function that controls image display */
 /* Basically uses image attributes to set the dynamic image title and src */
 
+// window.onload = function initialCollage(){
+//   var url_string = window.location.href;
+//   var url = new URL(url_string);
+//   var title = url.searchParams.get("title");
+//   var topicHeader = document.getElementById("topic");
+//   topicHeader.innerHTML = "Collage for Topic " + title;
+// }
+
+var currentCollage = null;
+
+/*testing with dummy response image for correct toggling behavior */
 window.onload = function initialCollage(){
-  var url_string = window.location.href;
-  var url = new URL(url_string);
-  var title = url.searchParams.get("title");
+  var mainCollage = document.getElementById("main_collage");
   var topicHeader = document.getElementById("topic");
-  topicHeader.innerHTML = "Collage for Topic " + title;
+  var firstImage = document.getElementById("history").children[0];
+  firstImage.style.display = "none";
+  currentCollage = img1;
+
+  topicHeader.innerHTML = "Collage for Topic " + firstImage.alt;
+  if(firstImage.src == null || firstImage.src == ""){
+    currentCollage = null;
+    displayError();
+  }
+  else{
+    mainCollage.style.background = "url('" + img1.src + "')";
+    mainCollage.style.backgroundRepeat = "no-repeat";
+    mainCollage.style.backgroundSize = "cover";
+  }
+}
+
+function newCollage(){
+  var mainCollage = document.getElementById("main_collage");
+  var topicHeader = document.getElementById("topic");
+  var firstImage = document.getElementById("history").children[0];
+  firstImage.style.display = "none";
+  currentCollage = img1;
+
+  topicHeader.innerHTML = "Collage for Topic " + firstImage.alt;
+  if(firstImage.src == null || firstImage.src == ""){
+    currentCollage = null;
+    displayError();
+  }
+  else{
+    mainCollage.style.background = "url('" + img1.src + "')";
+    mainCollage.style.backgroundRepeat = "no-repeat";
+    mainCollage.style.backgroundSize = "cover";
+  }
 }
 
 function toggleCollage(e){
   var topicHeader = document.getElementById("topic");
   var mainCollage = document.getElementById("main_collage");
+
+/* turning history thumbnail back on */
+  if(currentCollage != null){
+    var currentImg = document.getElementById(currentCollage.id);
+    currentImg.style.display = "inline";
+  }
+
+/* changing current collage variable to image pressed and applying image pressed to main collage */
+  hideError();
+  currentCollage = e.target;
   topicHeader.innerHTML = "Collage for Topic " + e.target.alt;
   mainCollage.style.background = "url('" + e.target.src + "')";
   mainCollage.style.backgroundRepeat = "no-repeat";
   mainCollage.style.backgroundSize = "cover";
+
+/* hiding new current collage history display */
+  hideCurrentCollageThumbnail();
 }
 
+function hideCurrentCollageThumbnail(){
+  var currentImg = document.getElementById(currentCollage.id);
+  currentImg.style.display = "none";
+}
+
+/* if input text box is empty, "build collage" button is disabled */
 function handleDisable(){
   var button = document.getElementById("build");
   var inputText = document.getElementById("text_input");
@@ -30,6 +90,17 @@ function handleDisable(){
   }
 }
 
+/* displaying error div */
+function displayError(){
+  document.getElementById("error").style.display = "block";
+}
+
+/* hiding error div */
+function hideError(){
+  document.getElementById("error").style.display = "none";
+}
+
+/*sending get request to backend */
 function buildAnotherCollage(){
   var title = document.getElementById("text_input").value;
   var topicHeader = document.getElementById("topic");
@@ -37,6 +108,9 @@ function buildAnotherCollage(){
   //need to change mainCollage
   var xHttp = new XMLHttpRequest();
   xHttp.open("GET", "BuildCollage?title="+title, false);
+  /* build new collage here */
+  /* basically what will happen is upon retrieval, we will make a new image child under the history bar */
+  /* after making a new child, we will append call the newCollage method */
   xHttp.send();
 }
 

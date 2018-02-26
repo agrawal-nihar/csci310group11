@@ -12,12 +12,11 @@
     </div>
     <div id = "container">
       <div id = "main_collage">
-        <img id = "main_img" />
+        <div id = "error">
+          <h2>Insufficient number of images found</h2>
+        </div>
       </div>
       <button onclick="exportCollage()"> Export Collage </button>
-    </div>
-    <div id = "error">
-      <h2>Insufficient number of images found</h2>
     </div>
     <div id = "input">
       <!-- oninput handles the requirement that unless the textbox has something valid, button is disabled -->
@@ -25,7 +24,7 @@
       <button id = "build" disabled onclick="buildAnotherCollage()">Build Another Collage</button>
     </div>
     <div id = "history">
-      <img onclick = "toggleCollage(event)" alt = "topic1" id = "img1" src = "https://pmcdeadline2.files.wordpress.com/2018/01/pyeongchang-winter-olympics-2018-logo.jpg?w=446&h=299&crop=1"/>
+      <img onclick = "toggleCollage(event)" alt = "topic1" id = "img1" />
       <img onclick = "toggleCollage(event)" alt = "topic2" id = "img2" src = "https://pmcdeadline2.files.wordpress.com/2018/02/john-henry-krueger-feb-17-2018-olympics.jpg?w=446&h=299&crop=1"/>
       <img onclick = "toggleCollage(event)" alt = "topic3" id = "img3" src = "http://www.abc.net.au/news/image/7749956-3x2-940x627.jpg"/>
       <img onclick = "toggleCollage(event)" alt = "topic4" id = "img4" src = "http://images.performgroup.com/di/library/omnisport/49/8a/chennathan02162018usnewsgettyftr_1h1waqneppew91r0by9ebcz7k5.jpg?t=-1578859623&w=960&quality=70"/>
