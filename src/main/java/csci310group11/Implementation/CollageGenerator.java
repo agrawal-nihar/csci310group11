@@ -99,15 +99,6 @@ public class CollageGenerator {
 		}
 	}
 	
-	// public BufferedImage resizeImage(BufferedImage image) {
-	// 	BufferedImage resizeImg = new BufferedImage(20, 40, BufferedImage.TYPE_INT_ARGB);
-	// 	//Draws the img image into the size of the resizeImg
-	// 	Graphics2D graphics = resizeImg.createGraphics();
-	// 	graphics.drawImage(image, 0, 0, 20, 40, null);
-	// 	graphics.dispose(); //not sure if needed
-	// 	return resizeImg;
-	// }
-	
 	/**
 	 * Responsible for adding a 3px white border to each image to be added to the collage.
 	 * 
@@ -137,28 +128,6 @@ public class CollageGenerator {
 		}
 	}
 
-	//Dummy method
-	// public BufferedImage addBorderToImage(BufferedImage image) {
-		
-	// 	int width = image.getWidth();
-	// 	int height = image.getHeight();
-		
-	// 	//Create image with enough space for 3px border
-	// 	BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
-
-	// 	//Setting larger image to all white
-	// 	Graphics2D graphics = borderedImage.createGraphics();
-	// 	graphics.setPaint(Color.WHITE);
-	// 	graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
-
-	// 	//Paint original image onto new borderedImage	
-	// 	graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);	
-	// 	graphics.dispose(); // not sure if needed check with both
-	// 	return borderedImage;
-	// }
-
-
-
 	/*
 	 * Cover corners, lay inside and see what happens
 	 * 
@@ -173,26 +142,26 @@ public class CollageGenerator {
 		for(int r=0; r < 4; r++) { //rows of images
 			for(int c = 0; c < 5; c++) { //cols of images
 				BufferedImage currImage = borderedImages.get(4*r + c);
-				this.rotateAndDrawImage(currImage, r, c);
+				System.out.println("Drawing image: " + (4*r + c));
+				int row = this.collageImage.getHeight()/4 * r;
+				int col = this.collageImage.getWidth()/5 * c;
+				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
 		
-	}
-	
-	// public void compileCollage(BufferedImage image) {
-	// 	Graphics2D graphics = this.collageImage.createGraphics();
-	// 	graphics.setPaint(Color.RED); //check for "whitespace"
-	// 	graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
+		for(int r=0; r < 3; r++) {
+			for(int c=0; c < 3; c++) {
+				BufferedImage currImage = borderedImages.get(3*r + c + 17);
+				int row = this.collageImage.getHeight()/3 * r + this.collageImage.getHeight()/8;
+				int col =  this.collageImage.getWidth()/3 * c + this.collageImage.getWidth()/8;
 
-	// 	this.rotateAndDrawImage(image, 0, 0);
-	// 	try {
-	// 		File outFile = new File("collage.png");
-	// 		ImageIO.write(this.collageImage, "png", outFile);
-	// 	} catch (IOException e) {
-	// 		// TODO Auto-generated catch block
-	// 		e.printStackTrace();
-	// 	}
-	// }
+				this.rotateAndDrawImage(currImage, row, col);
+			}
+		}
+		
+		this.rotateAndDrawImage(this.borderedImages.get(29), 350, 250);
+		
+	}
 
 	/**
 	 * Helper method to rotate images. Will draw them onto the collage BufferedImage
@@ -200,12 +169,11 @@ public class CollageGenerator {
 	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
 		AffineTransform at = new AffineTransform();
 		
-		int row_interval = this.collageImage.getHeight()/4 * row;
-		int col_interval = this.collageImage.getWidth()/4 * col;
+		
 
-		System.out.println("Row: " + row_interval + " | Col: " + col_interval);
+		System.out.println("Row: " + row + " | Col: " + col);
 
-		at.translate(col_interval, row_interval); //translate onto position for collage
+		at.translate(col, row); //translate onto position for collage
 
 		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
@@ -218,24 +186,6 @@ public class CollageGenerator {
 		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 		op.filter(image, this.collageImage); //paints onto collageImage
 	}
-
-//	public void rotateImage(BufferedImage image) {
-//		AffineTransform at = new AffineTransform();
-//		
-//		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
-//		System.out.println("Degrees: " + degree);
-//		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
-//		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-//		image = op.filter(image, null);
-//		
-//		try {
-//			File outFile = new File("borderedImage.png");
-//			ImageIO.write(image, "png", outFile);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
 	
 	private String downloadCollage(Collage collage) {
 		String filename = "";
