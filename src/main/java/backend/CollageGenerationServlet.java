@@ -30,7 +30,6 @@ public class CollageGenerationServlet extends HttpServlet {
 	 * Other options is when the user has clicked the Export Collage button which will call downloadCollageToUserStorage.
 	 */
 
-	private CollageGenerator collageGenerator; //not static, change from DESIGN 
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Verify user is valid user
