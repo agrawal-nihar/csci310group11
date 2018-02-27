@@ -5,6 +5,16 @@ import java.awt.image.BufferedImage;
 public class Collage {
 	private BufferedImage collageImage;
 	private String topic;
+
+	/**
+	 * Default constructor to ease CollageGenerator processes. MAY REMOVE LATER
+	 */
+	public Collage() {
+		this.collageImage = null;
+		this.topic = null;
+	}
+
+
 	/**
 	 * @param collage
 	 * @param topic
