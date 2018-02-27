@@ -18,16 +18,14 @@ public class CollageGenerator {
 
 	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
 	private ArrayList<BufferedImage> borderedImages;
-	private Collage collage;
 	private BufferedImage collageImage;
 	private GoogleCustomSearchApi api;
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
-		this.collage = new Collage();
 		this.api = new GoogleCustomSearchApi();
-		collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
+		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 	}
 
 	/**
@@ -43,12 +41,9 @@ public class CollageGenerator {
 	 * @return URL of the collage on the server's storage system
 	 */
 	public String collageGeneratorDriver(String topic) {
-
 		try {
-			this.images = (ArrayList<BufferedImage>) this.api.execute(topic);
-			// List<BufferedImage> t = this.api.execute(topic);
-			// this.images = (ArrayList<BufferedImage>) t;	
-		} catch (InsufficientImagesFoundError iife) {
+			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
+		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
 			System.out.println("iife: " + iife.getMessage());
 			return null;
 		}
@@ -56,36 +51,27 @@ public class CollageGenerator {
 		this.resizeImages();
 		this.addBorderToImages();
 		this.compileCollage();
-		
-		return this.downloadCollage(this.collage);
-	}
 
-	/**
-	 * Getter for the collage image
-	 * 
-	 * @return the BufferedImage collage
-	 */
-	public BufferedImage getCollage() {
-		return this.collage.getCollageImage();
+		Collage collage = new Collage(this.collageImage, topic);
+		
+		return this.downloadCollage(collage);
 	}
 
 	/**
 	 * Resizes all the BufferedImages inside of images to be 1/20th of the size of the overall collage.
 	 * 
-	 * Takes the original image and draws it into a new BufferedImage with the proper dimensions
-	 * 
-	 * Notes:
-	 * Should we set collage size 1st or make collage based of images entered?
+	 * Each images will be 1/5 as wide as the collage and 1/4 as tall as the collage.
+	 * These newly sized images will replace the original images in this.images.
 	 */
 	private void resizeImages() {
 		//1/20th of collage dimensions
-		//BufferedImage collageImage = this.collage.getCollageImage();
 		int resizeWidth = this.collageImage.getWidth()/5;
 		int resizeHeight = this.collageImage.getHeight()/4;
 		
 		//Iterate through all images
 		for(int i=0; i < images.size(); i++) {
 			BufferedImage img = images.get(i);
+
 			//New BufferedImage with 1/20th dimensions of collage
 			BufferedImage resizeImg = new BufferedImage(resizeWidth, resizeHeight, img.getType());
 
@@ -95,7 +81,8 @@ public class CollageGenerator {
 
 			//replace BufferedImage in images with resizedImg
 			images.set(i, resizeImg);
-			graphics.dispose(); //not sure if needed
+			
+			graphics.dispose(); //releases the resources used by graphics
 		}
 	}
 	
@@ -108,6 +95,7 @@ public class CollageGenerator {
 	 * new BufferedImage to create a 3px "border". Adds the bordred BuffereImage to this.borderedImages.
 	 */
 	private void addBorderToImages() {
+		//iterate through every image
 		for(int i=0; i < images.size(); i++) {
 			BufferedImage image = images.get(i);
 			int width = image.getWidth();
@@ -124,37 +112,46 @@ public class CollageGenerator {
 			//Paint original image onto new borderedImage	
 			graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
 			this.borderedImages.add(borderedImage);	
-			graphics.dispose(); // not sure if needed check with both
+			
+			graphics.dispose(); //releases the resources used by graphics
 		}
 	}
 
 	/*
-	 * Cover corners, lay inside and see what happens
+	 * Responsible for creating the this.collageImage.
 	 * 
-	 * Rotate inside of collage to allow for chopping of the corners.
-	 * Record location inside of collage
+	 * Sets the collage to all white and then paints the images in this.borderedImages onto this.collageImage.
+	 * Rotates each individual image and then paints onto this.collageImage in order to allow for cropping
+	 * at the borders. 
+	 * 
+	 * The basic layout of the collage is 5 rows of 6 images in a "grid".
+	 * Minor adjustments are made to ensure that the border of the collage are covered regardless of individual
+	 * rotation. 
 	 */
 	private void compileCollage() {
 		Graphics2D graphics = this.collageImage.createGraphics();
 		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
 
-		for(int r=0; r < 5; r++) { //rows of images
-			for(int c = 0; c < 6; c++) { //cols of images
-				BufferedImage currImage = borderedImages.get(5*r + c);
-				System.out.println("Drawing image: " + (5*r + c));
-				int row = this.collageImage.getHeight()/5 * r;
+		for(int r=0; r < 5; r++) { //5 rows of images
+			for(int c = 0; c < 6; c++) { //6 columns of images
+				BufferedImage currImage = borderedImages.get(5*r + c); //retrieves proper borderedImage
+				int row = this.collageImage.getHeight()/5 * r; //calculation for y-coordinate
+
+				//Adjustments to ensure border coverage
 				if(r == 0) {
 					row -= 25;
 				}
 				if(r == 1) {
-					row -= 15;
+					row -= 10;
 				}
 				if(r == 4) {
 					row += 2;
 				}
 				
-				int col = this.collageImage.getWidth()/6 * c;
+				int col = this.collageImage.getWidth()/6 * c; //calculation for x-coordinate
+				
+				//Adjustments to ensure border coverage
 				if(c == 0) {
 					col -= 20;
 				}
@@ -162,39 +159,38 @@ public class CollageGenerator {
 					col += 10;
 				}
 
+				//Helper method to rotate and draw the currImage
 				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
-		
-		// for(int r=0; r < 3; r++) {
-		// 	for(int c=0; c < 3; c++) {
-		// 		BufferedImage currImage = borderedImages.get(3*r + c + 17);
-		// 		int row = this.collageImage.getHeight()/3 * r + this.collageImage.getHeight()/8;
-		// 		int col =  this.collageImage.getWidth()/3 * c + this.collageImage.getWidth()/8;
-
-		// 		this.rotateAndDrawImage(currImage, row, col);
-		// 	}
-		// }
-		
-		// this.rotateAndDrawImage(this.borderedImages.get(29), 350, 250);
-		
 	}
 
 	/**
-	 * Helper method to rotate images. Will draw them onto the collage BufferedImage
+	 * Helper method to rotate images. Will draw them onto this.collageImage
+	 * 
+	 * @param image the BufferedImage to be drawn
+	 * @param row the y-coordinate in this.collageImage
+	 * @param col the x-coordinate in this.collageImage
 	 */
 	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
-		AffineTransform at = new AffineTransform();
+		AffineTransform at = new AffineTransform(); //Object for transformation
 
-		at.translate(col, row); //translate onto position for collage
+		at.translate(col, row); //specifies where in this.collageImage to paint image
 
-		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
-		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
+		int degree = (int) (Math.random() * 91 - 45); //random degree in range: -45 to 45
+		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2); //rotates image about its origin
 
-		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR); //performs the transformation
 		op.filter(image, this.collageImage); //paints onto collageImage
 	}
 	
+	/**
+	 * Responsible for downloading the Collage created to the server filespace.
+	 * Creates a unique filename by writing the Collage to a file named "<topic><creation time>.png"
+	 * 
+	 * @param collage the Collage object to be saved
+	 * @param filename the String containing the location of the file
+	 */
 	private String downloadCollage(Collage collage) {
 		String filename = "";
 		BufferedImage image = collage.getCollageImage();
@@ -217,55 +213,4 @@ public class CollageGenerator {
 		
 		return filename;
 	}
-
-	
-	public void setImages(ArrayList<BufferedImage> images) {
-		this.images = images;
-	}
-
-	public void dummyDriver() {
-
-		this.resizeImages();
-		this.addBorderToImages();
-		this.compileCollage();
-		
-		try {
-			File outFile = new File("collage.png");
-			ImageIO.write(this.collageImage, "png", outFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-
-	public static void main(String[] args) throws MalformedURLException {
-		CollageGenerator cg = new CollageGenerator();
-		try {
-			URL url = new URL("https://media.wired.com/photos/5a7cab6ca8e48854db175890/master/pass/norwayskier-915599900.jpg");
-			BufferedImage image = ImageIO.read(url);
-			
-			URL url2 = new URL("https://pbs.twimg.com/profile_images/953320896101412864/UdE5mfkP_400x400.jpg");
-			BufferedImage image2 = ImageIO.read(url2);
-
-			ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
-			for(int i=0; i < 30; i++) {
-				if(i % 2 == 0) {
-					images.add(image);
-				} else {
-					images.add(image2);
-				}
-			}
-
-			cg.setImages(images);
-			cg.dummyDriver();
-			
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
 }
