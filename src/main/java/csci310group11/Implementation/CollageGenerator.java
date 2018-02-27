@@ -136,30 +136,47 @@ public class CollageGenerator {
 	 */
 	private void compileCollage() {
 		Graphics2D graphics = this.collageImage.createGraphics();
-		graphics.setPaint(Color.RED); //check for "whitespace"
+		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
 
-		for(int r=0; r < 4; r++) { //rows of images
-			for(int c = 0; c < 5; c++) { //cols of images
-				BufferedImage currImage = borderedImages.get(4*r + c);
-				System.out.println("Drawing image: " + (4*r + c));
-				int row = this.collageImage.getHeight()/4 * r;
-				int col = this.collageImage.getWidth()/5 * c;
-				this.rotateAndDrawImage(currImage, row, col);
-			}
-		}
-		
-		for(int r=0; r < 3; r++) {
-			for(int c=0; c < 3; c++) {
-				BufferedImage currImage = borderedImages.get(3*r + c + 17);
-				int row = this.collageImage.getHeight()/3 * r + this.collageImage.getHeight()/8;
-				int col =  this.collageImage.getWidth()/3 * c + this.collageImage.getWidth()/8;
+		for(int r=0; r < 5; r++) { //rows of images
+			for(int c = 0; c < 6; c++) { //cols of images
+				BufferedImage currImage = borderedImages.get(5*r + c);
+				System.out.println("Drawing image: " + (5*r + c));
+				int row = this.collageImage.getHeight()/5 * r;
+				if(r == 0) {
+					row -= 25;
+				}
+				if(r == 1) {
+					row -= 15;
+				}
+				if(r == 4) {
+					row += 2;
+				}
+				
+				int col = this.collageImage.getWidth()/6 * c;
+				if(c == 0) {
+					col -= 20;
+				}
+				if(c == 5) {
+					col += 10;
+				}
 
 				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
 		
-		this.rotateAndDrawImage(this.borderedImages.get(29), 350, 250);
+		// for(int r=0; r < 3; r++) {
+		// 	for(int c=0; c < 3; c++) {
+		// 		BufferedImage currImage = borderedImages.get(3*r + c + 17);
+		// 		int row = this.collageImage.getHeight()/3 * r + this.collageImage.getHeight()/8;
+		// 		int col =  this.collageImage.getWidth()/3 * c + this.collageImage.getWidth()/8;
+
+		// 		this.rotateAndDrawImage(currImage, row, col);
+		// 	}
+		// }
+		
+		// this.rotateAndDrawImage(this.borderedImages.get(29), 350, 250);
 		
 	}
 
@@ -168,20 +185,11 @@ public class CollageGenerator {
 	 */
 	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
 		AffineTransform at = new AffineTransform();
-		
-		
-
-		System.out.println("Row: " + row + " | Col: " + col);
 
 		at.translate(col, row); //translate onto position for collage
 
 		int degree = (int) (Math.random() * 91 - 45); //-45 to 45
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2);
-		//Graphics2D graphics = this.collageImage.createGraphics();
-		//graphics.drawImage(image, at, null);
-		
-		//Setting larger image to all white
-		//Graphics2D graphics = borderedImage.createGraphics();
 
 		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 		op.filter(image, this.collageImage); //paints onto collageImage
