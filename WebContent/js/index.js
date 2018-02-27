@@ -21,8 +21,16 @@ function handleDisable(){
  */
 function buildCollage(){
 	var topic = document.getElementById("text_input").value;
-	window.location="collage.html?title=" + topic;
-	var xHttp = new XMLHttpRequest();
-	xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=true", false);
+	var xHttp = new XMLHttpRequest();	
+	var collageURL;
+
+	xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=true", true);
 	xHttp.send();
+	xHttp.onreadystatechange = function() {
+		collageURL = this.responseText;
+		window.location="collage.html?topic=" + topic + "&collageURL=" + collageURL;
+
+	}
+	
+
 }
