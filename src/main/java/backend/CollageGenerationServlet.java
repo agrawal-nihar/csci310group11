@@ -33,24 +33,22 @@ public class CollageGenerationServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Verify user is valid user
 		Boolean newUser = checkNewUser(request);
-
+		collageGenerator = new CollageGenerator();
 		
 		//Determine which action was requested in the HttpServletRequest object
 		String action = request.getParameter(Constants.ACTION_TYPE);
 		
 		//get response writer
 		PrintWriter responseUrl = response.getWriter();
-		
 		//Build Collage process
 		if (action.equals(Constants.BUILD_ACTION)) {
-			
 			String topic = request.getParameter("topic");
 			if (topic != null) {
-				String url = null;
-//				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
+//				String url = null;
+				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
 				
 				//for testing
-				url = "https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"; 
+//				url = "https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"; 
 				responseUrl.print(url);	
 				responseUrl.flush();
 			}

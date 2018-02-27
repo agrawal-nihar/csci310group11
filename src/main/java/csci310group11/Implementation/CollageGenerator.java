@@ -4,14 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.io.IOException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -203,7 +197,7 @@ public class CollageGenerator {
 			assetsDirectory.mkdir(); //no exception if directory already exists
 			
 			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
-			filename += "topicName";
+			filename += collage.getTopic();
 			filename += System.currentTimeMillis() + ".png";    
 			File outputFile = new File(filename);
 			ImageIO.write(image, "png", outputFile);

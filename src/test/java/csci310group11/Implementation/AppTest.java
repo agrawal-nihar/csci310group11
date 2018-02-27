@@ -46,4 +46,10 @@ public class AppTest
 			}
     		
     }
+    
+    public void testDriver() {
+    		CollageGenerator cg = new CollageGenerator();
+    		String filePath = cg.collageGeneratorDriver("DOG");
+    		System.out.println(filePath);
+    }
 }
