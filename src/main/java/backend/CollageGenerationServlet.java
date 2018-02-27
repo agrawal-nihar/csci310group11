@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,11 +46,11 @@ public class CollageGenerationServlet extends HttpServlet {
 			
 			String topic = request.getParameter("topic");
 			if (topic != null) {
-				//String url = null;
-				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
+				String url = null;
+//				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
 				
 				//for testing
-				//url = "https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"; 
+				url = "https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg"; 
 				responseUrl.print(url);	
 				responseUrl.flush();
 			}
@@ -73,9 +72,9 @@ public class CollageGenerationServlet extends HttpServlet {
 	 * it will delete every file inside of this directory.
 	 */
 	private Boolean checkNewUser(HttpServletRequest request) {
-		String userToken = request.getParameter(Constants.NEW_USER);
+		String userToken = request.getParameter("newUser");
 		Boolean newUser = false;
-		if (userToken.equals(Constants.NEW)) {
+		if (userToken.equals("true")) {
 			newUser = true;
 			removePreviousCollages();
 		}
@@ -86,12 +85,14 @@ public class CollageGenerationServlet extends HttpServlet {
 	private void removePreviousCollages() {
 		File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
 		File[] allCollages = assetsDirectory.listFiles();
+		if(allCollages != null) {
+			for (int i = 0; i < allCollages.length; i++) {
+				allCollages[i].delete();
+			}
 		
-		for (int i = 0; i < allCollages.length; i++) {
-			allCollages[i].delete();
+			assetsDirectory.delete();
 		}
 		
-		assetsDirectory.delete();
 	}
 	
 	/*

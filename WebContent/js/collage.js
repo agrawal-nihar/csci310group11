@@ -110,12 +110,12 @@ function hideError(){
 /*sending get request to backend */
 
 function buildAnotherCollage(){
-  var title = document.getElementById("text_input").value;
+  var topic = document.getElementById("text_input").value;
   var topicHeader = document.getElementById("topic");
   topicHeader.innerHTML = "Collage for Topic " + title;
   //need to change mainCollage
   var xHttp = new XMLHttpRequest();
-  xHttp.open("GET", "BuildCollage?title="+title, false);
+  xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=false", false);
   /* build new collage here */
   /* basically what will happen is upon retrieval, we will make a new image child under the history bar */
   /* after making a new child, we will append call the newCollage method */
@@ -129,6 +129,6 @@ function buildAnotherCollage(){
  */
 function exportCollage(){
 	var xHttp = new XMLHttpRequest();
-	xHttp.open("GET", "ExportCollage", false);
+	xHttp.open("GET", "CollageGeneratorServlet?action=download" + "&url=" + e.target.src + "&newUser=false", false);
 	xHttp.send();
 }
