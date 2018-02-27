@@ -1,3 +1,8 @@
+/*
+ * This function controls the availability of Build Collage button which enables the button 
+ * if and only if the user has given a term into intput text. If there is nothing on the input text
+ * it will remain disabled.
+ */
 function handleDisable(){
   var button = document.getElementById("build");
   var inputText = document.getElementById("text_input");
@@ -9,17 +14,15 @@ function handleDisable(){
   }
 }
 
-function buildCollage() {
-	//first time a collage is being built in this session
-	var topic = document.getElementById("text_input").value;
+/*
+ * Once the user clickes Build Collage, it will trigger this function to create a collage by sending singal
+ * to our servlet to begin searching for the images and generate collage using those images. Once the servlet generates
+ * the collage, it will direct user to collage.html to display the collage.
+ */
+function buildCollage(){
+	var title = document.getElementById("text_input").value;
+	window.location="collage.html?title=" + title;
 	var xHttp = new XMLHttpRequest();
-	xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=true", false);
+	xHttp.open("GET", "BuildCollage?title="+title, false);
 	xHttp.send();
-	
-	var url = "";
-	if (xHttp.responseText.trim().length > 0) {
-		url = xHttp.responseText.trim();
-	}
-	
-	window.location="collage.html?topic=" + topic + "&collageUrl=" + url;
 }
