@@ -21,8 +21,7 @@ window.onload = function initialCollage(){
   var url_string = window.location.href;
   var url = new URL(url_string);
   var topic = url.searchParams.get("topic");
-  var collageURL = url.searchParams.get("collageURL");
-  
+  var collageURL = url.searchParams.get("collageURL");  
   
   //New Collage as a DOM element
   var newCollageToDisplay = document.createElement("IMG");
@@ -45,26 +44,6 @@ window.onload = function initialCollage(){
   }
   else{
     mainCollage.style.background = "url('" + newCollage.src + "')";
-    mainCollage.style.backgroundRepeat = "no-repeat";
-    mainCollage.style.backgroundSize = "cover";
-  }
-}
-
-
-function newCollage(){
-  var mainCollage = document.getElementById("main_collage");
-  var topicHeader = document.getElementById("topic");
-  var firstImage = document.getElementById("history").children[0];
-  firstImage.style.display = "none";
-  currentCollage = firstImage;
-
-  topicHeader.innerHTML = "Collage for Topic " + firstImage.alt;
-  if(firstImage.src == null || firstImage.src == ""){
-    currentCollage = null;
-    displayError();
-  }
-  else{
-    mainCollage.style.background = "url('" + firstImage.src + "')";
     mainCollage.style.backgroundRepeat = "no-repeat";
     mainCollage.style.backgroundSize = "cover";
   }
@@ -141,10 +120,42 @@ function buildAnotherCollage(){
   xHttp.send();
   xHttp.onreadystatechange = function() {
 	  collageURL = this.responseText;
-	  window.location="collage.html?topic=" + topic + "&collageURL=" + collageURL;
+	  displayNewCollage(collageURL);
   }
+}
+
+function displayNewCollage(collageURL){
+  var mainCollage = document.getElementById("main_collage");
+  var topicHeader = document.getElementById("topic");
+
+  //New Collage as a DOM element
+  var newCollageToDisplay = document.createElement("IMG");
+  newCollageToDisplay.setAttribute("src", collageURL);
+  newCollageToDisplay.setAttribute("alt", topic);
+  newCollageToDisplay.setAttribute("id", 10);
+  newCollageToDisplay.setAttribute("onclick", "toggleCollage(event)");
+
+  var historyBar = document.getElementById("history");
+  historyBar.appendChild(newCollageToDisplay);
+  var newCollage = document.getElementById("history").children[document.getElementById("history").children.length - 1];
+
+  newCollage.style.display = "none";
+  currentCollage = newCollage;
+
   
-  
+  firstImage.style.display = "none";
+  currentCollage = firstImage;
+
+  topicHeader.innerHTML = "Collage for Topic " + firstImage.alt;
+  if(firstImage.src == null || firstImage.src == ""){
+    currentCollage = null;
+    displayError();
+  }
+  else{
+    mainCollage.style.background = "url('" + firstImage.src + "')";
+    mainCollage.style.backgroundRepeat = "no-repeat";
+    mainCollage.style.backgroundSize = "cover";
+  }
 }
 
 

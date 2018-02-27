@@ -29,7 +29,6 @@ function buildCollage(){
 	xHttp.onreadystatechange = function() {
 		collageURL = this.responseText;
 		window.location="collage.html?topic=" + topic + "&collageURL=" + collageURL;
-
 	}
 	
 
