@@ -13,6 +13,6 @@ function buildCollage(){
 	var title = document.getElementById("text_input").value;
 	window.location="collage.html?title=" + title;
 	var xHttp = new XMLHttpRequest();
-	xHttp.open("GET", "BuildCollage?title="+title, false);
+	xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=true", false);
 	xHttp.send();
 }

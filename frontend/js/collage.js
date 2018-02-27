@@ -36,12 +36,12 @@ function buildAnotherCollage(){
   topicHeader.innerHTML = "Collage for Topic " + title;
   //need to change mainCollage
   var xHttp = new XMLHttpRequest();
-  xHttp.open("GET", "BuildCollage?title="+title, false);
+  xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=true", false);
   xHttp.send();
 }
 
 function exportCollage(){
 	var xHttp = new XMLHttpRequest();
-	xHttp.open("GET", "ExportCollage", false);
+	xHttp.open("GET", "CollageGeneratorServlet?action=download"+"&url="+e.target.src+"&newUser=false", false);
 	xHttp.send();
 }
