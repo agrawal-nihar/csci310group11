@@ -1,8 +1,12 @@
 package csci310group11.Implementation;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -14,7 +18,6 @@ import com.google.api.services.customsearch.model.Result.Image;
 import com.google.api.services.customsearch.model.Search;
 
 public class GoogleCustomSearchApi implements Api {
-		
 		public List<BufferedImage> execute(String query) throws InsufficientImagesFoundError {
 			Customsearch cs = null;
 
@@ -42,6 +45,7 @@ public class GoogleCustomSearchApi implements Api {
 				list.setCx(SEARCH_ENGINE_ID);
 				list.setImgSize(IMAGE_SIZE);
 				list.setSearchType(SEARCH_TYPE);
+				list.setFileType(FILE_TYPE);
 				for(int i = 0; i < 3; i++) {
 					list.setStart((long) (i+1));
 					Search results = list.execute();
@@ -57,12 +61,20 @@ public class GoogleCustomSearchApi implements Api {
 			}
 			
 			List<BufferedImage> images = new ArrayList<BufferedImage>();
-			
-			for(Result r : rs) {
-				Image i = r.getImage();
-				images.add(new BufferedImage(i.getWidth(), i.getHeight(), BufferedImage.TYPE_INT_RGB));
+
+			try {
+				for(Result r : rs) {
+					URL url = new URL(r.getLink());
+					BufferedImage bf = ImageIO.read(url);
+					images.add(bf);
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
 			}
+			
+			
 			
 			return images;
 		}
+		
 }
