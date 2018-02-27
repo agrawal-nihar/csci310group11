@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -20,7 +21,7 @@ public class CollageGenerator {
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
-		this.api = new GoogleCustomSearchApi();
+//		this.api = new GoogleCustomSearchApi();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 	}
 
@@ -37,21 +38,25 @@ public class CollageGenerator {
 	 * @return URL of the collage on the server's storage system
 	 */
 	public String collageGeneratorDriver(String topic) {
-		try {
-			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
-			System.out.println("After images API Call");
-		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
-			System.out.println("iife: " + iife.getMessage());
-			return null;
-		}
-
-		this.resizeImages();
-		this.addBorderToImages();
-		this.compileCollage();
-
-		Collage collage = new Collage(this.collageImage, topic);
+//		try {
+//			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
+//			System.out.println("After images API Call");
+//		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
+//			System.out.println("iife: " + iife.getMessage());
+//			return null;
+//		}
+//
+//		this.resizeImages();
+//		this.addBorderToImages();
+//		this.compileCollage();
+//
+//		Collage collage = new Collage(this.collageImage, topic);
 		
-		return this.downloadCollage(collage);
+		Collage collage = null;
+		
+		//NIHAR --
+		String returnURL = downloadCollage(collage);
+		return returnURL;
 	}
 
 	/**
@@ -188,27 +193,53 @@ public class CollageGenerator {
 	 * @param collage the Collage object to be saved
 	 * @param filename the String containing the location of the file
 	 */
-	private String downloadCollage(Collage collage) {
-		String filename = "";
-		BufferedImage image = collage.getCollageImage();
+	
+	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 
+	private String downloadCollage(Collage collage) {
+//		String filename = "";
+//		BufferedImage image = collage.getCollageImage();
+		String webContentUrl = "";
+		String partialWebContentUrl = "";
 		try {
+			//just for testing purposes: read an image from the Internet to fill TMP DIR
+			BufferedImage image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
+	
+			
 			//get destination path in assets folder of server
 			File assetsDirectory = new File(System.getProperty("user.dir") + "/WebContent/assets");
 			assetsDirectory.mkdir(); //no exception if directory already exists
 			
-			filename += System.getProperty("user.dir") + "/WebContent/assets/"; //current system context path
-			filename += collage.getTopic();
+			webContentUrl = System.getProperty("user.dir") + "/WebContent"; //current system context path
+			partialWebContentUrl = "/assets/birds";
+			partialWebContentUrl += System.currentTimeMillis() + ".png";    
+			webContentUrl += partialWebContentUrl;
+
+			File webContentUrlFile = new File(webContentUrl);
+			ImageIO.write(image, "png", webContentUrlFile);
+			System.out.println("After download colalge method TO WEB CONTENT");
+			
+			//DOWNLOAD TO TOMCAT TMP DIRECTORY
+
+			//NEW CODE WITH TMP DIR
+			String filename = TMP_DIR; 
+
+			System.out.println("In downloadCollageMethod");
+			
+//			filename += collage.getTopic();
+			filename += "birds";
+			
 			filename += System.currentTimeMillis() + ".png";    
 			File outputFile = new File(filename);
 			ImageIO.write(image, "png", outputFile);
-			
+			System.out.println("After download colalge method");
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		return filename;
+		return partialWebContentUrl;
 	}
 	
 }

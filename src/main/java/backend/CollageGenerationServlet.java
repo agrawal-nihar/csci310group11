@@ -35,7 +35,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		//Verify user is valid user
 
 		Boolean newUser = checkNewUser(request);
-//		collageGenerator = new CollageGenerator();
+		collageGenerator = new CollageGenerator();
 		System.out.println("After collageGenerator");
 
 		//Determine which action was requested in the HttpServletRequest object
@@ -51,16 +51,13 @@ public class CollageGenerationServlet extends HttpServlet {
 			String topic = request.getParameter("topic");
 			if (topic != null) {
 				
-				String url = "assets/DOG1519722937895.png";
-//				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
+//				String url = "assets/DOG1519722937895.png";
+				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
 				System.out.println("URL Printed: " + url);
 
 //				String url = "brain.png"; 
 
-				//for testing
-				responseUrl.print(url);	
-				
-				System.out.println("URL PRINTED TO FRONTEND: " + responseUrl.toString() );
+				responseUrl.print(url);					
 				responseUrl.flush();
 			}
 			
@@ -70,6 +67,11 @@ public class CollageGenerationServlet extends HttpServlet {
 		else if (action.equals(Constants.DOWNLOAD_ACTION)) {
 			System.out.println("IN COLLAGE GENERATION SERVLET's DOWNLOAD ACTION");
 			String url = request.getParameter(Constants.URL);
+			
+			//NEW
+			url = parseTmpDirUrl(url);
+			
+			
 			System.out.println("Received " + url + " in this method");
 
 			if (url != null) {
@@ -108,6 +110,23 @@ public class CollageGenerationServlet extends HttpServlet {
 		
 	}
 	
+	private String parseTmpDirUrl(String url) {
+		int startOfRealUrlString = 0;
+		System.out.println("Substrings");
+		for (int i = 0; i < url.length() - 3; i++) {
+//			System.out.println(url.substring(i, i + 2));
+			if (url.substring(i, i + 3).equals("/T/")) {
+				startOfRealUrlString = i + 3;
+				break;
+			}
+		}
+		
+//		System.out.println("Index of start of real url string " + startOfRealUrlString);
+		String realUrlString = url.substring(startOfRealUrlString, url.length() );
+//		System.out.println("Real URL String: " + realUrlString);
+		return realUrlString;
+	}
+	
 	/*
 	 * This fucntion allow users to download the collage to their storage. It will download to their Downloads directory
 	 * The downloaded collage will be in png file and the name of the file will be based on the time it was downloaded.
@@ -117,20 +136,47 @@ public class CollageGenerationServlet extends HttpServlet {
 
 	private void downloadCollageToUserStorage(HttpServletRequest request, HttpServletResponse response, String url) throws IOException, ServletException
 	{
-		BufferedImage bufferedImage = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
 		
-		File assetsDirectory = new File(TMP_DIR + "");
-		assetsDirectory.mkdir(); //no exception if directory already exists
+		//just for testing purposes: read an image from the Internet to fill TMP DIR
+//		BufferedImage bufferedImage = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
 		
-		String filename = TMP_DIR; //current system context path
-		filename += "TestTopic";
-		filename += System.currentTimeMillis() + ".png";    
-		File outputFile = new File(filename);
-		ImageIO.write(bufferedImage, "png", outputFile);
+		//get TMP DIR
+//		File assetsDirectory = new File(TMP_DIR + "");
+//		assetsDirectory.mkdir(); //no exception if directory already exists
 		
+//		String filename = TMP_DIR; 
+//		filename += "TestTopic";
+//		filename += System.currentTimeMillis() + ".png";    
+//		File outputFile = new File(filename);
+//		ImageIO.write(bufferedImage, "png", outputFile);
+		
+		//READ URl and PARSE
+    String rawUrl = request.getParameter("url");
+    String parsedUrl = parseTmpDirUrl(rawUrl);
+		System.out.println("Parsed URL: " + parsedUrl);
+		
+		//FOR TESTING ---
+    File retrievedFile = null;
+		System.out.println("ALl files in TMP DIR");
+    File curDir = new File(TMP_DIR);
+    File[] filesList = curDir.listFiles();
+    for(File f : filesList){
+        if(f.isFile()){
+            System.out.println(f.getName());
+            if (f.getName().equals(parsedUrl)) {
+            		System.out.println("FOUND");
+            		retrievedFile = f;
+            }
+        }
+    }
+    
 		//read from TMP DIR
-		BufferedImage retrievedImage = ImageIO.read(new File(filename));
-		File downloads = new File(System.getProperty("user.home") + "/Downloads/imageRetrievedTest");
+		String filename = TMP_DIR + parsedUrl;
+		System.out.println("RECEIVED FILE NAME:" + parsedUrl);
+
+		
+		BufferedImage retrievedImage = ImageIO.read(retrievedFile);
+		File downloads = new File(System.getProperty("user.home") + "/Downloads/" + url);
 		ImageIO.write(retrievedImage, "png", downloads);
 
 		

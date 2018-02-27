@@ -36,7 +36,7 @@ window.onload = function initialCollage(){
   historyBar.appendChild(newCollageToDisplay);
   var newCollage = document.getElementById("history").children[document.getElementById("history").children.length - 1];
 
-  newCollage.style.display = "none";
+  //newCollage.style.display = "none";
   currentCollage = newCollage;
 
   topicHeader.innerHTML = "Collage for Topic " + topic;
@@ -45,7 +45,7 @@ window.onload = function initialCollage(){
     displayError();
   }
   else{
-    mainCollage.style.background = "url('" + newCollage.src + "')";
+    mainCollage.style.background = collageURL;
     mainCollage.style.backgroundRepeat = "no-repeat";
     mainCollage.style.backgroundSize = "cover";
   }
@@ -115,13 +115,15 @@ function buildAnotherCollage(){
   
   //need to change mainCollage
   var xHttp = new XMLHttpRequest();
-  xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=false", false);
+  xHttp.open("GET", "CollageGeneratorServlet?action=build&topic="+topic+"&newUser=false", true);
   /* build new collage here */
   /* basically what will happen is upon retrieval, we will make a new image child under the history bar */
   /* after making a new child, we will append call the newCollage method */
   xHttp.send();
   xHttp.onreadystatechange = function() {
 	  collageURL = this.responseText;
+	  console.log("BUILD ANOTHER COLLAGE URL");
+	  console.log(collageURL);
 	  displayNewCollage(collageURL);
   }
 }
@@ -144,17 +146,16 @@ function displayNewCollage(collageURL){
   newCollage.style.display = "none";
   currentCollage = newCollage;
 
-  
-  firstImage.style.display = "none";
-  currentCollage = firstImage;
+//  firstImage.style.display = "none";
+//  currentCollage = firstImage;
 
-  topicHeader.innerHTML = "Collage for Topic " + firstImage.alt;
-  if(firstImage.src == null || firstImage.src == ""){
+  topicHeader.innerHTML = "Collage for Topic " + currentCollage.alt;
+  if(currentCollage.src == null || currentCollage.src == ""){
     currentCollage = null;
     displayError();
   }
   else{
-    mainCollage.style.background = "url('" + firstImage.src + "')";
+    mainCollage.style.background = "url('" + currentCollage.src + "')";
     mainCollage.style.backgroundRepeat = "no-repeat";
     mainCollage.style.backgroundSize = "cover";
   }
@@ -170,9 +171,9 @@ function exportCollage() {
 	console.log("Main collage URL");
 	
 	//Parses the background to extract just the server destination of the file
-	var mainCollageUrl = mainCollage.style.background.substring(42, mainCollage.style.background.length-26);
+	var mainCollageUrl = mainCollage.style.background.substring(49, mainCollage.style.background.length-26);
 	console.log(mainCollageUrl); //in the format of assets/DOGXXXX.png
-	var urlToSend = "/WebContent/" + mainCollageUrl;
+	var urlToSend =  mainCollageUrl;
 	console.log("Collage URL to send to backend");
 	console.log(urlToSend);
 
