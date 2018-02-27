@@ -11,39 +11,39 @@
 // }
 
 var currentCollage = null;
-
 /*testing with dummy response image for correct toggling behavior */
 
 window.onload = function initialCollage(){
-	 var mainCollage = document.getElementById("main_collage");
-	 var topicHeader = document.getElementById("topic");
-	 
-	//  var firstImage = document.getElementById("history").children[0];
-	 var url_string = window.location.href;
-	 var url = new URL(url_string);
-	 var topic = url.searchParams.get("title");
-	 
-	 firstImage.style.display = "none";
-	 currentCollage = img1;
+  var mainCollage = document.getElementById("main_collage");
+  var topicHeader = document.getElementById("topic");
+  var firstImage = document.getElementById("history").children[0];
+  
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  var topic = url.searchParams.get("title");
+  
+  firstImage.style.display = "none";
+  currentCollage = firstImage;
 
-	 topicHeader.innerHTML = "Collage for Topic " + topic;
-	 if(firstImage.src == null || firstImage.src == ""){
-	   currentCollage = null;
-	   displayError();
-	 }
-	 else{
-	   mainCollage.style.background = "url('" + img1.src + "')";
-	   mainCollage.style.backgroundRepeat = "no-repeat";
-	   mainCollage.style.backgroundSize = "cover";
-	 }
-	}
+  topicHeader.innerHTML = "Collage for Topic " + topic;
+  if(firstImage.src == null || firstImage.src == ""){
+    currentCollage = null;
+    displayError();
+  }
+  else{
+    mainCollage.style.background = "url('" + firstImage.src + "')";
+    mainCollage.style.backgroundRepeat = "no-repeat";
+    mainCollage.style.backgroundSize = "cover";
+  }
+}
+
 
 function newCollage(){
   var mainCollage = document.getElementById("main_collage");
   var topicHeader = document.getElementById("topic");
   var firstImage = document.getElementById("history").children[0];
   firstImage.style.display = "none";
-  currentCollage = img1;
+  currentCollage = firstImage;
 
   topicHeader.innerHTML = "Collage for Topic " + firstImage.alt;
   if(firstImage.src == null || firstImage.src == ""){
@@ -51,7 +51,7 @@ function newCollage(){
     displayError();
   }
   else{
-    mainCollage.style.background = "url('" + img1.src + "')";
+    mainCollage.style.background = "url('" + firstImage.src + "')";
     mainCollage.style.backgroundRepeat = "no-repeat";
     mainCollage.style.backgroundSize = "cover";
   }
