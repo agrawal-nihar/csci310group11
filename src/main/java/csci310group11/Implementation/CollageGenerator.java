@@ -1,13 +1,15 @@
 package csci310group11.Implementation;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.io.IOException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -194,7 +196,7 @@ public class CollageGenerator {
 	private String downloadCollage(Collage collage) {
 		String filename = "";
 		BufferedImage image = collage.getCollageImage();
-	
+
 		try {
 			//get destination path in assets folder of server
 			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
@@ -213,4 +215,5 @@ public class CollageGenerator {
 		
 		return filename;
 	}
+	
 }
