@@ -16,22 +16,35 @@ var currentCollage = null;
 window.onload = function initialCollage(){
   var mainCollage = document.getElementById("main_collage");
   var topicHeader = document.getElementById("topic");
-  var firstImage = document.getElementById("history").children[0];
   
+  //extract collageURL and topic from the URL of the page
   var url_string = window.location.href;
   var url = new URL(url_string);
-  var topic = url.searchParams.get("title");
+  var topic = url.searchParams.get("topic");
+  var collageURL = url.searchParams.get("collageURL");
   
-  firstImage.style.display = "none";
-  currentCollage = firstImage;
+  
+  //New Collage as a DOM element
+  var newCollageToDisplay = document.createElement("IMG");
+  newCollageToDisplay.setAttribute("src", collageURL);
+  newCollageToDisplay.setAttribute("alt", topic);
+  newCollageToDisplay.setAttribute("id", 10);
+  newCollageToDisplay.setAttribute("onclick", "toggleCollage(event)");
+
+  var historyBar = document.getElementById("history");
+  historyBar.appendChild(newCollageToDisplay);
+  var newCollage = document.getElementById("history").children[document.getElementById("history").children.length - 1];
+
+  newCollage.style.display = "none";
+  currentCollage = newCollage;
 
   topicHeader.innerHTML = "Collage for Topic " + topic;
-  if(firstImage.src == null || firstImage.src == ""){
+  if(newCollage.src == null || newCollage.src == ""){
     currentCollage = null;
     displayError();
   }
   else{
-    mainCollage.style.background = "url('" + firstImage.src + "')";
+    mainCollage.style.background = "url('" + newCollage.src + "')";
     mainCollage.style.backgroundRepeat = "no-repeat";
     mainCollage.style.backgroundSize = "cover";
   }
