@@ -9,6 +9,8 @@ public interface Api {
 	
 	static final String GOOGLE_API_KEY = "AIzaSyCXbP7Ick0SwIKrkzhe8veZdFyaOGzXW8U";
 	static final String SEARCH_ENGINE_ID = "014013525301963847978:symg0aqu3ti";
+	
+	static final String FILE_TYPE = ".png";
 	/**
 	 * "huge": huge 
 	 * "icon": icon 

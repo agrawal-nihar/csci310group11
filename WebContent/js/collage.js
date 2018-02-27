@@ -37,6 +37,7 @@ window.onload = function initialCollage(){
   }
 }
 
+
 function newCollage(){
   var mainCollage = document.getElementById("main_collage");
   var topicHeader = document.getElementById("topic");
