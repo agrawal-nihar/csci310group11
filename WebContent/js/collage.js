@@ -25,6 +25,8 @@ window.onload = function initialCollage(){
   
   //New Collage as a DOM element
   var newCollageToDisplay = document.createElement("IMG");
+  console.log("Collage URL");
+  console.log(collageURL);
   newCollageToDisplay.setAttribute("src", collageURL);
   newCollageToDisplay.setAttribute("alt", topic);
   newCollageToDisplay.setAttribute("id", 10);
@@ -163,8 +165,18 @@ function displayNewCollage(collageURL){
  * This function allow users to download the current collage displayed onto their storage. 
  * It would send the signal back to servlet to trigger the downloadCollageToUserStorage.
  */
-function exportCollage(){
+function exportCollage() {
+	var mainCollage = document.getElementById("main_collage");
+	console.log("Main collage URL");
+	
+	//Parses the background to extract just the server destination of the file
+	var mainCollageUrl = mainCollage.style.background.substring(42, mainCollage.style.background.length-26);
+	console.log(mainCollageUrl); //in the format of assets/DOGXXXX.png
+	var urlToSend = "/WebContent/" + mainCollageUrl;
+	console.log("Collage URL to send to backend");
+	console.log(urlToSend);
+
 	var xHttp = new XMLHttpRequest();
-	xHttp.open("GET", "CollageGeneratorServlet?action=download" + "&url=" + e.target.src + "&newUser=false", false);
+	xHttp.open("GET", "CollageGeneratorServlet?action=download" + "&url=" + mainCollageUrl + "&newUser=false", false);
 	xHttp.send();
 }

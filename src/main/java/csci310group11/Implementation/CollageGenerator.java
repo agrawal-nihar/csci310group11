@@ -39,6 +39,7 @@ public class CollageGenerator {
 	public String collageGeneratorDriver(String topic) {
 		try {
 			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
+			System.out.println("After images API Call");
 		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
 			System.out.println("iife: " + iife.getMessage());
 			return null;
@@ -193,10 +194,10 @@ public class CollageGenerator {
 
 		try {
 			//get destination path in assets folder of server
-			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
+			File assetsDirectory = new File(System.getProperty("user.dir") + "/WebContent/assets");
 			assetsDirectory.mkdir(); //no exception if directory already exists
 			
-			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
+			filename += System.getProperty("user.dir") + "/WebContent/assets/"; //current system context path
 			filename += collage.getTopic();
 			filename += System.currentTimeMillis() + ".png";    
 			File outputFile = new File(filename);

@@ -1,7 +1,6 @@
 package csci310group11.Implementation;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.customsearch.Customsearch;
 import com.google.api.services.customsearch.model.Result;
-import com.google.api.services.customsearch.model.Result.Image;
 import com.google.api.services.customsearch.model.Search;
 
 public class GoogleCustomSearchApi implements Api {
@@ -67,6 +65,7 @@ public class GoogleCustomSearchApi implements Api {
 					URL url = new URL(r.getLink());
 					BufferedImage bf = ImageIO.read(url);
 					images.add(bf);
+					System.out.println("line 69");
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
