@@ -13,6 +13,7 @@
 var currentCollage = null;
 
 /*testing with dummy response image for correct toggling behavior */
+
 window.onload = function initialCollage(){
   var mainCollage = document.getElementById("main_collage");
   var topicHeader = document.getElementById("topic");
@@ -51,6 +52,11 @@ function newCollage(){
   }
 }
 
+/*
+ * This function changes the content of collage.html whenever the user clicks one of the previous collage
+ * inside of history bar. It will change the main collage image to the collage that user pressed and it would
+ * also change the title of the page.
+ */
 function toggleCollage(e){
   var topicHeader = document.getElementById("topic");
   var mainCollage = document.getElementById("main_collage");
@@ -79,6 +85,7 @@ function hideCurrentCollageThumbnail(){
 }
 
 /* if input text box is empty, "build collage" button is disabled */
+
 function handleDisable(){
   var button = document.getElementById("build");
   var inputText = document.getElementById("text_input");
@@ -101,6 +108,7 @@ function hideError(){
 }
 
 /*sending get request to backend */
+
 function buildAnotherCollage(){
   var title = document.getElementById("text_input").value;
   var topicHeader = document.getElementById("topic");
@@ -114,6 +122,11 @@ function buildAnotherCollage(){
   xHttp.send();
 }
 
+
+/*
+ * This function allow users to download the current collage displayed onto their storage. 
+ * It would send the signal back to servlet to trigger the downloadCollageToUserStorage.
+ */
 function exportCollage(){
 	var xHttp = new XMLHttpRequest();
 	xHttp.open("GET", "ExportCollage", false);
