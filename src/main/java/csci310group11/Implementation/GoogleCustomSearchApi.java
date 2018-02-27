@@ -41,13 +41,14 @@ public class GoogleCustomSearchApi implements Api {
 			List<Result> rs = new ArrayList<Result>();
 			try {
 				Customsearch.Cse.List list = cs.cse().list(query);
-				list.setKey(GOOGLE_API_KEY);
-				list.setCx(SEARCH_ENGINE_ID);
-				list.setImgSize(IMAGE_SIZE);
-				list.setSearchType(SEARCH_TYPE);
-				list.setFileType(FILE_TYPE);
 				for(int i = 0; i < 3; i++) {
-					list.setStart((long) (i+1));
+					list.setKey(GOOGLE_API_KEY);
+					list.setCx(SEARCH_ENGINE_ID);
+					list.setImgSize(IMAGE_SIZE);
+					list.setSearchType(SEARCH_TYPE);
+					list.setFileType(FILE_TYPE);
+					
+					list.setStart((long) (i+1) * 10);
 					Search results = list.execute();
 					rs.addAll(results.getItems());
 				}
@@ -71,9 +72,6 @@ public class GoogleCustomSearchApi implements Api {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-			
-			
-			
 			return images;
 		}
 		
