@@ -2,16 +2,21 @@ package backend;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.URL;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.codec.binary.Base64;
 
 import csci310group11.Implementation.CollageGenerator;
 
@@ -23,7 +28,7 @@ public class CollageGenerationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private CollageGenerator collageGenerator; //not static, change from DESIGN
-	
+	private HashMap<String, BufferedImage> allCollages = new HashMap<String, BufferedImage>();
 	/*
 	 * This servlet will be called whenever the user clicks a any of button in our frontend pages. Depends on what time of
 	 * button it is, it will execute different code based on it. One option is to generate a new collage by calling CollageGenerator
@@ -52,11 +57,10 @@ public class CollageGenerationServlet extends HttpServlet {
 			if (topic != null) {
 				
 //				String url = "assets/DOG1519722937895.png";
-				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
+				String url = collageGenerator.collageGeneratorDriver(topic, allCollages); //should return the URL ADD BACK IN
 				System.out.println("URL Printed: " + url);
 
 //				String url = "brain.png"; 
-
 				responseUrl.print(url);					
 				responseUrl.flush();
 			}
@@ -69,13 +73,30 @@ public class CollageGenerationServlet extends HttpServlet {
 			String url = request.getParameter(Constants.URL);
 			
 			//NEW
-			url = parseTmpDirUrl(url);
-			
-			
+			//url = parseTmpDirUrl(url);
 			System.out.println("Received " + url + " in this method");
 
+//			File downloads = new File(System.getProperty("user.home") + "/Downloads/" + url);
+			
+			//reencode URL
+			
+			//parse URL
+			url = url.substring(beginIndex)
+      byte[] imageBase64String = Base64.encodeBase64(url.getBytes());
+			byte[] data = Base64.decodeBase64(imageBase64String);
+			try {
+					OutputStream stream = new FileOutputStream(System.getProperty("user.home") + "/Downloads/downloadedCollage.png");
+			    stream.write(data);
+			}
+			catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			
+//			ImageIO.write(retrievedImage, "png", downloads);
+			
+
 			if (url != null) {
-				downloadCollageToUserStorage(request, response, url); 
+//				downloadCollageToUserStorage(request, response, url); 
 			}
 		}
 	} //end of service method
@@ -110,22 +131,23 @@ public class CollageGenerationServlet extends HttpServlet {
 		
 	}
 	
-	private String parseTmpDirUrl(String url) {
-		int startOfRealUrlString = 0;
-		System.out.println("Substrings");
-		for (int i = 0; i < url.length() - 3; i++) {
-//			System.out.println(url.substring(i, i + 2));
-			if (url.substring(i, i + 3).equals("/T/")) {
-				startOfRealUrlString = i + 3;
-				break;
-			}
-		}
+//	private String parseTmpDirUrl(String url) {
+//		int startOfRealUrlString = 0;
+//		System.out.println("Substrings");
+//		for (int i = 0; i < url.length() - 3; i++) {
+////			System.out.println(url.substring(i, i + 2));
+//			if (url.substring(i, i + 6).equals("/assets/")) {
+//				startOfRealUrlString = i + 6;
+//				break;
+//			}
+//		}
 		
 //		System.out.println("Index of start of real url string " + startOfRealUrlString);
-		String realUrlString = url.substring(startOfRealUrlString, url.length() );
-//		System.out.println("Real URL String: " + realUrlString);
-		return realUrlString;
-	}
+//		String realUrlString = url.substring(startOfRealUrlString, url.length() );
+	
+////		System.out.println("Real URL String: " + realUrlString);
+//		return realUrlString;
+//	}
 	
 	/*
 	 * This fucntion allow users to download the collage to their storage. It will download to their Downloads directory
@@ -136,14 +158,23 @@ public class CollageGenerationServlet extends HttpServlet {
 
 	private void downloadCollageToUserStorage(HttpServletRequest request, HttpServletResponse response, String url) throws IOException, ServletException
 	{
+		System.out.println("Request servlet context" + request.getServletContext().getContextPath());
+		System.out.println("URL received in downloadCollageToUserStorage():" + url);
 		
 		//just for testing purposes: read an image from the Internet to fill TMP DIR
 //		BufferedImage bufferedImage = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
 		
 		//get TMP DIR
-//		File assetsDirectory = new File(TMP_DIR + "");
-//		assetsDirectory.mkdir(); //no exception if directory already exists
-		
+		String filePath = getServletConfig().getServletContext().getRealPath("/assets");   
+		File assetsDirectory = new File(filePath);
+		assetsDirectory.mkdir(); //no exception if directory already exists
+    System.out.println(String.format("ASSETS DIRECTORY File: %s", assetsDirectory.getAbsolutePath()));
+    
+    
+    File folder = (File) getServletContext().getAttribute(ServletContext.TEMPDIR);
+    File result = new File(folder, url);
+    
+    
 //		String filename = TMP_DIR; 
 //		filename += "TestTopic";
 //		filename += System.currentTimeMillis() + ".png";    
@@ -152,7 +183,8 @@ public class CollageGenerationServlet extends HttpServlet {
 		
 		//READ URl and PARSE
     String rawUrl = request.getParameter("url");
-    String parsedUrl = parseTmpDirUrl(rawUrl);
+//    String parsedUrl = parseTmpDirUrl(rawUrl);
+    String parsedUrl = rawUrl;
 		System.out.println("Parsed URL: " + parsedUrl);
 		
 		//FOR TESTING ---
@@ -162,7 +194,7 @@ public class CollageGenerationServlet extends HttpServlet {
     File[] filesList = curDir.listFiles();
     for(File f : filesList){
         if(f.isFile()){
-            System.out.println(f.getName());
+//            System.out.println(f.getName());
             if (f.getName().equals(parsedUrl)) {
             		System.out.println("FOUND");
             		retrievedFile = f;

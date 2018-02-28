@@ -28,7 +28,8 @@ function buildCollage(){
 	xHttp.send();
 	xHttp.onreadystatechange = function() {
 		collageURL = this.responseText;
-		window.location="collage.html?topic=" + topic + "&collageURL=" + collageURL;
+		sessionStorage.setItem("collageURL", collageURL);
+		window.location="collage.html?topic=" + topic ; //DELETED COLLAGE URL
 	}
 	
 

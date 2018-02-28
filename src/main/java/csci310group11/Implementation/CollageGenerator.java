@@ -5,11 +5,17 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+
 
 public class CollageGenerator {
 
@@ -21,7 +27,6 @@ public class CollageGenerator {
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
-//		this.api = new GoogleCustomSearchApi();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 	}
 
@@ -37,7 +42,7 @@ public class CollageGenerator {
 	 * @param topic the String of terms inputted by the user; this will be passed to the API to make th search
 	 * @return URL of the collage on the server's storage system
 	 */
-	public String collageGeneratorDriver(String topic) {
+	public String collageGeneratorDriver(String topic, HashMap<String, BufferedImage> allCollages) {
 //		try {
 //			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
 //			System.out.println("After images API Call");
@@ -55,7 +60,8 @@ public class CollageGenerator {
 		Collage collage = null;
 		
 		//NIHAR --
-		String returnURL = downloadCollage(collage);
+		String returnURL = downloadCollage(collage, allCollages);
+//		allCollages.put(returnURL, collage.getCollageImage());
 		return returnURL;
 	}
 
@@ -196,50 +202,98 @@ public class CollageGenerator {
 	
 	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 
-	private String downloadCollage(Collage collage) {
+	private String downloadCollage(Collage collage, HashMap<String, BufferedImage> allCollages) {
 //		String filename = "";
 //		BufferedImage image = collage.getCollageImage();
 		String webContentUrl = "";
 		String partialWebContentUrl = "";
+		BufferedImage image = null;
+		String filename = null;
+		String returnUrl = "";
 		try {
 			//just for testing purposes: read an image from the Internet to fill TMP DIR
-			BufferedImage image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
+			image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
 	
 			
 			//get destination path in assets folder of server
-			File assetsDirectory = new File(System.getProperty("user.dir") + "/WebContent/assets");
-			assetsDirectory.mkdir(); //no exception if directory already exists
+//			File assetsDirectory = new File("../WebContent/assets");
+//			System.out.println("Assets Direcotry File path: " + assetsDirectory.getAbsolutePath());
+//			assetsDirectory.mkdir(); //no exception if directory already exists
+//			System.out.println("Created assets directory");
 			
-			webContentUrl = System.getProperty("user.dir") + "/WebContent"; //current system context path
-			partialWebContentUrl = "/assets/birds";
-			partialWebContentUrl += System.currentTimeMillis() + ".png";    
-			webContentUrl += partialWebContentUrl;
-
-			File webContentUrlFile = new File(webContentUrl);
-			ImageIO.write(image, "png", webContentUrlFile);
-			System.out.println("After download colalge method TO WEB CONTENT");
+//			webContentUrl = ""; //current system context path
+//			partialWebContentUrl = "assets/birds";
+//			partialWebContentUrl += System.currentTimeMillis() + ".png";    
+////			webContentUrl += partialWebContentUrl;
+//
+//			webContentUrl = partialWebContentUrl;
+//			System.out.println("WebContentUrl: " + webContentUrl);
+//			File webContentUrlFile = new File(webContentUrl);
+//			ImageIO.write(image, "png", webContentUrlFile);
+//			System.out.println("Downloaded collage at: " + webContentUrlFile.getPath());
+			
+			
+//			filename = "";
+//			//BufferedImage image = collage.getCollageImage();
+//		
+//			//get destination path in assets folder of server
+//			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
+//			assetsDirectory.mkdir(); //no exception if directory already exists
+//			
+//			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
+//			filename += "topicName";
+//			filename += System.currentTimeMillis() + ".png";    
+//			File outputFileForFrontend = new File(filename);
+//			ImageIO.write(image, "png", outputFileForFrontend);
+//				
+//			returnUrl = filename;
+			
+			
+			
+			
 			
 			//DOWNLOAD TO TOMCAT TMP DIRECTORY
 
 			//NEW CODE WITH TMP DIR
-			String filename = TMP_DIR; 
-
-			System.out.println("In downloadCollageMethod");
-			
-//			filename += collage.getTopic();
-			filename += "birds";
-			
-			filename += System.currentTimeMillis() + ".png";    
-			File outputFile = new File(filename);
-			ImageIO.write(image, "png", outputFile);
-			System.out.println("After download colalge method");
-
+//			filename = TMP_DIR; 
+//
+//			System.out.println("In downloadCollageMethod");
+//			
+////			filename += collage.getTopic();
+//			filename += "birds";
+//			
+//			filename += System.currentTimeMillis() + ".png";    
+//			File outputFile = new File(filename);
+//			ImageIO.write(image, "png", outputFile);
+//			System.out.println("After download colalge method");
+//
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		return partialWebContentUrl;
+		
+		returnUrl = imgToBase64String(image, "png");
+		System.out.println("Base 64 string for image: " + returnUrl);
+		allCollages.put(returnUrl, image);
+		return returnUrl;
+	}
+	
+	//from stack overflow
+	private static String imgToBase64String(BufferedImage img, final String formatName)
+	{
+	  final ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+	  try
+	  {
+	    ImageIO.write(img, formatName, os);
+	    System.out.println("Base 64 image in helper method: " + Base64.getEncoder().encodeToString(os.toByteArray()));
+	    return Base64.getEncoder().encodeToString(os.toByteArray());
+	  }
+	  catch (final IOException ioe)
+	  {
+	    throw new UncheckedIOException(ioe);
+	  }
 	}
 	
 }
