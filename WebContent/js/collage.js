@@ -11,7 +11,7 @@
 // }
 
 var currentCollage = 0;
-
+var idCounter = 0;
 /*testing with dummy response image for correct toggling behavior */
 
 window.onload = function initialCollage(){
@@ -22,7 +22,9 @@ window.onload = function initialCollage(){
   var url_string = window.location.href;
   var url = new URL(url_string);
   var topic = url.searchParams.get("topic");
+
   var collageURL = sessionStorage.getItem("collageURL");
+idCounter++;
   
   //New Collage as a DOM element
   var newCollageToDisplay = document.createElement("IMG");
@@ -36,23 +38,25 @@ window.onload = function initialCollage(){
   
   newCollageToDisplay.setAttribute("src", collageURL);
   newCollageToDisplay.setAttribute("alt", topic);
-  newCollageToDisplay.setAttribute("id", 0);
+  newCollageToDisplay.setAttribute("id", idCounter);
+
+
+
   newCollageToDisplay.setAttribute("onclick", "toggleCollage(event)");
 
   var historyBar = document.getElementById("history");
-  historyBar.appendChild(newCollageToDisplay);
-  var newCollage = document.getElementById("history").children[document.getElementById("history").children.length - 1];
-
-  //newCollage.style.display = "none";
+  historyBar.insertAdjacentElement('afterbegin', newCollageToDisplay);
+  var newCollage = document.getElementById("history").children[0];
+  newCollage.style.display = "none";
   currentCollage = newCollage;
 
   topicHeader.innerHTML = "Collage for Topic " + topic;
-  if(newCollage.src == null || newCollage.src == ""){
+  if(collageURL == null || collageURL == ""){
     currentCollage = null;
     displayError();
   }
   else{
-    mainCollage.style.background = collageURL;
+	mainCollage.style.background = "url('" + collageURL + "')";
     mainCollage.style.backgroundRepeat = "no-repeat";
     mainCollage.style.backgroundSize = "cover";
   }
@@ -129,8 +133,6 @@ function buildAnotherCollage(){
   xHttp.send();
   xHttp.onreadystatechange = function() {
 	  collageURL = this.responseText;
-	  console.log("BUILD ANOTHER COLLAGE URL");
-	  console.log(collageURL);
 	  displayNewCollage(collageURL);
   }
 }
@@ -138,25 +140,23 @@ function buildAnotherCollage(){
 function displayNewCollage(collageURL){
   var mainCollage = document.getElementById("main_collage");
   var topicHeader = document.getElementById("topic");
-
+  
   //New Collage as a DOM element
   var newCollageToDisplay = document.createElement("IMG");
+  idCounter++;
   newCollageToDisplay.setAttribute("src", collageURL);
   newCollageToDisplay.setAttribute("alt", topic);
-  newCollageToDisplay.setAttribute("id", 10);
+  newCollageToDisplay.setAttribute("id", idCounter);
   newCollageToDisplay.setAttribute("onclick", "toggleCollage(event)");
 
   var historyBar = document.getElementById("history");
-  historyBar.appendChild(newCollageToDisplay);
-  var newCollage = document.getElementById("history").children[document.getElementById("history").children.length - 1];
-
+  historyBar.insertAdjacentElement('afterbegin', newCollageToDisplay);
+  var newCollage = document.getElementById("history").children[0];
   newCollage.style.display = "none";
   currentCollage = newCollage;
 
-//  firstImage.style.display = "none";
-//  currentCollage = firstImage;
-
-  topicHeader.innerHTML = "Collage for Topic " + currentCollage.alt;
+  var text = document.getElementById("text_input").value;
+  topicHeader.innerHTML = "Collage for Topic " + text;
   if(currentCollage.src == null || currentCollage.src == ""){
     currentCollage = null;
     displayError();
