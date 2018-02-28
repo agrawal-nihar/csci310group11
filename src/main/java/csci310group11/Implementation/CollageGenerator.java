@@ -28,6 +28,7 @@ public class CollageGenerator {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
+		this.api = new GoogleCustomSearchApi();
 	}
 
 	/**
@@ -43,25 +44,20 @@ public class CollageGenerator {
 	 * @return URL of the collage on the server's storage system
 	 */
 	public String collageGeneratorDriver(String topic) {
-//		try {
-//			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
-//			System.out.println("After images API Call");
-//		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
-//			System.out.println("iife: " + iife.getMessage());
-//			return null;
-//		}
-//
-//		this.resizeImages();
-//		this.addBorderToImages();
-//		this.compileCollage();
-//
-//		Collage collage = new Collage(this.collageImage, topic);
+		try {
+			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
+		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
+			return null;
+		}
+
+		this.resizeImages();
+		this.addBorderToImages();
+		this.compileCollage();
+
+		Collage collage = new Collage(this.collageImage, topic);
 		
-		Collage collage = null;
 		
-		//NIHAR --
-		String returnURL = downloadCollage(collage);
-//		allCollages.put(returnURL, collage.getCollageImage());
+		String returnURL = this.downloadCollage(collage);
 		return returnURL;
 	}
 
@@ -205,77 +201,92 @@ public class CollageGenerator {
 	private String downloadCollage(Collage collage) {
 //		String filename = "";
 //		BufferedImage image = collage.getCollageImage();
-		String webContentUrl = "";
-		String partialWebContentUrl = "";
-		BufferedImage image = null;
-		String filename = null;
+//		String webContentUrl = "";
+//		String partialWebContentUrl = "";
+//		String filename = null;
 		String returnUrl = "";
-		try {
-			//just for testing purposes: read an image from the Internet to fill TMP DIR
-			image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
-	
-			
-			//get destination path in assets folder of server
-//			File assetsDirectory = new File("../WebContent/assets");
-//			System.out.println("Assets Direcotry File path: " + assetsDirectory.getAbsolutePath());
-//			assetsDirectory.mkdir(); //no exception if directory already exists
-//			System.out.println("Created assets directory");
-			
-//			webContentUrl = ""; //current system context path
-//			partialWebContentUrl = "assets/birds";
-//			partialWebContentUrl += System.currentTimeMillis() + ".png";    
-////			webContentUrl += partialWebContentUrl;
-//
-//			webContentUrl = partialWebContentUrl;
-//			System.out.println("WebContentUrl: " + webContentUrl);
-//			File webContentUrlFile = new File(webContentUrl);
-//			ImageIO.write(image, "png", webContentUrlFile);
-//			System.out.println("Downloaded collage at: " + webContentUrlFile.getPath());
-			
-			
-//			filename = "";
-//			//BufferedImage image = collage.getCollageImage();
-//		
-//			//get destination path in assets folder of server
-//			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
-//			assetsDirectory.mkdir(); //no exception if directory already exists
-//			
-//			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
-//			filename += "topicName";
-//			filename += System.currentTimeMillis() + ".png";    
-//			File outputFileForFrontend = new File(filename);
-//			ImageIO.write(image, "png", outputFileForFrontend);
-//				
-//			returnUrl = filename;
-			
-			
-			
-			
-			
-			//DOWNLOAD TO TOMCAT TMP DIRECTORY
-
-			//NEW CODE WITH TMP DIR
-//			filename = TMP_DIR; 
-//
-//			System.out.println("In downloadCollageMethod");
-//			
-////			filename += collage.getTopic();
-//			filename += "birds";
-//			
-//			filename += System.currentTimeMillis() + ".png";    
-//			File outputFile = new File(filename);
-//			ImageIO.write(image, "png", outputFile);
-//			System.out.println("After download colalge method");
-//
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		
+		BufferedImage before = collage.getCollageImage();
+		int w = before.getWidth();
+		int h = before.getHeight();
+		BufferedImage after = new BufferedImage(w/2, h/2, BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(0.5, 0.5);
+		AffineTransformOp scaleOp = 
+		   new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		after = scaleOp.filter(before, after);
 		
 		
-		returnUrl = imgToBase64String(image, "png");
+		
+		returnUrl = imgToBase64String(after, "png");
 		System.out.println("Base 64 string for image: " + returnUrl);
 		return returnUrl;
+		
+		
+//		try {
+//			//just for testing purposes: read an image from the Internet to fill TMP DIR
+////			image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
+//	
+//			
+//			//get destination path in assets folder of server
+////			File assetsDirectory = new File("../WebContent/assets");
+////			System.out.println("Assets Direcotry File path: " + assetsDirectory.getAbsolutePath());
+////			assetsDirectory.mkdir(); //no exception if directory already exists
+////			System.out.println("Created assets directory");
+//			
+////			webContentUrl = ""; //current system context path
+////			partialWebContentUrl = "assets/birds";
+////			partialWebContentUrl += System.currentTimeMillis() + ".png";    
+//////			webContentUrl += partialWebContentUrl;
+////
+////			webContentUrl = partialWebContentUrl;
+////			System.out.println("WebContentUrl: " + webContentUrl);
+////			File webContentUrlFile = new File(webContentUrl);
+////			ImageIO.write(image, "png", webContentUrlFile);
+////			System.out.println("Downloaded collage at: " + webContentUrlFile.getPath());
+//			
+//			
+////			filename = "";
+////			//BufferedImage image = collage.getCollageImage();
+////		
+////			//get destination path in assets folder of server
+////			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
+////			assetsDirectory.mkdir(); //no exception if directory already exists
+////			
+////			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
+////			filename += "topicName";
+////			filename += System.currentTimeMillis() + ".png";    
+////			File outputFileForFrontend = new File(filename);
+////			ImageIO.write(image, "png", outputFileForFrontend);
+////				
+////			returnUrl = filename;
+//			
+//			
+//			
+//			
+//			
+//			//DOWNLOAD TO TOMCAT TMP DIRECTORY
+//
+//			//NEW CODE WITH TMP DIR
+////			filename = TMP_DIR; 
+////
+////			System.out.println("In downloadCollageMethod");
+////			
+//////			filename += collage.getTopic();
+////			filename += "birds";
+////			
+////			filename += System.currentTimeMillis() + ".png";    
+////			File outputFile = new File(filename);
+////			ImageIO.write(image, "png", outputFile);
+////			System.out.println("After download colalge method");
+////
+//		}
+//		catch(Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		
+
 	}
 	
 	//from stack overflow
@@ -286,7 +297,7 @@ public class CollageGenerator {
 	  try
 	  {
 	    ImageIO.write(img, formatName, os);
-	    System.out.println("Base 64 image in helper method: " + Base64.getEncoder().encodeToString(os.toByteArray()));
+//	    System.out.println("Base 64 image in helper method: " + Base64.getEncoder().encodeToString(os.toByteArray()));
 	    return Base64.getEncoder().encodeToString(os.toByteArray());
 	  }
 	  catch (final IOException ioe)

@@ -42,7 +42,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		//Verify user is valid user
 		System.out.println("Beg of REQUEST arguments");
 		System.out.println(request.getParameter("newUser"));
-		System.out.println(request.getParameter("url"));
+		System.out.println(request.getParameter("topic"));
 		System.out.println("End of REQUEST arguments");
 		
 		String newUserTruthValue = request.getParameter("newUser");
@@ -50,6 +50,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		collageGenerator = new CollageGenerator();
 		System.out.println("After collageGenerator");
 
+		
 		//Determine which action was requested in the HttpServletRequest object
 		String action = request.getParameter(Constants.ACTION_TYPE);
 		
@@ -66,9 +67,18 @@ public class CollageGenerationServlet extends HttpServlet {
 				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
 				allCollages.add(url);
 				
-				System.out.println("URL Printed: " + url);
-				responseUrl.print(url);					
+				BASE64Decoder decoder = new BASE64Decoder();
+				byte[] imageBytes = decoder.decodeBuffer(url);
+				System.out.println("service() bytes: " + imageBytes.length);
+				
+				
+//				System.out.println("URL Printed: " + url);
+//				System.out.println("Size of url: " + url.length());
+				responseUrl.print(url);		
+				System.out.println("AFter print");
+
 				responseUrl.flush();
+				System.out.println("AFter flush");
 			}
 			
 		}
@@ -132,7 +142,7 @@ public class CollageGenerationServlet extends HttpServlet {
 
 	private void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
 	{
-		String collageFullEncodedString = allCollages.get(0);
+		String collageFullEncodedString = allCollages.get(currentCollageId);
 	
 		System.out.println("URL received in downloadCollageToUserStorage():" + collageFullEncodedString.substring(0, 10));
 
