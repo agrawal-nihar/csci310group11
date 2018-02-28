@@ -42,7 +42,7 @@ public class CollageGenerator {
 	 * @param topic the String of terms inputted by the user; this will be passed to the API to make th search
 	 * @return URL of the collage on the server's storage system
 	 */
-	public String collageGeneratorDriver(String topic, HashMap<String, BufferedImage> allCollages) {
+	public String collageGeneratorDriver(String topic) {
 //		try {
 //			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
 //			System.out.println("After images API Call");
@@ -60,7 +60,7 @@ public class CollageGenerator {
 		Collage collage = null;
 		
 		//NIHAR --
-		String returnURL = downloadCollage(collage, allCollages);
+		String returnURL = downloadCollage(collage);
 //		allCollages.put(returnURL, collage.getCollageImage());
 		return returnURL;
 	}
@@ -202,7 +202,7 @@ public class CollageGenerator {
 	
 	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 
-	private String downloadCollage(Collage collage, HashMap<String, BufferedImage> allCollages) {
+	private String downloadCollage(Collage collage) {
 //		String filename = "";
 //		BufferedImage image = collage.getCollageImage();
 		String webContentUrl = "";
@@ -275,7 +275,6 @@ public class CollageGenerator {
 		
 		returnUrl = imgToBase64String(image, "png");
 		System.out.println("Base 64 string for image: " + returnUrl);
-		allCollages.put(returnUrl, image);
 		return returnUrl;
 	}
 	
