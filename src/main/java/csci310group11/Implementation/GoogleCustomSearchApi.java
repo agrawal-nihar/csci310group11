@@ -16,7 +16,14 @@ import com.google.api.services.customsearch.model.Result;
 import com.google.api.services.customsearch.model.Search;
 
 public class GoogleCustomSearchApi implements Api {
-		public List<BufferedImage> execute(String query) throws InsufficientImagesFoundError {
+	/**
+	 * generate search results' urls from Google Custom Search API, and then parse the url into BufferedImage,
+	 * if there is insufficient images, it will throw `InsufficientImagesError`
+	 * @param query
+	 * @return results' Json String
+	 * @throws InsufficientImagesFoundError 
+	 */
+	public List<BufferedImage> execute(String query) throws InsufficientImagesFoundError {
 			Customsearch cs = null;
 
 			try {
@@ -40,6 +47,8 @@ public class GoogleCustomSearchApi implements Api {
 			try {
 				Customsearch.Cse.List list = cs.cse().list(query);
 				for(int i = 0; i < 3; i++) {
+					/* Set parameters for the search, because each search will only return 10 results at maxium,
+					 * so it has to make the request three times*/
 					list.setKey(GOOGLE_API_KEY);
 					list.setCx(SEARCH_ENGINE_ID);
 					list.setImgSize(IMAGE_SIZE);
@@ -51,7 +60,6 @@ public class GoogleCustomSearchApi implements Api {
 					rs.addAll(results.getItems());
 				}
 			} catch (Exception e) {
-				//TODO: add explicit exception
 				e.printStackTrace();
 			}
 			

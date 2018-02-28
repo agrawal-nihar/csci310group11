@@ -7,7 +7,7 @@ public class Collage {
 	private String topic;
 
 	/**
-	 * Default constructor to ease CollageGenerator processes. MAY REMOVE LATER
+	 * Default constructor to ease CollageGenerator processes.
 	 */
 	public Collage() {
 		this.collageImage = null;

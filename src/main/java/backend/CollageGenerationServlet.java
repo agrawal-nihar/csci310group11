@@ -28,35 +28,22 @@ public class CollageGenerationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private CollageGenerator collageGenerator; //not static, change from DESIGN
+
 	private ArrayList<String> allCollages = new ArrayList<String>();
 	private String globalurl = "";
 	/*
 	 * This servlet will be called whenever the user clicks a any of button in our frontend pages. Depends on what time of
 	 * button it is, it will execute different code based on it. One option is to generate a new collage by calling CollageGenerator
 	 * Other options is when the user has clicked the Export Collage button which will call downloadCollageToUserStorage.
+	 * @param request, response
 	 */
-
-
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
-		//TESTING
-		
-		
-		
-		
-		
-		
+    
 		//Verify user is valid user
-		
-		
-		
-		
 		System.out.println("Beg of REQUEST arguments");
 		System.out.println(request.getParameter("newUser"));
 		System.out.println(request.getParameter("url"));
 		System.out.println("End of REQUEST arguments");
-		
 		
 		String newUserTruthValue = request.getParameter("newUser");
 		Boolean newUser = checkNewUser(newUserTruthValue);
@@ -80,8 +67,6 @@ public class CollageGenerationServlet extends HttpServlet {
 				allCollages.add(url);
 				
 				System.out.println("URL Printed: " + url);
-//				this.globalurl = url;
-//				String url = "brain.png"; 
 				responseUrl.print(url);					
 				responseUrl.flush();
 			}
@@ -101,10 +86,12 @@ public class CollageGenerationServlet extends HttpServlet {
 		}
 	} //end of service method
 
-	/*
+	/**
 	 * When the users has created multiple collages in one session, this function will allow the server to
 	 * delete all the collages that were made in this session. Since all the collages are stored in /assets directory,
 	 * it will delete every file inside of this directory.
+	 * @param request
+	 * @return newUser: true if new user enters the session or false if it's an old user
 	 */
 	private Boolean checkNewUser(String truthValue) {
 		Boolean newUser = false;
@@ -116,6 +103,11 @@ public class CollageGenerationServlet extends HttpServlet {
 		return newUser;
 	}
 	
+	/**
+	 * When new user enters, all the previous collages will be deleted. This function is responsible for makeing
+	 * the deletion for all previous collages under /assests directory. It will first check whether the directory exist
+	 * or not, if not it won't do anything.
+	 */
 	private void removePreviousCollages() {
 		File assetsDirectory = new File(System.getProperty("user.dir") + "/WebContent/assets");
 		File[] allCollages = assetsDirectory.listFiles();
@@ -130,10 +122,11 @@ public class CollageGenerationServlet extends HttpServlet {
 	}
 
 	
-	/*
-	 * This fucntion allow users to download the collage to their storage. It will download to their Downloads directory
+	/**
+	 * This function allows users to download the collage to their storage. It will download to their Downloads directory
 	 * The downloaded collage will be in png file and the name of the file will be based on the time it was downloaded.
 	 * If the source of image can't be found, it will not download.
+	 * @param url
 	 */
 	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 

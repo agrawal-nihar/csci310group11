@@ -23,7 +23,7 @@ public interface Api {
 	static final String IMAGE_SIZE = "Medium";
 	static final String SEARCH_TYPE = "image";
 	/**
-	 * generate search results' urls from Google Custom Search API, 
+	 * generate search results' urls from Google Custom Search API, and then parse the url into BufferedImage,
 	 * if there is insufficient images, it will throw `InsufficientImagesError`
 	 * @param query
 	 * @return results' Json String
