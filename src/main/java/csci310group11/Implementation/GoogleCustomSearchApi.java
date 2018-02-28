@@ -57,13 +57,13 @@ public class GoogleCustomSearchApi implements Api {
 					
 					list.setStart((long) (i+1) * 10);
 					Search results = list.execute();
-					if (results != null) {
+				//	if (results != null) {
 						rs.addAll(results.getItems());
-					}
-					else {
-						System.out.println("Results are null");
-						return null;
-					}
+					//}
+//					else {
+//						System.out.println("Results are null");
+//						return null;
+//					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -77,14 +77,15 @@ public class GoogleCustomSearchApi implements Api {
 
 			try {
 				for(Result r : rs) {
+					System.out.println("link: " + r.getLink());
 					URL url = new URL(r.getLink());
 					BufferedImage bf = ImageIO.read(url);
 					images.add(bf);
-//					System.out.println("line 69");
 				}
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("API IMAGES SIZE: " + images.size());
 			return images;
 		}
 		

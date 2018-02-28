@@ -4,7 +4,6 @@ window.onload = function onEnter(){
 	var button = document.getElementById("build");
 	inputText.addEventListener("keyup", function(event){
 		if(event.keyCode === 13){
-			console.log("enter");
 			button.click();
 		}
 	});
@@ -42,24 +41,9 @@ function buildCollage(){
 	//xHttp.onLoad = function(){
 	xHttp.onreadystatechange = function() {
 		collageURL = this.responseText;
-		console.log(collageURL);
-		console.log("hit");
 		
 		sessionStorage.setItem("collageURL", collageURL);
-		window.location="collage.html?topic=" + topic ; //DELETED COLLAGE URL	
+		window.location="collage.html?topic=" + topic ; 
 	}
-
-	//}
-//	xHttp.onreadystatechange = function() {
-//		console.log("inside on readys tate function " + xHttp.readState);
-//
-//		//if (xHttp.readState == 4 && xHttp.status == 200) {
-//			collageURL = this.responseText;
-//			console.log(collageURL);
-//			
-//			sessionStorage.setItem("collageURL", collageURL);
-//			window.location="collage.html?topic=" + topic ; //DELETED COLLAGE URL
-//		//}
-//	}
 	
 }

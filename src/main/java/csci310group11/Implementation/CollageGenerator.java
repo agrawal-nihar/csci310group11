@@ -44,6 +44,7 @@ public class CollageGenerator {
 	 * @return URL of the collage on the server's storage system
 	 */
 	public String collageGeneratorDriver(String topic) {
+		
 		try {
 			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
 		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
@@ -75,18 +76,23 @@ public class CollageGenerator {
 		//Iterate through all images
 		for(int i=0; i < images.size(); i++) {
 			BufferedImage img = images.get(i);
-
 			//New BufferedImage with 1/20th dimensions of collage
-			BufferedImage resizeImg = new BufferedImage(resizeWidth, resizeHeight, img.getType());
+			BufferedImage resizeImg = null;
+			if (img != null) {
+				resizeImg = new BufferedImage(resizeWidth, resizeHeight, img.getType());
+				//Draws the img image into the size of the resizeImg
+				Graphics2D graphics = resizeImg.createGraphics();
+				graphics.drawImage(img, 0, 0, resizeWidth, resizeHeight, null);
 
-			//Draws the img image into the size of the resizeImg
-			Graphics2D graphics = resizeImg.createGraphics();
-			graphics.drawImage(img, 0, 0, resizeWidth, resizeHeight, null);
+				//replace BufferedImage in images with resizedImg
+				images.set(i, resizeImg);
+				
+				graphics.dispose(); //releases the resources used by graphics
+			}
+			else {
+				images.set(i, new BufferedImage(1, 1, 1)) ; //DUMMY Picture for null URL
+			}
 
-			//replace BufferedImage in images with resizedImg
-			images.set(i, resizeImg);
-			
-			graphics.dispose(); //releases the resources used by graphics
 		}
 	}
 	
@@ -95,8 +101,8 @@ public class CollageGenerator {
 	 * 
 	 * Creates a new BufferedImage that is 6px taller and wider than the original BufferedImage in images.
 	 * 
-	 * Sets thes the graphics of the larger BufferedImage to white. Paints the original image onto the 
-	 * new BufferedImage to create a 3px "border". Adds the bordred BuffereImage to this.borderedImages.
+	 * Sets the graphics of the larger BufferedImage to white. Paints the original image onto the 
+	 * new BufferedImage to create a 3px "border". Adds the bordered BuffereImage to this.borderedImages.
 	 */
 	private void addBorderToImages() {
 		//iterate through every image
@@ -198,17 +204,21 @@ public class CollageGenerator {
 	
 	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 
+	/**
+	 * This function will download the generated collage into user local storage. This file extension
+	 * is png. This function will convert the file into base64 and return the path.
+	 * @param collage
+	 * @return returnUrl
+	 */
 	private String downloadCollage(Collage collage) {
-//		String filename = "";
-//		BufferedImage image = collage.getCollageImage();
-//		String webContentUrl = "";
-//		String partialWebContentUrl = "";
-//		String filename = null;
+
 		String returnUrl = "";
 		
 		BufferedImage before = collage.getCollageImage();
 		int w = before.getWidth();
 		int h = before.getHeight();
+		
+		//from stackoverflow
 		BufferedImage after = new BufferedImage(w/2, h/2, BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
 		at.scale(0.5, 0.5);
@@ -216,77 +226,10 @@ public class CollageGenerator {
 		   new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 		after = scaleOp.filter(before, after);
 		
-		
-		
 		returnUrl = imgToBase64String(after, "png");
-		System.out.println("Base 64 string for image: " + returnUrl);
+		
 		return returnUrl;
 		
-		
-//		try {
-//			//just for testing purposes: read an image from the Internet to fill TMP DIR
-////			image = ImageIO.read(new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cerebral_lobes.png/300px-Cerebral_lobes.png"));
-//	
-//			
-//			//get destination path in assets folder of server
-////			File assetsDirectory = new File("../WebContent/assets");
-////			System.out.println("Assets Direcotry File path: " + assetsDirectory.getAbsolutePath());
-////			assetsDirectory.mkdir(); //no exception if directory already exists
-////			System.out.println("Created assets directory");
-//			
-////			webContentUrl = ""; //current system context path
-////			partialWebContentUrl = "assets/birds";
-////			partialWebContentUrl += System.currentTimeMillis() + ".png";    
-//////			webContentUrl += partialWebContentUrl;
-////
-////			webContentUrl = partialWebContentUrl;
-////			System.out.println("WebContentUrl: " + webContentUrl);
-////			File webContentUrlFile = new File(webContentUrl);
-////			ImageIO.write(image, "png", webContentUrlFile);
-////			System.out.println("Downloaded collage at: " + webContentUrlFile.getPath());
-//			
-//			
-////			filename = "";
-////			//BufferedImage image = collage.getCollageImage();
-////		
-////			//get destination path in assets folder of server
-////			File assetsDirectory = new File(System.getProperty("user.dir") + "/assets");
-////			assetsDirectory.mkdir(); //no exception if directory already exists
-////			
-////			filename += System.getProperty("user.dir") + "/assets/"; //current system context path
-////			filename += "topicName";
-////			filename += System.currentTimeMillis() + ".png";    
-////			File outputFileForFrontend = new File(filename);
-////			ImageIO.write(image, "png", outputFileForFrontend);
-////				
-////			returnUrl = filename;
-//			
-//			
-//			
-//			
-//			
-//			//DOWNLOAD TO TOMCAT TMP DIRECTORY
-//
-//			//NEW CODE WITH TMP DIR
-////			filename = TMP_DIR; 
-////
-////			System.out.println("In downloadCollageMethod");
-////			
-//////			filename += collage.getTopic();
-////			filename += "birds";
-////			
-////			filename += System.currentTimeMillis() + ".png";    
-////			File outputFile = new File(filename);
-////			ImageIO.write(image, "png", outputFile);
-////			System.out.println("After download colalge method");
-////
-//		}
-//		catch(Exception e) {
-//			e.printStackTrace();
-//		}
-		
-		
-
 	}
 	
 	//from stack overflow
@@ -297,7 +240,6 @@ public class CollageGenerator {
 	  try
 	  {
 	    ImageIO.write(img, formatName, os);
-//	    System.out.println("Base 64 image in helper method: " + Base64.getEncoder().encodeToString(os.toByteArray()));
 	    return Base64.getEncoder().encodeToString(os.toByteArray());
 	  }
 	  catch (final IOException ioe)
