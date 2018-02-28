@@ -143,7 +143,7 @@ public class CollageGenerator {
 
 		for(int r=0; r < 5; r++) { //5 rows of images
 			for(int c = 0; c < 6; c++) { //6 columns of images
-				BufferedImage currImage = borderedImages.get(5*r + c); //retrieves proper borderedImage
+				BufferedImage currImage = borderedImages.get(6*r + c); //retrieves proper borderedImage
 				int row = this.collageImage.getHeight()/5 * r; //calculation for y-coordinate
 
 				//Adjustments to ensure border coverage
