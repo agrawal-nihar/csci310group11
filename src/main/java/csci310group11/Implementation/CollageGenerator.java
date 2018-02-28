@@ -113,7 +113,7 @@ public class CollageGenerator {
 		}
 	}
 
-	/*
+	/**
 	 * Responsible for creating the this.collageImage.
 	 * 
 	 * Sets the collage to all white and then paints the images in this.borderedImages onto this.collageImage.
