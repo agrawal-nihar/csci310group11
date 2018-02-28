@@ -75,8 +75,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		if (action.equals(Constants.BUILD_ACTION)) {
 
 			if (topic != null) {
-				
-//				String url = "assets/DOG1519722937895.png";
+
 				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
 				allCollages.add(url);
 				

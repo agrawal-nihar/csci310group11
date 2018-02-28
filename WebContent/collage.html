@@ -19,12 +19,12 @@
           <h2>Insufficient number of images found</h2>
         </div>
       </div>
-      <button onclick="exportCollage()"> Export Collage </button>
+      <button onclick="downloadCollage()"> Export Collage </button>
     </div>
     <div id = "input">
       <!-- oninput handles the requirement that unless the textbox has something valid, button is disabled; function located in js/collage.js-->
       <input id = "text_input" oninput="handleDisable()" type = "text" placeholder = "Enter Topic"/>
-      <button id = "build" onclick="buildAnotherCollage()">Build Another Collage</button>
+      <button id = "build" disabled onclick="buildAnotherCollage()">Build Another Collage</button>
     </div>
     <!-- History bar displays all previously created collages during the session-->
     <div id = "history">
