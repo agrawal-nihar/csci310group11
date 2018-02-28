@@ -22,10 +22,12 @@ window.onload = function initialCollage(){
   //Extract collageURL and topic from the URL of the page
   var url_string = window.location.href;
   var url = new URL(url_string);
-  var collageURL = sessionStorage.getItem("url");
   var topic = url.searchParams.get("topic");
-
   var collageURL = sessionStorage.getItem("collageURL");
+  
+  var collageMetaData = "data:image/png;base64, ";
+  var collageURL = collageMetaData + collageURL;
+  console.log(collageURL);
   
   //Creating a new image element with new resources
   var newCollageToDisplay = document.createElement("IMG");
@@ -58,6 +60,10 @@ window.onload = function initialCollage(){
   }
   //Otherwise display it as the main collage
   else{
+	var mainImg = document.getElementById("main_image");
+	
+	mainImg.setAttribute("src", collageURL);
+	
 	mainCollage.style.background = "url('" + collageURL + "')";
     mainCollage.style.backgroundRepeat = "no-repeat";
     mainCollage.style.backgroundSize = "cover";
