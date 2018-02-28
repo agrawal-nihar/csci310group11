@@ -81,7 +81,9 @@ public class CollageGenerationServlet extends HttpServlet {
 			//reencode URL
 			
 			//parse URL
-			url = url.substring(beginIndex)
+			url = url.substring(23);
+			System.out.println(url.substring(0, 10));
+			
       byte[] imageBase64String = Base64.encodeBase64(url.getBytes());
 			byte[] data = Base64.decodeBase64(imageBase64String);
 			try {
