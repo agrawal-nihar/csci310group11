@@ -1,36 +1,136 @@
 package csci310group11.Implementation;
 
 import java.awt.Color;
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
-import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
 
 public class CollageGenerator {
 
-	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
-	private ArrayList<BufferedImage> borderedImages;
-	private BufferedImage collageImage;
+	public ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
+	public ArrayList<BufferedImage> borderedImages;
+	
+	//changed to public for testing
+	public BufferedImage collageImage;
+	
 	private GoogleCustomSearchApi api;
+	public ArrayList<BufferedImage> dummyImages = null;
+	public ArrayList<BufferedImage> dummyImagesWithNull = null;
+	
+	//testing flags
+	public Boolean testingCollageGeneratorDummyImages = false; //flag to determine whether API should be made
+	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 		this.api = new GoogleCustomSearchApi();
+		
+		//testing data members -- RESUME
+		try {
+			dummyImages = new ArrayList<BufferedImage>(Arrays.asList(
+					ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/NINXdNF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/vWD85qB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/BUG2NOZ.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/t6rfewd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/iv5iLkj.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/teIakKI.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/5jdgEU4.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/s1i5OGd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/yTV8L0s.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/fuG4fpj.gif"))
+					,ImageIO.read(new URL("https://i.imgur.com/crLuiua.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/OzaawFv.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/XFZE79u.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/0gXBfVm.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/6G0JhxF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/lMOAQBs.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/lxHeItW.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/DWOQF38.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/Lj2UGJh.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/PtKFycU.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/VgmBH30.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/4qmmRFj.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/qVkzrLq.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/m8mpGoK.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/xmRJOOP.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/bzPQBoB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/90yLceB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/NFS0WeC.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/tl91hI5.gif")) ));
+		} catch (IOException ioe) {
+			System.out.println("ioe: " + ioe.getMessage());
+		}
+		
+		try {
+			dummyImagesWithNull = new ArrayList<BufferedImage>(Arrays.asList(
+					null
+					,ImageIO.read(new URL("https://i.imgur.com/NINXdNF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/vWD85qB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/BUG2NOZ.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/t6rfewd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/iv5iLkj.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/teIakKI.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/5jdgEU4.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/s1i5OGd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/yTV8L0s.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/fuG4fpj.gif"))
+					,ImageIO.read(new URL("https://i.imgur.com/crLuiua.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/OzaawFv.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/XFZE79u.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/0gXBfVm.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/6G0JhxF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/lMOAQBs.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/lxHeItW.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/DWOQF38.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/Lj2UGJh.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/PtKFycU.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/VgmBH30.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/4qmmRFj.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/qVkzrLq.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/m8mpGoK.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/xmRJOOP.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/bzPQBoB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/90yLceB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/NFS0WeC.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/tl91hI5.gif")) ));
+		} catch (IOException ioe) {
+			System.out.println("ioe: " + ioe.getMessage());
+		}
 	}
-
+	
+	
+	
+	/**
+	 * Method to include dummy parameters if we are in testing process
+	 * @return true or false whether some flag was set
+	 */
+	public Boolean enableTestingFlags() {
+		if (testingCollageGeneratorDummyImages) {
+			this.images = dummyImages;
+			return true;
+		}
+		if (testingCollageGeneratorDummyImagesWithNull) {
+			this.images = dummyImagesWithNull;
+			return true;
+		}
+		
+		return false;
+	}
 	/**
 	 * Driver method to complete Collage creation process.
 	 * This method will call the GoogleCustomSearchAPI and retrieve the images to be compiled.
@@ -45,8 +145,14 @@ public class CollageGenerator {
 	 */
 	public String collageGeneratorDriver(String topic) {
 		
+		//To check testing flags and enable them if they were set in test case
 		try {
-			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
+			if (!enableTestingFlags()) {
+				this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
+			}
+			else {
+				this.images = dummyImages;
+			}
 		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
 			return null;
 		}
@@ -68,8 +174,12 @@ public class CollageGenerator {
 	 * Each images will be 1/5 as wide as the collage and 1/4 as tall as the collage.
 	 * These newly sized images will replace the original images in this.images.
 	 */
-	private void resizeImages() {
+	public void resizeImages() {
 		//1/20th of collage dimensions
+		
+		//To check testing flags and enable them if they were set in test case
+		enableTestingFlags();
+		
 		int resizeWidth = this.collageImage.getWidth()/5;
 		int resizeHeight = this.collageImage.getHeight()/4;
 		
@@ -104,7 +214,11 @@ public class CollageGenerator {
 	 * Sets the graphics of the larger BufferedImage to white. Paints the original image onto the 
 	 * new BufferedImage to create a 3px "border". Adds the bordered BuffereImage to this.borderedImages.
 	 */
-	private void addBorderToImages() {
+	public void addBorderToImages() {
+		
+		//To check testing flags and enable them if they were set in test case
+		enableTestingFlags();
+		
 		//iterate through every image
 		for(int i=0; i < images.size(); i++) {
 			BufferedImage image = images.get(i);
@@ -138,7 +252,7 @@ public class CollageGenerator {
 	 * Minor adjustments are made to ensure that the border of the collage are covered regardless of individual
 	 * rotation. 
 	 */
-	private void compileCollage() {
+	public void compileCollage() {
 		Graphics2D graphics = this.collageImage.createGraphics();
 		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
@@ -233,7 +347,8 @@ public class CollageGenerator {
 	}
 	
 	//from stack overflow
-	private static String imgToBase64String(BufferedImage img, final String formatName)
+	//MADE PUBLIC!!!
+	public static String imgToBase64String(BufferedImage img, final String formatName)
 	{
 	  final ByteArrayOutputStream os = new ByteArrayOutputStream();
 

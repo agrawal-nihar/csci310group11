@@ -1,14 +1,14 @@
 package backend;
 
 import java.awt.image.BufferedImage;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import csci310group11.Implementation.CollageGenerator;
-import sun.misc.BASE64Decoder;
 
 /**
  * Servlet implementation class CollageGenerationServlet
@@ -28,19 +27,30 @@ public class CollageGenerationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private CollageGenerator collageGenerator; //not static, change from DESIGN
+	
+	public ArrayList<String> allCollages = new ArrayList<String>();
+	public ArrayList<String> getAllCollages() {
+		return allCollages;
+	}
 
-	private ArrayList<String> allCollages = new ArrayList<String>();
-	private String globalurl = "";
+	//TESTING DATA MEMBERS
+	public Boolean testingServletFlag = false;
+
+
+//	private String globalurl = "";
 	/**
 	 * This servlet will be called whenever the user clicks a any of button in our frontend pages. Depends on what time of
 	 * button it is, it will execute different code based on it. One option is to generate a new collage by calling CollageGenerator
 	 * Other options is when the user has clicked the Export Collage button which will call downloadCollageToUserStorage.
 	 * @param request, response
 	 */
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	//CHANGED TO PUBLIC - -is this an issue??
+	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     
-		//Verify user is new user
+		//Verify user is new user	
 		String newUserTruthValue = request.getParameter("newUser");
+
 		Boolean newUser = checkNewUser(newUserTruthValue);
 		collageGenerator = new CollageGenerator();
 		
@@ -56,12 +66,19 @@ public class CollageGenerationServlet extends HttpServlet {
 
 			if (topic != null) {
 
-				String url = collageGenerator.collageGeneratorDriver(topic); //should return the URL ADD BACK IN
+				//for testing purposes!
+				String url = null;
+				if (!testingServletFlag) {
+					url = collageGenerator.collageGeneratorDriver(topic) ;
+				} else {
+					 url = "testUrl";
+				}
+			
 				if(url != null) {
 					allCollages.add(url);
 					
-					BASE64Decoder decoder = new BASE64Decoder();
-					byte[] imageBytes = decoder.decodeBuffer(url);
+//					BASE64Decoder decoder = new BASE64Decoder(); 
+//					byte[] imageBytes = decoder.decodeBuffer(url);
 					
 				}
 				responseUrl.print(url);		
@@ -72,9 +89,9 @@ public class CollageGenerationServlet extends HttpServlet {
 		
 	//Download Collage (to frontend) process
 		else if (action.equals(Constants.DOWNLOAD_ACTION)) {
-			String url = request.getParameter(Constants.URL);
+//			String url = request.getParameter(Constants.URL);
 			Integer currentCollageId = Integer.valueOf(request.getParameter("currentCollageId"));
-			downloadCollageToUserStorage(currentCollageId);
+//			downloadCollageToUserStorage(currentCollageId);
 			
 		}
 	} //end of service method
@@ -114,22 +131,22 @@ public class CollageGenerationServlet extends HttpServlet {
 	 */
 	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 
-	private void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
-	{
-		String collageFullEncodedString = allCollages.get(currentCollageId-1);
-		BASE64Decoder decoder = new BASE64Decoder();
-		byte[] imageBytes = decoder.decodeBuffer(collageFullEncodedString);
-		
-		BufferedImage img = ImageIO.read((InputStream) new ByteArrayInputStream(imageBytes));
-
-		try {
-				File outputfile = new File(System.getProperty("user.home") + "/Downloads/downloadedCollage" + currentCollageId + ".png");
-		    ImageIO.write(img, "png", outputfile);
-		} 
-		catch (IOException e) {
-		    System.err.println("IOException: " + e);
-		}
-			
-	}
+//	private void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
+//	{
+//		String collageFullEncodedString = allCollages.get(currentCollageId-1);
+//		BASE64Decoder decoder = new BASE64Decoder();
+//		byte[] imageBytes = decoder.decodeBuffer(collageFullEncodedString);
+//		
+//		BufferedImage img = ImageIO.read((InputStream) new ByteArrayInputStream(imageBytes));
+//
+//		try {
+//				File outputfile = new File(System.getProperty("user.home") + "/Downloads/downloadedCollage" + currentCollageId + ".png");
+//		    ImageIO.write(img, "png", outputfile);
+//		} 
+//		catch (IOException e) {
+//		    System.err.println("IOException: " + e);
+//		}
+//			
+//	}
 	
 }
