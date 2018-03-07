@@ -1,7 +1,6 @@
 package csci310group11.Implementation;
 
 import java.awt.Color;
-
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -26,12 +25,22 @@ public class CollageGenerator {
 	public BufferedImage collageImage;
 	
 	private GoogleCustomSearchApi api;
+	
+	//testing objects
 	public ArrayList<BufferedImage> dummyImages = null;
 	public ArrayList<BufferedImage> dummyImagesWithNull = null;
+	public ArrayList<Integer> dummyRotationDegrees = new ArrayList<Integer>(Arrays.asList(-11, 0, 7, -41, -31, -36, 13, 
+																															18, -29, 18, 6, 11, 11, -11, -9, 
+																															42, 41, 21, 16, 5, -27, 2, 6, 25, 
+																															17, 27, -35, 29, 44, -28)); 
+	public Integer currentDummyRotationDegreeIndex = 0;
+	public String returnURL = null;
 	
 	//testing flags
 	public Boolean testingCollageGeneratorDummyImages = false; //flag to determine whether API should be made
 	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
+	public Boolean testingRotation = false; 
+
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
@@ -163,8 +172,13 @@ public class CollageGenerator {
 
 		Collage collage = new Collage(this.collageImage, topic);
 		
-		
 		String returnURL = this.downloadCollage(collage);
+		
+		//testing
+		System.out.println("returnURL: " + returnURL.substring(0, 10));
+		this.returnURL = returnURL;
+		
+		
 		return returnURL;
 	}
 
@@ -301,7 +315,18 @@ public class CollageGenerator {
 
 		at.translate(col, row); //specifies where in this.collageImage to paint image
 
-		int degree = (int) (Math.random() * 91 - 45); //random degree in range: -45 to 45
+		//testing
+		Integer degree = null;
+		if (!testingRotation) {
+			degree = (int) (Math.random() * 91 - 45); //random degree in range: -45 to 45
+		} else {
+			degree = dummyRotationDegrees.get(currentDummyRotationDegreeIndex++);
+			
+			//testing
+			System.out.println("Current dummyRotationDegree: " + degree);
+
+		}
+		 
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2); //rotates image about its origin
 
 		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR); //performs the transformation

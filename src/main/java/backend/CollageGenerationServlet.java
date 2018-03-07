@@ -131,8 +131,8 @@ public class CollageGenerationServlet extends HttpServlet {
 	 */
 	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 
-//	private void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
-//	{
+	private void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
+	{
 //		String collageFullEncodedString = allCollages.get(currentCollageId-1);
 //		BASE64Decoder decoder = new BASE64Decoder();
 //		byte[] imageBytes = decoder.decodeBuffer(collageFullEncodedString);
@@ -147,6 +147,6 @@ public class CollageGenerationServlet extends HttpServlet {
 //		    System.err.println("IOException: " + e);
 //		}
 //			
-//	}
+	}
 	
 }
