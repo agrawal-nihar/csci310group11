@@ -40,7 +40,8 @@ public class CollageGenerator {
 	public Boolean testingCollageGeneratorDummyImages = false; //flag to determine whether API should be made
 	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
 	public Boolean testingRotation = false; 
-
+	public static boolean testMode = false;
+	public static boolean test_degreeAfterRotation = true; // for testing rotation
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
@@ -310,11 +311,16 @@ public class CollageGenerator {
 	 * @param row the y-coordinate in this.collageImage
 	 * @param col the x-coordinate in this.collageImage
 	 */
-	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
+	public void rotateAndDrawImage(BufferedImage image, int row, int col) {
 		AffineTransform at = new AffineTransform(); //Object for transformation
 
 		at.translate(col, row); //specifies where in this.collageImage to paint image
 
+		/* these two params are for later testing, it only allocates a little resource but provide huge convenience to later test */
+		double prev_x = at.getScaleX();
+		double prev_y = at.getScaleY();
+		/* end of assigning test params */
+		
 		//testing
 		Integer degree = null;
 		if (!testingRotation) {
@@ -330,6 +336,29 @@ public class CollageGenerator {
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2); //rotates image about its origin
 
 		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR); //performs the transformation
+		
+				
+		/* if it's in test mode, below codes will exec once, else it won't be invoked */
+		if (testMode) {
+			double alt_x = op.getTransform().getScaleX();
+			double alt_y = op.getTransform().getScaleY();
+			double rad = Math.toRadians(degree);
+			if(degree > 0) {
+						double comp_x = prev_x * Math.cos(rad) + prev_y * Math.sin(rad);
+						double comp_y = -prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
+						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
+						else test_degreeAfterRotation = false;
+					} else {
+						double comp_x = prev_x * Math.cos(rad) - prev_y * Math.sin(rad);
+						double comp_y = prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
+						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
+						else test_degreeAfterRotation = false;
+					}
+				}
+				/* end of test case */
+				
+			
+		
 		op.filter(image, this.collageImage); //paints onto collageImage
 	}
 	
