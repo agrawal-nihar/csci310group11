@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,11 +36,13 @@ public class CollageGenerator {
 																															17, 27, -35, 29, 44, -28)); 
 	public Integer currentDummyRotationDegreeIndex = 0;
 	public String returnURL = null;
+	public BufferedImage downloadCollageDummyImage;
 	
 	//testing flags
 	public Boolean testingCollageGeneratorDummyImages = false; //flag to determine whether API should be made
 	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
-	public Boolean testingRotation = false; 
+	public Boolean testingRotation = false;
+	public Boolean testingDownloadCollage = false; 
 	public static boolean testMode = false;
 	public static boolean test_degreeAfterRotation = true; // for testing rotation
 
@@ -49,7 +52,15 @@ public class CollageGenerator {
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 		this.api = new GoogleCustomSearchApi();
 		
-		//testing data members -- RESUME
+		//testing data members -- 
+		try {
+			downloadCollageDummyImage = ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		try {
 			dummyImages = new ArrayList<BufferedImage>(Arrays.asList(
 					ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"))
@@ -138,7 +149,6 @@ public class CollageGenerator {
 			this.images = dummyImagesWithNull;
 			return true;
 		}
-		
 		return false;
 	}
 	/**
@@ -378,14 +388,21 @@ public class CollageGenerator {
 	 * @param collage
 	 * @return returnUrl
 	 */
-	private String downloadCollage(Collage collage) {
+	public String downloadCollage(Collage collage) {
 
 		String returnUrl = "";
-		
-		BufferedImage before = collage.getCollageImage();
+		//testing
+		BufferedImage before = null;
+		if (!testingDownloadCollage) {
+			 before = collage.getCollageImage();
+		}
+		else {
+			before = downloadCollageDummyImage;
+		}
+	
 		int w = before.getWidth();
 		int h = before.getHeight();
-		
+				
 		//from stackoverflow
 		BufferedImage after = new BufferedImage(w/2, h/2, BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
@@ -395,7 +412,6 @@ public class CollageGenerator {
 		after = scaleOp.filter(before, after);
 		
 		returnUrl = imgToBase64String(after, "png");
-		
 		return returnUrl;
 		
 	}
