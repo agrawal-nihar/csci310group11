@@ -5,8 +5,15 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,6 +52,9 @@ public class CollageGenerator {
 	public Boolean testingDownloadCollage = false; 
 	public static boolean testMode = false;
 	public static boolean test_degreeAfterRotation = true; // for testing rotation
+	public String rotationFile = "rotation.txt";
+	public String subImagesSizeFile = "size.txt";
+	public String collageSizeFile = "byte.txt";
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
@@ -162,8 +172,12 @@ public class CollageGenerator {
 	 * 
 	 * @param topic the String of terms inputted by the user; this will be passed to the API to make th search
 	 * @return URL of the collage on the server's storage system
+	 * @throws IOException 
 	 */
-	public String collageGeneratorDriver(String topic) {
+	public String collageGeneratorDriver(String topic) throws IOException {
+		
+		//clear all logging files
+		clearAllLoggingFiles();
 		
 		//To check testing flags and enable them if they were set in test case
 		try {
@@ -190,9 +204,26 @@ public class CollageGenerator {
 		this.returnURL = returnURL;
 		
 		
+		
+//		readFromFile(rotationFile);
+//		readFromFile(collageSizeFile);
+//		readFromFile(subImagesSizeFile);
+//		
+//		printPathOfFile(rotationFile);
+//		readFromFile(collageSizeFile);
+//		readFromFile(subImagesSizeFile);
+		
 		return returnURL;
 	}
-
+	
+//	//identify path of file
+//	public void printPathOfFile(String filename) {
+//		File file = new File(filename);
+//		System.out.println(filename + " should be at: ");
+//
+//		System.out.println(file.getAbsolutePath());
+//		
+//	}
 	/**
 	 * Resizes all the BufferedImages inside of images to be 1/20th of the size of the overall collage.
 	 * 
@@ -276,8 +307,9 @@ public class CollageGenerator {
 	 * The basic layout of the collage is 5 rows of 6 images in a "grid".
 	 * Minor adjustments are made to ensure that the border of the collage are covered regardless of individual
 	 * rotation. 
+	 * @throws IOException 
 	 */
-	public void compileCollage() {
+	public void compileCollage() throws IOException {
 		Graphics2D graphics = this.collageImage.createGraphics();
 		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
@@ -308,10 +340,25 @@ public class CollageGenerator {
 					col += 10;
 				}
 
+				//logging method
+				String subImageSizeString = currImage.getWidth() + "\n" + currImage.getHeight();
+				writeToFile(subImageSizeString, subImagesSizeFile);
+				//end of logging
+				
 				//Helper method to rotate and draw the currImage
 				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
+		
+		String collageSizeString = this.collageImage.getWidth() + "\n" + this.collageImage.getHeight();
+		writeToFile(collageSizeString, collageSizeFile);
+		
+		//print size
+		DataBuffer dataBuffer = this.collageImage.getData().getDataBuffer();
+		long sizeBytes = ((long) dataBuffer.getSize()) * 4l;
+		long sizeMB = sizeBytes / (1024l * 1024l);
+		writeToFile(Long.toString(sizeMB), collageSizeFile);
+		
 	}
 
 	/**
@@ -320,8 +367,9 @@ public class CollageGenerator {
 	 * @param image the BufferedImage to be drawn
 	 * @param row the y-coordinate in this.collageImage
 	 * @param col the x-coordinate in this.collageImage
+	 * @throws IOException 
 	 */
-	public void rotateAndDrawImage(BufferedImage image, int row, int col) {
+	public void rotateAndDrawImage(BufferedImage image, int row, int col) throws IOException {
 		AffineTransform at = new AffineTransform(); //Object for transformation
 
 		at.translate(col, row); //specifies where in this.collageImage to paint image
@@ -340,8 +388,11 @@ public class CollageGenerator {
 			
 			//testing
 			System.out.println("Current dummyRotationDegree: " + degree);
-
 		}
+		
+		//write rotations to file
+		writeToFile(Integer.toString(degree), rotationFile);
+		//end of logging
 		 
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2); //rotates image about its origin
 
@@ -370,6 +421,68 @@ public class CollageGenerator {
 			
 		
 		op.filter(image, this.collageImage); //paints onto collageImage
+	}
+	
+	
+	//helper method to clear all logging files
+	public void clearAllLoggingFiles() throws FileNotFoundException {
+		clearFile(rotationFile);
+		clearFile(collageSizeFile);
+		clearFile(subImagesSizeFile);
+	}
+	
+	
+	//helper method to clear log file 
+	public static void clearFile(String filename) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(filename);
+		writer.print("");
+		writer.close();
+	}
+	
+	//helper method to pass degree of rotation to log file
+	public static void writeToFile(String data, String filename) throws IOException {
+		System.out.println("Supposed to write: " + data + " to " + filename);
+		FileWriter fileWriter = new FileWriter(filename, true);
+		BufferedWriter bw = new BufferedWriter(fileWriter);
+		bw.write(data + "\n");
+
+		fileWriter.flush();
+		bw.flush();
+		fileWriter.close();
+		bw.close();
+		
+		//write URL to file
+		FileReader fr = null;
+		try {
+			fr = new FileReader(filename);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	//helper method to read from file
+	public void readFromFile(String filename) {
+		System.out.println(filename + " PRINTOUT is: ");
+		String lineRead = "";
+		String fileContents = "";
+	  FileReader fileReader = null;
+	  try {
+			fileReader = new FileReader(filename);
+	    BufferedReader bufferedReader = new BufferedReader(fileReader);
+			while((lineRead = bufferedReader.readLine()) != null) {
+			    
+			    fileContents += lineRead;
+			}
+			
+			bufferedReader.close();
+	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();   
+		} 
+	  System.out.println(fileContents);
 	}
 	
 	/**
