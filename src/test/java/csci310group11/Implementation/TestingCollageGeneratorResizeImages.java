@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-public class CollageGeneratorResizeImages {
+public class TestingCollageGeneratorResizeImages {
 
 	@Test
 	public void collageGeneratorResizeImagesWithNullTest() {

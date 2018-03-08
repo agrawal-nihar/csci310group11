@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-public class CollageGeneratorAddBorder {
+public class TestingCollageGeneratorAddBorder {
 
 	//values to check against
 	Integer WHITE_RED_ATTRIBUTE = 255;

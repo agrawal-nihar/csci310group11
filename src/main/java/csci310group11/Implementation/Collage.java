@@ -7,15 +7,6 @@ public class Collage {
 	private String topic;
 
 	/**
-	 * Default constructor to ease CollageGenerator processes.
-	 */
-	public Collage() {
-		this.collageImage = null;
-		this.topic = null;
-	}
-
-
-	/**
 	 * @param collage
 	 * @param topic
 	 */
@@ -30,24 +21,5 @@ public class Collage {
 	public BufferedImage getCollageImage() {
 		return collageImage;
 	}
-	/**
-	 * @param collage the collage to set
-	 */
-	public void setCollageImage(BufferedImage collage) {
-		this.collageImage = collage;
-	}
-	/**
-	 * @return the topic
-	 */
-	public String getTopic() {
-		return topic;
-	}
-	/**
-	 * @param topic the topic to set
-	 */
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
-	
 
 }

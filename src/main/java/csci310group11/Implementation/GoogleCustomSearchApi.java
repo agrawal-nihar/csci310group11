@@ -16,6 +16,7 @@ import com.google.api.services.customsearch.model.Result;
 import com.google.api.services.customsearch.model.Search;
 
 public class GoogleCustomSearchApi implements Api {
+	public static boolean testInsufficientImage = false;
 	/**
 	 * generate search results' urls from Google Custom Search API, and then parse the url into BufferedImage,
 	 * if there is insufficient images, it will throw `InsufficientImagesError`
@@ -69,7 +70,7 @@ public class GoogleCustomSearchApi implements Api {
 				e.printStackTrace();
 			}
 			
-			if(rs.size() < 30) {
+			if(rs.size() < 30 || testInsufficientImage) {
 				throw new InsufficientImagesFoundError(rs.size());
 			}
 			
@@ -77,7 +78,6 @@ public class GoogleCustomSearchApi implements Api {
 
 			try {
 				for(Result r : rs) {
-					System.out.println("link: " + r.getLink());
 					URL url = new URL(r.getLink());
 					BufferedImage bf = ImageIO.read(url);
 					images.add(bf);
@@ -85,7 +85,6 @@ public class GoogleCustomSearchApi implements Api {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-			System.out.println("API IMAGES SIZE: " + images.size());
 			return images;
 		}
 		

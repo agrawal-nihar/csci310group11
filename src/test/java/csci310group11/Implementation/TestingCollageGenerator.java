@@ -17,6 +17,7 @@ public class TestingCollageGenerator extends TestCase {
 	
 	@Test
 	public void testRotation() {
+		CollageGenerator.testMode = true;
 		cg = mock(CollageGenerator.class);
 		BufferedImage dummyImage = new BufferedImage(1, 1, 1);
 		cg.rotateAndDrawImage(dummyImage, 0, 0);

@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import backend.CollageGenerationServlet;
 
-public class CollageGeneratorServletTest {
+public class TestingCollageGeneratorServlet {
 
 //	public static ArrayList<String> subImagesCache = null;
 	public String ACTION_TYPE = "action";
