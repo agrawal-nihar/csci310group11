@@ -52,9 +52,9 @@ public class CollageGenerator {
 	public Boolean testingDownloadCollage = false; 
 	public static boolean testMode = false;
 	public static boolean test_degreeAfterRotation = true; // for testing rotation
-	public String rotationFile = "/rotation.txt";
-	public String subImagesSizeFile = "/size.txt";
-	public String collageSizeFile = "/byte.txt";
+	public String rotationFile = "rotation.txt";
+	public String subImagesSizeFile = "size.txt";
+	public String collageSizeFile = "byte.txt";
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
