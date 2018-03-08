@@ -8,13 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import junit.framework.TestCase;
 
-public class TestingCollageGenerator extends TestCase {
+public class TestingCollageGeneratorRotateAndDraw extends TestCase {
 	public static CollageGenerator cg = null;
-	
-	@Test
-	public void testContructor() {
-		
-	}
 	
 	@Test
 	public void testRotation() throws IOException {
