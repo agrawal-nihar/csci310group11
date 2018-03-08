@@ -46,15 +46,15 @@ public class CollageGenerator {
 	public BufferedImage downloadCollageDummyImage;
 	
 	//testing flags
-	public Boolean testingCollageGeneratorDummyImages = false; //flag to determine whether API should be made
+	public Boolean testingCollageGeneratorDummyImages = true; //flag to determine whether API should be made
 	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
 	public Boolean testingRotation = false;
 	public Boolean testingDownloadCollage = false; 
 	public static boolean testMode = false;
 	public static boolean test_degreeAfterRotation = true; // for testing rotation
-	public String rotationFile = "rotation.txt";
-	public String subImagesSizeFile = "size.txt";
-	public String collageSizeFile = "byte.txt";
+	public String rotationFile = "/rotation.txt";
+	public String subImagesSizeFile = "/size.txt";
+	public String collageSizeFile = "/byte.txt";
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
