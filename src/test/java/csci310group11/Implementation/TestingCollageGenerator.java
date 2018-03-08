@@ -2,6 +2,7 @@ package csci310group11.Implementation;
 import static org.mockito.Mockito.mock;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ public class TestingCollageGenerator extends TestCase {
 	}
 	
 	@Test
-	public void testRotation() {
+	public void testRotation() throws IOException {
 		CollageGenerator.testMode = true;
 		cg = mock(CollageGenerator.class);
 		BufferedImage dummyImage = new BufferedImage(1, 1, 1);

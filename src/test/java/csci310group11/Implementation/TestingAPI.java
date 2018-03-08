@@ -25,6 +25,8 @@ public class TestingAPI {
 		assert(images.size() == sufficientImageAmount);
 		
 		GoogleCustomSearchApi.testInsufficientImage = true;
+		
+		
 	}
 
 }

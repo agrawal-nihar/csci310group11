@@ -12,7 +12,7 @@ import org.junit.Test;
 public class TestingCollageGeneratorCompile {
 
 	@Test
-	public void test() {
+	public void test() throws IOException {
 		CollageGenerator collageGenerator = new CollageGenerator();
 		collageGenerator.testingCollageGeneratorDummyImages = true;
 		collageGenerator.testingRotation = true;
