@@ -3,6 +3,7 @@ package backend;
 import java.awt.image.BufferedImage;
 
 
+import java.util.Base64;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -134,20 +135,20 @@ public class CollageGenerationServlet extends HttpServlet {
 
 	private void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
 	{
-//		String collageFullEncodedString = allCollages.get(currentCollageId-1);
-//		BASE64Decoder decoder = new BASE64Decoder();
-//		byte[] imageBytes = decoder.decodeBuffer(collageFullEncodedString);
-//		
-//		BufferedImage img = ImageIO.read((InputStream) new ByteArrayInputStream(imageBytes));
-//
-//		try {
-//				File outputfile = new File(System.getProperty("user.home") + "/Downloads/downloadedCollage" + currentCollageId + ".png");
-//		    ImageIO.write(img, "png", outputfile);
-//		} 
-//		catch (IOException e) {
-//		    System.err.println("IOException: " + e);
-//		}
-//			
+		String collageFullEncodedString = allCollages.get(currentCollageId-1);
+
+		byte[] imageBytes = Base64.getDecoder().decode(collageFullEncodedString);
+		
+		BufferedImage img = ImageIO.read((InputStream) new ByteArrayInputStream(imageBytes));
+
+		try {
+				File outputfile = new File(System.getProperty("user.home") + "/Downloads/downloadedCollage" + currentCollageId + ".png");
+		    ImageIO.write(img, "png", outputfile);
+		} 
+		catch (IOException e) {
+		    System.err.println("IOException: " + e);
+		}
+			
 	}
 	
 }
