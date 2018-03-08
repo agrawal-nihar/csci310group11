@@ -1,6 +1,8 @@
 package csci310group11.Implementation;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 public interface Api {
@@ -28,6 +30,8 @@ public interface Api {
 	 * @param query
 	 * @return results' Json String
 	 * @throws InsufficientImagesFoundError 
+	 * @throws MalformedURLException 
+	 * @throws IOException 
 	 */
-	List<BufferedImage> execute(String query) throws InsufficientImagesFoundError;
+	List<BufferedImage> execute(String query) throws InsufficientImagesFoundError, MalformedURLException, IOException;
 }
