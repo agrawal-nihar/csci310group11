@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestingAPI {
@@ -12,7 +13,7 @@ public class TestingAPI {
 	public static int sufficientImageAmount = 30;
 	
 	@Test
-	public void testGoogleCustomAPI() throws InsufficientImagesFoundError, MalformedURLException, IOException {
+	@Ignore public void testGoogleCustomAPI() throws InsufficientImagesFoundError, MalformedURLException, IOException {
 		List<BufferedImage> images = null;
 		images = api.execute("dog");
 		assert(images.size() == sufficientImageAmount);
