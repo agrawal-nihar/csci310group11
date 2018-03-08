@@ -1,8 +1,7 @@
 package backend;
 
 import java.awt.image.BufferedImage;
-
-
+import java.awt.image.DataBuffer;
 import java.util.Base64;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,7 +27,7 @@ import csci310group11.Implementation.CollageGenerator;
 public class CollageGenerationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private CollageGenerator collageGenerator; //not static, change from DESIGN
+	public CollageGenerator collageGenerator; //not static, change from DESIGN
 	
 	public ArrayList<String> allCollages = new ArrayList<String>();
 	public ArrayList<String> getAllCollages() {
@@ -37,7 +36,7 @@ public class CollageGenerationServlet extends HttpServlet {
 
 	//TESTING DATA MEMBERS
 	public Boolean testingServletFlag = false;
-
+	public long imageToDownloadSize = 0L;
 
 //	private String globalurl = "";
 	/**
@@ -66,8 +65,6 @@ public class CollageGenerationServlet extends HttpServlet {
 		String topic = request.getParameter("topic");
 		if (action.equals(Constants.BUILD_ACTION)) {
 
-			if (topic != null) {
-
 				//for testing purposes!
 				String url = null;
 				if (!testingServletFlag) {
@@ -76,16 +73,14 @@ public class CollageGenerationServlet extends HttpServlet {
 					 url = "testUrl";
 				}
 			
-				if(url != null) {
-					allCollages.add(url);
+				allCollages.add(url);
 					
 //					BASE64Decoder decoder = new BASE64Decoder(); 
 //					byte[] imageBytes = decoder.decodeBuffer(url);
 					
-				}
 				responseUrl.print(url);		
 				responseUrl.flush();
-			}
+			
 			
 		}
 		
@@ -93,7 +88,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		else if (action.equals(Constants.DOWNLOAD_ACTION)) {
 //			String url = request.getParameter(Constants.URL);
 			Integer currentCollageId = Integer.valueOf(request.getParameter("currentCollageId"));
-//			downloadCollageToUserStorage(currentCollageId);
+			downloadCollageToUserStorage(currentCollageId);
 			
 		}
 	} //end of service method
@@ -133,14 +128,17 @@ public class CollageGenerationServlet extends HttpServlet {
 	 */
 	public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
 
-	private void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
+	public void downloadCollageToUserStorage(Integer currentCollageId) throws IOException, ServletException
 	{
 		String collageFullEncodedString = allCollages.get(currentCollageId-1);
 
 		byte[] imageBytes = Base64.getDecoder().decode(collageFullEncodedString);
 		
-		BufferedImage img = ImageIO.read((InputStream) new ByteArrayInputStream(imageBytes));
-
+		BufferedImage img = ImageIO.read((InputStream) new ByteArrayInputStream(imageBytes)); //CHANGE THIS -- NIHAR
+		DataBuffer dataBuffer = img.getData().getDataBuffer();
+		long sizeBytes = ((long) dataBuffer.getSize()) * 4l;
+		imageToDownloadSize = sizeBytes / (1024l * 1024l);
+		
 		try {
 				File outputfile = new File(System.getProperty("user.home") + "/Downloads/downloadedCollage" + currentCollageId + ".png");
 		    ImageIO.write(img, "png", outputfile);

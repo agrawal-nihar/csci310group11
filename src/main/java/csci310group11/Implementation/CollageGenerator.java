@@ -52,9 +52,9 @@ public class CollageGenerator {
 	public Boolean testingDownloadCollage = false; 
 	public static boolean testMode = false;
 	public static boolean test_degreeAfterRotation = true; // for testing rotation
-	public String rotationFile = "rotation.txt";
-	public String subImagesSizeFile = "size.txt";
-	public String collageSizeFile = "byte.txt";
+	public String rotationFile = "/home/student/Desktop/rotation.txt";
+	public String subImagesSizeFile = "/home/student/Desktop/size.txt";
+	public String collageSizeFile = "/home/student/Desktop/byte.txt";
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
@@ -177,7 +177,7 @@ public class CollageGenerator {
 	public String collageGeneratorDriver(String topic) throws IOException {
 		
 		//clear all logging files
-		clearAllLoggingFiles();
+//		clearAllLoggingFiles(); UNCOMMENT
 		
 		//To check testing flags and enable them if they were set in test case
 		try {
@@ -342,7 +342,7 @@ public class CollageGenerator {
 
 				//logging method
 				String subImageSizeString = currImage.getWidth() + "\n" + currImage.getHeight();
-				writeToFile(subImageSizeString, subImagesSizeFile);
+//				writeToFile(subImageSizeString, subImagesSizeFile); //UNCOMMENT
 				//end of logging
 				
 				//Helper method to rotate and draw the currImage
@@ -351,13 +351,13 @@ public class CollageGenerator {
 		}
 		
 		String collageSizeString = this.collageImage.getWidth() + "\n" + this.collageImage.getHeight();
-		writeToFile(collageSizeString, collageSizeFile);
+//		writeToFile(collageSizeString, collageSizeFile);
 		
 		//print size
 		DataBuffer dataBuffer = this.collageImage.getData().getDataBuffer();
 		long sizeBytes = ((long) dataBuffer.getSize()) * 4l;
 		long sizeMB = sizeBytes / (1024l * 1024l);
-		writeToFile(Long.toString(sizeMB), collageSizeFile);
+//		writeToFile(Long.toString(sizeMB), collageSizeFile);
 		
 	}
 
@@ -391,7 +391,7 @@ public class CollageGenerator {
 		}
 		
 		//write rotations to file
-		writeToFile(Integer.toString(degree), rotationFile);
+//		writeToFile(Integer.toString(degree), rotationFile);
 		//end of logging
 		 
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2); //rotates image about its origin
