@@ -24,7 +24,7 @@ public class TestingCollageGeneratorServletNominal {
 	public String TOPIC = "topic";
 	public String DOG = "dog";
 	public String NEW_USER = "newUser";
-	public String NEW_USER_TRUTH = "false";
+	public String NEW_USER_TRUTH = "true";
 	
 	@Test
 	public void testingCollageGeneratorServletNominal() {

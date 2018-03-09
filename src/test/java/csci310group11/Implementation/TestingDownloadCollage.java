@@ -28,6 +28,7 @@ public class TestingDownloadCollage {
 	public String TOPIC = "topic";
 	public String DOG = "dog";
 	public String NEW_USER = "newUser";
+	public String FALSE = "false";
 	public String TRUE = "true";
 	public String CURRENT_COLLAGE_ID = "currentCollageId";
 	public String ONE = "1";
@@ -76,7 +77,7 @@ public class TestingDownloadCollage {
 		//set attributes on request object
 		when(mockHttpServletRequest.getParameter(ACTION_TYPE)).thenReturn(DOWNLOAD);
 		when(mockHttpServletRequest.getParameter(TOPIC)).thenReturn(DOG);
-		when(mockHttpServletRequest.getParameter(NEW_USER)).thenReturn(TRUE);
+		when(mockHttpServletRequest.getParameter(NEW_USER)).thenReturn(FALSE);
 		when(mockHttpServletRequest.getParameter(CURRENT_COLLAGE_ID)).thenReturn(ONE);
 
 		try {

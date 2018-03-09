@@ -77,13 +77,16 @@ public class Utility {
 	}
 	
 	public static void printImageByteSize(BufferedImage image, String destination) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write( image, "jpg", baos );
-		baos.flush();
-		byte[] imageInByte = baos.toByteArray();
-		baos.close();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ImageIO.write(image, "png", outputStream);
+		outputStream.flush();
+		byte[] imageInByte = outputStream.toByteArray();
+
 		
+		writeToFile(String.valueOf("12345"), destination);
 		writeToFile(String.valueOf(imageInByte.length), destination);
+		
+		outputStream.close();
 	}
 	
 	public static void printAllCollagesBase64String(ArrayList<String> data, String allCollagesFile) throws IOException {
