@@ -6,15 +6,12 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,6 +51,7 @@ public class CollageGenerator {
 	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
 	public Boolean testingRotation = false;
 	public Boolean testingDownloadCollage = false; 
+
 	public static  Boolean testingResizeImageReturnNull = false;
 //	public static boolean testMode = false;
 	public String rotationFile = "/home/student/Desktop/rotation.txt";
@@ -159,10 +157,12 @@ public class CollageGenerator {
 		if (testingCollageGeneratorDummyImages) {
 			this.images = dummyImages;
 			return true;
-		} else if (testingCollageGeneratorDummyImagesWithNull) {
+		}
+		if (testingCollageGeneratorDummyImagesWithNull) {
 			this.images = dummyImagesWithNull;
 			return true;
-		} else return false;
+		}
+		return false;
 	}
 	/**
 	 * Driver method to complete Collage creation process.
@@ -414,7 +414,7 @@ public class CollageGenerator {
 				}
 
 				//logging method
-				String subImageSizeString = images.get(6*r + c).getWidth() + "\n" + images.get(6*r + c).getHeight();
+				String subImageSizeString = currImage.getWidth() + "\n" + currImage.getHeight();
 				Utility.writeToFile(subImageSizeString, subImagesSizeFile); 
 				//end of logging
 				
@@ -422,7 +422,6 @@ public class CollageGenerator {
 				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
-
 		
 		//print size
 		Utility.printImageByteSize(this.collageImage, collageSizeFile);

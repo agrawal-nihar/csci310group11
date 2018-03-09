@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.util.Base64;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import csci310group11.Implementation.CollageGenerator;
-import csci310group11.Implementation.InsufficientImagesFoundError;
 import csci310group11.Implementation.Utility;
 
 /**
@@ -41,7 +39,6 @@ public class CollageGenerationServlet extends HttpServlet {
 	public Boolean testingServletFlag = false;
 	public long imageToDownloadSize = 0L;
 	public String allCollagesFile = "/home/student/Desktop/imageLogs.txt";
-	public String collageBytesSizeFile = "/home/student/Desktop/byte.txt";
 
 //	private String globalurl = "";
 	/**
@@ -80,6 +77,7 @@ public class CollageGenerationServlet extends HttpServlet {
 						url = null;
 						//e.printStackTrace();
 					}
+
 				} else {
 					 url = "testUrl";
 				}
@@ -93,11 +91,6 @@ public class CollageGenerationServlet extends HttpServlet {
 				responseUrl.flush();
 				
 				Utility.printAllCollagesBase64String(allCollages, allCollagesFile);
-				
-				//write to file
-				byte[] imageBytes = Base64.getDecoder().decode(url);
-				System.out.println("Bytes in image file byte array after reading: " + imageBytes.length);
-				Utility.writeToFile(String.valueOf(imageBytes.length), collageBytesSizeFile);
 		}
 		
 	//Download Collage (to frontend) process
