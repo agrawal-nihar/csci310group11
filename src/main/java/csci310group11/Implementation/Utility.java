@@ -48,22 +48,16 @@ public class Utility {
 		
 		//write URL to file
 		FileReader fr = null;
-		try {
-			fr = new FileReader(filename);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 	
 	//helper method to read from file
 	public String readFromFile(String filename) {
+	public static String readFromFile(String filename) throws IOException {
 		System.out.println(filename + " PRINTOUT is: ");
 		String lineRead = "";
 		String fileContents = "";
 	  FileReader fileReader = null;
-	  try {
 			fileReader = new FileReader(filename);
 	    BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while((lineRead = bufferedReader.readLine()) != null) {
@@ -73,6 +67,7 @@ public class Utility {
 			
 			bufferedReader.close();
 	
+<<<<<<< HEAD
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();   

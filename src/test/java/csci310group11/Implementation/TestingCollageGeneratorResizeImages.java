@@ -3,14 +3,15 @@ package csci310group11.Implementation;
 import static org.junit.Assert.*;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import org.junit.Test;
 
 public class TestingCollageGeneratorResizeImages {
-
 	@Test
-	public void collageGeneratorResizeImagesWithNullTest() {
+	public void collageGeneratorResizeImagesWithNullTest() throws MalformedURLException, IOException {
 		CollageGenerator collageGenerator = new CollageGenerator();
 		collageGenerator.testingCollageGeneratorDummyImagesWithNull = true;
 		
@@ -39,6 +40,14 @@ public class TestingCollageGeneratorResizeImages {
 				}
 			}
 		}
+	}
+	
+	@Test
+	public void collageGeneratorReszieImagesReturnNull() throws MalformedURLException, IOException {
+		CollageGenerator.testingResizeImageReturnNull = true;
+		CollageGenerator cg = new CollageGenerator();
+		cg.resizeImages();
+		assertEquals(cg.images.size(), 30);
 	}
 
 }
