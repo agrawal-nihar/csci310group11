@@ -30,15 +30,8 @@ public class TestingCollageGeneratorResizeImagesNormal {
 
 			//for each image, verify that it meets the size criteria specified by the code
 			if (img != null) {
-				if (img.getWidth() == 1 || img.getHeight() == 1) {
-					assertEquals(1, img.getWidth());
-					assertEquals(1, img.getHeight());
-				}
-				else {
-					assertEquals(validWidth, img.getWidth());
-					assertEquals(validHeight, img.getHeight());
-				}
-
+				assertEquals(validWidth, img.getWidth());
+				assertEquals(validHeight, img.getHeight());
 			}
 		}
 	}

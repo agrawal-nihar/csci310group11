@@ -13,7 +13,6 @@ import org.junit.Test;
 public class TestingCollageGeneratorDownloadCollage {
 
 	@Test
-
 	public void collageGeneratorDownloadCollageTest() throws MalformedURLException, IOException {
 		CollageGenerator collageGenerator = new CollageGenerator();
 		collageGenerator.testingDownloadCollage = true;
