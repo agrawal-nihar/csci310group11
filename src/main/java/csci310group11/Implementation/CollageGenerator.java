@@ -291,23 +291,71 @@ public class CollageGenerator {
 		//iterate through every image
 		for(int i=0; i < images.size(); i++) {
 			BufferedImage image = images.get(i);
+			
+			BufferedImage proxy = image; 
+			Graphics2D proxyGraphics = proxy.createGraphics();
+			proxyGraphics.setPaint(Color.BLACK);
+			proxyGraphics.fillRect(0, 0, proxy.getWidth(), proxy.getHeight());
+			
 			int width = image.getWidth();
 			int height = image.getHeight();
 			
 			//Create image with enough space for 3px border
 			BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
-
+			BufferedImage proxyBordered = borderedImage;
+			
+			
 			//Setting larger image to all white
 			Graphics2D graphics = borderedImage.createGraphics();
 			graphics.setPaint(Color.WHITE);
 			graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
+			
+			Graphics2D proxyBorderedGraphics = proxyBordered.createGraphics();
+			proxyBorderedGraphics.setPaint(Color.WHITE);
+			proxyBorderedGraphics.fillRect(0, 0, proxyBordered.getWidth(), proxyBordered.getHeight());
 
 			//Paint original image onto new borderedImage	
 			graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
+			proxyBorderedGraphics.drawImage(proxy, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
+			
 			this.borderedImages.add(borderedImage);	
 			
+			this.printProxyBorders(i, proxyBordered);
+			
 			graphics.dispose(); //releases the resources used by graphics
+			proxyGraphics.dispose();
+			proxyBorderedGraphics.dispose();
 		}
+	}
+	
+	private void printProxyBorders(int index, BufferedImage img) {
+		try {
+			int num = index + 1;
+			File fout = new File("/Users/allenhuang/Desktop/border" + num + ".txt");
+			FileOutputStream fos = new FileOutputStream(fout);
+		 
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			
+			for(int r=0; r < img.getHeight(); r++) {
+				String row = "";
+				for(int c=0; c < img.getWidth(); c++) {
+					Color currColor = new Color(img.getRGB(c, r));
+					if(currColor.equals(Color.BLACK)) {
+						row += "1 ";
+					}
+					else if(currColor.equals(Color.WHITE)) {
+						row += "0 ";
+					} else {
+						row += "-1 ";
+					}
+				}
+				bw.write(row);
+				bw.newLine();
+			}
+			bw.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} 
 	}
 
 	/**
