@@ -5,13 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,9 +25,6 @@ public class CollageGenerator {
 	
 	//changed to public for testing
 	public BufferedImage collageImage;
-	
-	//proxy for blackbox
-	public BufferedImage proxyCollage;
 	
 	private GoogleCustomSearchApi api;
 	
@@ -51,7 +44,6 @@ public class CollageGenerator {
 	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
 	public Boolean testingRotation = false;
 	public Boolean testingDownloadCollage = false; 
-
 	public static  Boolean testingResizeImageReturnNull = false;
 //	public static boolean testMode = false;
 	public String rotationFile = "/home/student/Desktop/rotation.txt";
@@ -62,7 +54,6 @@ public class CollageGenerator {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
-		this.proxyCollage = this.collageImage;
 		this.api = new GoogleCustomSearchApi();
 		
 		//testing data members -- 
@@ -157,12 +148,10 @@ public class CollageGenerator {
 		if (testingCollageGeneratorDummyImages) {
 			this.images = dummyImages;
 			return true;
-		}
-		if (testingCollageGeneratorDummyImagesWithNull) {
+		} else if (testingCollageGeneratorDummyImagesWithNull) {
 			this.images = dummyImagesWithNull;
 			return true;
-		}
-		return false;
+		} else return false;
 	}
 	/**
 	 * Driver method to complete Collage creation process.
@@ -296,71 +285,23 @@ public class CollageGenerator {
 		//iterate through every image
 		for(int i=0; i < images.size(); i++) {
 			BufferedImage image = images.get(i);
-			
-			BufferedImage proxy = image; 
-			Graphics2D proxyGraphics = proxy.createGraphics();
-			proxyGraphics.setPaint(Color.BLACK);
-			proxyGraphics.fillRect(0, 0, proxy.getWidth(), proxy.getHeight());
-			
 			int width = image.getWidth();
 			int height = image.getHeight();
 			
 			//Create image with enough space for 3px border
 			BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
-			BufferedImage proxyBordered = borderedImage;
-			
-			
+
 			//Setting larger image to all white
 			Graphics2D graphics = borderedImage.createGraphics();
 			graphics.setPaint(Color.WHITE);
 			graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
-			
-			Graphics2D proxyBorderedGraphics = proxyBordered.createGraphics();
-			proxyBorderedGraphics.setPaint(Color.WHITE);
-			proxyBorderedGraphics.fillRect(0, 0, proxyBordered.getWidth(), proxyBordered.getHeight());
 
 			//Paint original image onto new borderedImage	
 			graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
-			proxyBorderedGraphics.drawImage(proxy, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
-			
 			this.borderedImages.add(borderedImage);	
 			
-			this.printProxyBorders(i, proxyBordered);
-			
 			graphics.dispose(); //releases the resources used by graphics
-			proxyGraphics.dispose();
-			proxyBorderedGraphics.dispose();
 		}
-	}
-	
-	private void printProxyBorders(int index, BufferedImage img) {
-		try {
-			int num = index + 1;
-			File fout = new File("/Users/allenhuang/Desktop/border" + num + ".txt");
-			FileOutputStream fos = new FileOutputStream(fout);
-		 
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-			
-			for(int r=0; r < img.getHeight(); r++) {
-				String row = "";
-				for(int c=0; c < img.getWidth(); c++) {
-					Color currColor = new Color(img.getRGB(c, r));
-					if(currColor.equals(Color.BLACK)) {
-						row += "1 ";
-					}
-					else if(currColor.equals(Color.WHITE)) {
-						row += "0 ";
-					} else {
-						row += "-1 ";
-					}
-				}
-				bw.write(row);
-				bw.newLine();
-			}
-			bw.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} 
 	}
 
 	/**
@@ -379,11 +320,6 @@ public class CollageGenerator {
 		Graphics2D graphics = this.collageImage.createGraphics();
 		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
-		
-		//BLACKBOX PROXY
-		Graphics2D proxyGraphics = this.proxyCollage.createGraphics();
-		graphics.setPaint(Color.WHITE); //check for "whitespace"
-		graphics.fillRect(0, 0, proxyCollage.getWidth(), proxyCollage.getHeight());
 
 		//logging method
 		String collageSizeString = this.collageImage.getWidth() + "\n" + this.collageImage.getHeight();
@@ -417,7 +353,7 @@ public class CollageGenerator {
 				}
 
 				//logging method
-				String subImageSizeString = currImage.getWidth() + "\n" + currImage.getHeight();
+				String subImageSizeString = images.get(6*r + c).getWidth() + "\n" + images.get(6*r + c).getHeight();
 				Utility.writeToFile(subImageSizeString, subImagesSizeFile); 
 				//end of logging
 				
@@ -425,13 +361,7 @@ public class CollageGenerator {
 				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
-		
-		//print size
-		Utility.printImageByteSize(this.collageImage, collageSizeFile);
-		
-		//write proxy image
-		this.printProxyCollage();
-		
+				
 	}
 
 	/**
@@ -494,48 +424,9 @@ public class CollageGenerator {
 			
 		
 		op.filter(image, this.collageImage); //paints onto collageImage
-		
-		//PROXY PAINTS ALL BLACK IMAGE ONTO PROXYCOLLAGE
-		BufferedImage proxy = image;
-		Graphics2D proxyGraphics = proxy.createGraphics();
-		proxyGraphics.setPaint(Color.BLACK); 
-		proxyGraphics.fillRect(0, 0, proxy.getWidth(), proxy.getHeight());
-		op.filter(proxy, this.proxyCollage);
-		
 	}
 
-	/**
-	 * Helper function to write the pixel array of Proxy Collage to a file.
-	 * Transforms all white pixels to 0 and all black pixels to 1
-	 */
-	private void printProxyCollage() {
-		try {
-			File fout = new File("/Users/allenhuang/Desktop/background.txt");
-			FileOutputStream fos = new FileOutputStream(fout);
-		 
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-			
-			for(int r=0; r < this.proxyCollage.getHeight(); r++) {
-				String row = "";
-				for(int c=0; c < this.proxyCollage.getWidth(); c++) {
-					Color currColor = new Color(this.proxyCollage.getRGB(c, r));
-					if(currColor.equals(Color.BLACK)) {
-						row += "1 ";
-					}
-					else if(currColor.equals(Color.WHITE)) {
-						row += "0 ";
-					} else {
-						row += "-1 ";
-					}
-				}
-				bw.write(row);
-				bw.newLine();
-			}
-			bw.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} 
-	}
+
 	
 	/**
 	 * Responsible for downloading the Collage created to the server filespace.
