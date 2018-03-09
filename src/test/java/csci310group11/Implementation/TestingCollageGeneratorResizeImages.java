@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 public class TestingCollageGeneratorResizeImages {
-
 	@Test
 	public void collageGeneratorResizeImagesWithNullTest() throws MalformedURLException, IOException {
 		CollageGenerator collageGenerator = new CollageGenerator();
@@ -41,6 +40,14 @@ public class TestingCollageGeneratorResizeImages {
 				}
 			}
 		}
+	}
+	
+	@Test
+	public void collageGeneratorReszieImagesReturnNull() throws MalformedURLException, IOException {
+		CollageGenerator.testingResizeImageReturnNull = true;
+		CollageGenerator cg = new CollageGenerator();
+		cg.resizeImages();
+		assertEquals(cg.images.size(), 30);
 	}
 
 }

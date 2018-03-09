@@ -56,6 +56,10 @@ public class TestingCollageGeneratorCompile {
 
 		String actualBase64String = returnURL.substring(0, expectedBase64String.length());
 		// assertEquals(expectedBase64String, actualBase64String);
+		
+		collageGenerator.testingRotation = false;
+		collageGenerator.resizeImages();
+		assertEquals(collageGenerator.images.size(), 30);
 
 	}
 
