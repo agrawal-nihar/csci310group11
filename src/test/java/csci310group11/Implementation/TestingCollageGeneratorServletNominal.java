@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class TestingCollageGeneratorServletNominal {
 	public String NEW_USER_TRUTH = "true";
 	
 	@Test
-	public void testingCollageGeneratorServletNominal() {
+	public void testingCollageGeneratorServletNominal() throws MalformedURLException, IOException {
 		CollageGenerationServlet collageGenerationServlet = new CollageGenerationServlet();
 		
 		//input CollageGenerator with dummy images into servlet

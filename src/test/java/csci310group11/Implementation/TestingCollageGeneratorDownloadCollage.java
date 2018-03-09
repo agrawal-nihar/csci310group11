@@ -6,13 +6,14 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.junit.Test;
 
 public class TestingCollageGeneratorDownloadCollage {
 
 	@Test
-	public void collageGeneratorDownloadCollageTest() {
+	public void collageGeneratorDownloadCollageTest() throws MalformedURLException, IOException {
 		CollageGenerator collageGenerator = new CollageGenerator();
 		collageGenerator.testingDownloadCollage = true;
 		
