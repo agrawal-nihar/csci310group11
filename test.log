@@ -1,0 +1,120 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Implementation 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] >>> cobertura-maven-plugin:2.7:cobertura (default-cli) > [cobertura]test @ Implementation >>>
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ Implementation ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /media/sf_VM_shared/cs310/csci310group11/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.2:compile (default-compile) @ Implementation ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- cobertura-maven-plugin:2.7:instrument (default-cli) @ Implementation ---
+[INFO] Cobertura 2.1.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+[INFO] Cobertura: Loaded information on 9 classes.
+[INFO] Cobertura: Saved information on 9 classes.
+[INFO] Cobertura: Saved information on 9 classes.
+
+[INFO] Instrumentation was successful.
+[INFO] NOT adding cobertura ser file to attached artifacts list.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ Implementation ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /media/sf_VM_shared/cs310/csci310group11/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.2:testCompile (default-testCompile) @ Implementation ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.17:test (default-test) @ Implementation ---
+[INFO] Surefire report directory: /media/sf_VM_shared/cs310/csci310group11/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running csci310group11.Implementation.TestingCollageGeneratorDownloadCollage
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.647 sec - in csci310group11.Implementation.TestingCollageGeneratorDownloadCollage
+Running csci310group11.Implementation.TestingCollageGeneratorAddBorder
+numRows: 646 numCols: 646
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.489 sec - in csci310group11.Implementation.TestingCollageGeneratorAddBorder
+Running csci310group11.Implementation.TestingCollageGeneratorCompile
+Current dummyRotationDegree: -11
+Current dummyRotationDegree: 0
+Current dummyRotationDegree: 7
+Current dummyRotationDegree: -41
+Current dummyRotationDegree: -31
+Current dummyRotationDegree: -36
+Current dummyRotationDegree: 13
+Current dummyRotationDegree: 18
+Current dummyRotationDegree: -29
+Current dummyRotationDegree: 18
+Current dummyRotationDegree: 6
+Current dummyRotationDegree: 11
+Current dummyRotationDegree: 11
+Current dummyRotationDegree: -11
+Current dummyRotationDegree: -9
+Current dummyRotationDegree: 42
+Current dummyRotationDegree: 41
+Current dummyRotationDegree: 21
+Current dummyRotationDegree: 16
+Current dummyRotationDegree: 5
+Current dummyRotationDegree: -27
+Current dummyRotationDegree: 2
+Current dummyRotationDegree: 6
+Current dummyRotationDegree: 25
+Current dummyRotationDegree: 17
+Current dummyRotationDegree: 27
+Current dummyRotationDegree: -35
+Current dummyRotationDegree: 29
+Current dummyRotationDegree: 44
+Current dummyRotationDegree: -28
+returnURL: iVBORw0KGg
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.822 sec - in csci310group11.Implementation.TestingCollageGeneratorCompile
+Running csci310group11.Implementation.TestingCollageGeneratorResizeImages
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.954 sec - in csci310group11.Implementation.TestingCollageGeneratorResizeImages
+Running csci310group11.Implementation.TestingCollageGeneratorResizeImagesNormal
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.626 sec - in csci310group11.Implementation.TestingCollageGeneratorResizeImagesNormal
+Running csci310group11.Implementation.TestingImgToBase64String
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.019 sec <<< FAILURE! - in csci310group11.Implementation.TestingImgToBase64String
+warning(junit.framework.TestSuite$1)  Time elapsed: 0.009 sec  <<< FAILURE!
+junit.framework.AssertionFailedError: No tests found in csci310group11.Implementation.TestingImgToBase64String
+	at junit.framework.Assert.fail(Assert.java:47)
+	at junit.framework.TestSuite$1.runTest(TestSuite.java:97)
+
+Running csci310group11.Implementation.TestingCollageGeneratorServlet
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.832 sec - in csci310group11.Implementation.TestingCollageGeneratorServlet
+Running csci310group11.Implementation.TestingCollageGenerator
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 sec - in csci310group11.Implementation.TestingCollageGenerator
+[INFO] Cobertura: Loaded information on 9 classes.
+[INFO] Cobertura: Saved information on 9 classes.
+
+Results :
+
+Failed tests: 
+  TestSuite$1.warning No tests found in csci310group11.Implementation.TestingImgToBase64String
+
+Tests run: 9, Failures: 1, Errors: 0, Skipped: 0
+
+[ERROR] There are test failures.
+
+Please refer to /media/sf_VM_shared/cs310/csci310group11/target/surefire-reports for the individual test results.
+[INFO] 
+[INFO] <<< cobertura-maven-plugin:2.7:cobertura (default-cli) < [cobertura]test @ Implementation <<<
+[INFO] 
+[INFO] --- cobertura-maven-plugin:2.7:cobertura (default-cli) @ Implementation ---
+[INFO] Cobertura 2.1.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+[INFO] Cobertura: Loaded information on 9 classes.
+[INFO] Data file does not contain instrumentation information for the file csci310group11/Implementation/Api.java.  Ensure this class was instrumented, and this data file contains the instrumentation information.
+Report time: 531ms
+
+[INFO] Cobertura Report generation was successful.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 52.324 s
+[INFO] Finished at: 2018-03-07T23:44:55-08:00
+[INFO] Final Memory: 16M/60M
+[INFO] ------------------------------------------------------------------------

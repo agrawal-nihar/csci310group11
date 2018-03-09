@@ -5,32 +5,165 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
-import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
 
 public class CollageGenerator {
 
-	private ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
-	private ArrayList<BufferedImage> borderedImages;
-	private BufferedImage collageImage;
+	public ArrayList<BufferedImage> images; //change to <BufferedImage> if necessary
+	public ArrayList<BufferedImage> borderedImages;
+	
+	//changed to public for testing
+	public BufferedImage collageImage;
+	
+	//proxy for blackbox
+	public BufferedImage proxyCollage;
+	
 	private GoogleCustomSearchApi api;
+	
+	//testing objects
+	public ArrayList<BufferedImage> dummyImages = null;
+	public ArrayList<BufferedImage> dummyImagesWithNull = null;
+	public ArrayList<Integer> dummyRotationDegrees = new ArrayList<Integer>(Arrays.asList(-11, 0, 7, -41, -31, -36, 13, 
+																															18, -29, 18, 6, 11, 11, -11, -9, 
+																															42, 41, 21, 16, 5, -27, 2, 6, 25, 
+																															17, 27, -35, 29, 44, -28)); 
+	public Integer currentDummyRotationDegreeIndex = 0;
+	public String returnURL = null;
+	public BufferedImage downloadCollageDummyImage;
+	
+	//testing flags
+	public Boolean testingCollageGeneratorDummyImages = true; //flag to determine whether API should be made
+	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
+	public Boolean testingRotation = false;
+	public Boolean testingDownloadCollage = false; 
 
-	public CollageGenerator() {
+	public static  Boolean testingResizeImageReturnNull = false;
+//	public static boolean testMode = false;
+	public String rotationFile = "/home/student/Desktop/rotation.txt";
+	public String subImagesSizeFile = "/home/student/Desktop/size.txt";
+	public String collageSizeFile = "/home/student/Desktop/byte.txt";
+
+	public CollageGenerator() throws MalformedURLException, IOException {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
+		this.proxyCollage = this.collageImage;
 		this.api = new GoogleCustomSearchApi();
-	}
+		
+		//testing data members -- 
+//		try {
+		downloadCollageDummyImage = ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"));
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
+//		try {
+			dummyImages = new ArrayList<BufferedImage>(Arrays.asList(
+					ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/NINXdNF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/vWD85qB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/BUG2NOZ.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/t6rfewd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/iv5iLkj.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/teIakKI.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/5jdgEU4.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/s1i5OGd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/yTV8L0s.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/fuG4fpj.gif"))
+					,ImageIO.read(new URL("https://i.imgur.com/crLuiua.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/OzaawFv.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/XFZE79u.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/0gXBfVm.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/6G0JhxF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/lMOAQBs.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/lxHeItW.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/DWOQF38.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/Lj2UGJh.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/PtKFycU.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/VgmBH30.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/4qmmRFj.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/qVkzrLq.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/m8mpGoK.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/xmRJOOP.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/bzPQBoB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/90yLceB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/NFS0WeC.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/tl91hI5.gif")) ));
+//		} catch (IOException ioe) {
+//			System.out.println("ioe: " + ioe.getMessage());
+//		}
+		
+//		try {
+			dummyImagesWithNull = new ArrayList<BufferedImage>(Arrays.asList(
+					null
+					,ImageIO.read(new URL("https://i.imgur.com/NINXdNF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/vWD85qB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/BUG2NOZ.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/t6rfewd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/iv5iLkj.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/teIakKI.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/5jdgEU4.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/s1i5OGd.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/yTV8L0s.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/fuG4fpj.gif"))
+					,ImageIO.read(new URL("https://i.imgur.com/crLuiua.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/OzaawFv.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/XFZE79u.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/0gXBfVm.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/6G0JhxF.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/lMOAQBs.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/lxHeItW.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/DWOQF38.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/Lj2UGJh.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/PtKFycU.jpg?1"))
+					,ImageIO.read(new URL("https://i.imgur.com/VgmBH30.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/4qmmRFj.png"))
+					,ImageIO.read(new URL("https://i.imgur.com/qVkzrLq.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/m8mpGoK.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/xmRJOOP.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/bzPQBoB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/90yLceB.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/NFS0WeC.jpg"))
+					,ImageIO.read(new URL("https://i.imgur.com/tl91hI5.gif")) ));
+//		} catch (IOException ioe) {
+//			System.out.println("ioe: " + ioe.getMessage());
+//		}
+	}
+	
+	
+	
+	/**
+	 * Method to include dummy parameters if we are in testing process
+	 * @return true or false whether some flag was set
+	 */
+	public Boolean enableTestingFlags() {
+		if (testingCollageGeneratorDummyImages) {
+			this.images = dummyImages;
+			return true;
+		}
+		if (testingCollageGeneratorDummyImagesWithNull) {
+			this.images = dummyImagesWithNull;
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * Driver method to complete Collage creation process.
 	 * This method will call the GoogleCustomSearchAPI and retrieve the images to be compiled.
@@ -42,14 +175,25 @@ public class CollageGenerator {
 	 * 
 	 * @param topic the String of terms inputted by the user; this will be passed to the API to make th search
 	 * @return URL of the collage on the server's storage system
+	 * @throws IOException 
+	 * @throws InsufficientImagesFoundError 
 	 */
-	public String collageGeneratorDriver(String topic) {
+	public String collageGeneratorDriver(String topic) throws IOException, InsufficientImagesFoundError {
 		
-		try {
-			this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
-		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
-			return null;
-		}
+		//clear all logging files
+		clearAllLoggingFiles(); 
+		
+		//To check testing flags and enable them if they were set in test case
+//		try {
+			if (!enableTestingFlags()) {
+				this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
+			}
+			else {
+				this.images = dummyImages;
+			}
+//		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
+//			return null;
+//		}
 
 		this.resizeImages();
 		this.addBorderToImages();
@@ -57,19 +201,56 @@ public class CollageGenerator {
 
 		Collage collage = new Collage(this.collageImage, topic);
 		
-		
 		String returnURL = this.downloadCollage(collage);
+		
+		//testing
+		System.out.println("returnURL: " + returnURL.substring(0, 10));
+		this.returnURL = returnURL;
+		
+		
+		
+//		readFromFile(rotationFile);
+//		readFromFile(collageSizeFile);
+//		readFromFile(subImagesSizeFile);
+//		
+//		printPathOfFile(rotationFile);
+//		readFromFile(collageSizeFile);
+//		readFromFile(subImagesSizeFile);
+		
 		return returnURL;
 	}
+	
+	
+	//helper method to clear all logging files
+	public void clearAllLoggingFiles() throws FileNotFoundException {
+		ArrayList<String> files = new ArrayList<String>();
+		files.add(rotationFile);
+		files.add(subImagesSizeFile);
+		files.add(collageSizeFile);
 
+		Utility.clearAllLoggingFiles(files);
+	}
+	
+//	//identify path of file
+//	public void printPathOfFile(String filename) {
+//		File file = new File(filename);
+//		System.out.println(filename + " should be at: ");
+//
+//		System.out.println(file.getAbsolutePath());
+//		
+//	}
 	/**
 	 * Resizes all the BufferedImages inside of images to be 1/20th of the size of the overall collage.
 	 * 
 	 * Each images will be 1/5 as wide as the collage and 1/4 as tall as the collage.
 	 * These newly sized images will replace the original images in this.images.
 	 */
-	private void resizeImages() {
+	public void resizeImages() {
 		//1/20th of collage dimensions
+		
+		//To check testing flags and enable them if they were set in test case
+		enableTestingFlags();
+		
 		int resizeWidth = this.collageImage.getWidth()/5;
 		int resizeHeight = this.collageImage.getHeight()/4;
 		
@@ -78,6 +259,9 @@ public class CollageGenerator {
 			BufferedImage img = images.get(i);
 			//New BufferedImage with 1/20th dimensions of collage
 			BufferedImage resizeImg = null;
+			if (testingResizeImageReturnNull) {
+				img = null;
+			}
 			if (img != null) {
 				resizeImg = new BufferedImage(resizeWidth, resizeHeight, img.getType());
 				//Draws the img image into the size of the resizeImg
@@ -104,27 +288,79 @@ public class CollageGenerator {
 	 * Sets the graphics of the larger BufferedImage to white. Paints the original image onto the 
 	 * new BufferedImage to create a 3px "border". Adds the bordered BuffereImage to this.borderedImages.
 	 */
-	private void addBorderToImages() {
+	public void addBorderToImages() {
+		
+		//To check testing flags and enable them if they were set in test case
+		enableTestingFlags();
+		
 		//iterate through every image
 		for(int i=0; i < images.size(); i++) {
 			BufferedImage image = images.get(i);
+			
+			BufferedImage proxy = image; 
+			Graphics2D proxyGraphics = proxy.createGraphics();
+			proxyGraphics.setPaint(Color.BLACK);
+			proxyGraphics.fillRect(0, 0, proxy.getWidth(), proxy.getHeight());
+			
 			int width = image.getWidth();
 			int height = image.getHeight();
 			
 			//Create image with enough space for 3px border
 			BufferedImage borderedImage = new BufferedImage(width + 2*Constants.BORDER_WIDTH, height + 2*Constants.BORDER_WIDTH, image.getType());
-
+			BufferedImage proxyBordered = borderedImage;
+			
+			
 			//Setting larger image to all white
 			Graphics2D graphics = borderedImage.createGraphics();
 			graphics.setPaint(Color.WHITE);
 			graphics.fillRect(0, 0, borderedImage.getWidth(), borderedImage.getHeight());
+			
+			Graphics2D proxyBorderedGraphics = proxyBordered.createGraphics();
+			proxyBorderedGraphics.setPaint(Color.WHITE);
+			proxyBorderedGraphics.fillRect(0, 0, proxyBordered.getWidth(), proxyBordered.getHeight());
 
 			//Paint original image onto new borderedImage	
 			graphics.drawImage(image, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
+			proxyBorderedGraphics.drawImage(proxy, Constants.BORDER_WIDTH, Constants.BORDER_WIDTH, null);
+			
 			this.borderedImages.add(borderedImage);	
 			
+			this.printProxyBorders(i, proxyBordered);
+			
 			graphics.dispose(); //releases the resources used by graphics
+			proxyGraphics.dispose();
+			proxyBorderedGraphics.dispose();
 		}
+	}
+	
+	private void printProxyBorders(int index, BufferedImage img) {
+		try {
+			int num = index + 1;
+			File fout = new File("/Users/allenhuang/Desktop/border" + num + ".txt");
+			FileOutputStream fos = new FileOutputStream(fout);
+		 
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			
+			for(int r=0; r < img.getHeight(); r++) {
+				String row = "";
+				for(int c=0; c < img.getWidth(); c++) {
+					Color currColor = new Color(img.getRGB(c, r));
+					if(currColor.equals(Color.BLACK)) {
+						row += "1 ";
+					}
+					else if(currColor.equals(Color.WHITE)) {
+						row += "0 ";
+					} else {
+						row += "-1 ";
+					}
+				}
+				bw.write(row);
+				bw.newLine();
+			}
+			bw.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} 
 	}
 
 	/**
@@ -137,12 +373,23 @@ public class CollageGenerator {
 	 * The basic layout of the collage is 5 rows of 6 images in a "grid".
 	 * Minor adjustments are made to ensure that the border of the collage are covered regardless of individual
 	 * rotation. 
+	 * @throws IOException 
 	 */
-	private void compileCollage() {
+	public void compileCollage() throws IOException {
 		Graphics2D graphics = this.collageImage.createGraphics();
 		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
+		
+		//BLACKBOX PROXY
+		Graphics2D proxyGraphics = this.proxyCollage.createGraphics();
+		graphics.setPaint(Color.WHITE); //check for "whitespace"
+		graphics.fillRect(0, 0, proxyCollage.getWidth(), proxyCollage.getHeight());
 
+		//logging method
+		String collageSizeString = this.collageImage.getWidth() + "\n" + this.collageImage.getHeight();
+		Utility.writeToFile(collageSizeString, subImagesSizeFile); 
+		//end of logging
+		
 		for(int r=0; r < 5; r++) { //5 rows of images
 			for(int c = 0; c < 6; c++) { //6 columns of images
 				BufferedImage currImage = borderedImages.get(6*r + c); //retrieves proper borderedImage
@@ -169,10 +416,22 @@ public class CollageGenerator {
 					col += 10;
 				}
 
+				//logging method
+				String subImageSizeString = currImage.getWidth() + "\n" + currImage.getHeight();
+				Utility.writeToFile(subImageSizeString, subImagesSizeFile); 
+				//end of logging
+				
 				//Helper method to rotate and draw the currImage
 				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
+		
+		//print size
+		Utility.printImageByteSize(this.collageImage, collageSizeFile);
+		
+		//write proxy image
+		this.printProxyCollage();
+		
 	}
 
 	/**
@@ -181,17 +440,101 @@ public class CollageGenerator {
 	 * @param image the BufferedImage to be drawn
 	 * @param row the y-coordinate in this.collageImage
 	 * @param col the x-coordinate in this.collageImage
+	 * @throws IOException 
 	 */
-	private void rotateAndDrawImage(BufferedImage image, int row, int col) {
+	public void rotateAndDrawImage(BufferedImage image, int row, int col) throws IOException {
 		AffineTransform at = new AffineTransform(); //Object for transformation
 
 		at.translate(col, row); //specifies where in this.collageImage to paint image
 
-		int degree = (int) (Math.random() * 91 - 45); //random degree in range: -45 to 45
+		/* these two params are for later testing, it only allocates a little resource but provide huge convenience to later test */
+		double prev_x = at.getScaleX();
+		double prev_y = at.getScaleY();
+		/* end of assigning test params */
+		
+		//testing
+		Integer degree = null;
+		if (!testingRotation) {
+			degree = (int) (Math.random() * 91 - 45); //random degree in range: -45 to 45
+		} else {
+			degree = dummyRotationDegrees.get(currentDummyRotationDegreeIndex++);
+			
+			//testing
+			System.out.println("Current dummyRotationDegree: " + degree);
+		}
+		
+		//write rotations to file
+		Utility.writeToFile(Integer.toString(degree), rotationFile);
+		//end of logging
+		 
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2); //rotates image about its origin
 
 		AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR); //performs the transformation
+		
+				
+		/* if it's in test mode, below codes will exec once, else it won't be invoked */
+//		if (testMode) {
+//			double alt_x = op.getTransform().getScaleX();
+//			double alt_y = op.getTransform().getScaleY();
+//			double rad = Math.toRadians(degree);
+//			if(degree > 0) {
+//						double comp_x = prev_x * Math.cos(rad) + prev_y * Math.sin(rad);
+//						double comp_y = -prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
+//						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
+//						else test_degreeAfterRotation = false;
+//					} else {
+//						double comp_x = prev_x * Math.cos(rad) - prev_y * Math.sin(rad);
+//						double comp_y = prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
+//						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
+//						else test_degreeAfterRotation = false;
+//					}
+//				}
+		/* end of test case */
+				
+			
+		
 		op.filter(image, this.collageImage); //paints onto collageImage
+		
+		//PROXY PAINTS ALL BLACK IMAGE ONTO PROXYCOLLAGE
+		BufferedImage proxy = image;
+		Graphics2D proxyGraphics = proxy.createGraphics();
+		proxyGraphics.setPaint(Color.BLACK); 
+		proxyGraphics.fillRect(0, 0, proxy.getWidth(), proxy.getHeight());
+		op.filter(proxy, this.proxyCollage);
+		
+	}
+
+	/**
+	 * Helper function to write the pixel array of Proxy Collage to a file.
+	 * Transforms all white pixels to 0 and all black pixels to 1
+	 */
+	private void printProxyCollage() {
+		try {
+			File fout = new File("/Users/allenhuang/Desktop/background.txt");
+			FileOutputStream fos = new FileOutputStream(fout);
+		 
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			
+			for(int r=0; r < this.proxyCollage.getHeight(); r++) {
+				String row = "";
+				for(int c=0; c < this.proxyCollage.getWidth(); c++) {
+					Color currColor = new Color(this.proxyCollage.getRGB(c, r));
+					if(currColor.equals(Color.BLACK)) {
+						row += "1 ";
+					}
+					else if(currColor.equals(Color.WHITE)) {
+						row += "0 ";
+					} else {
+						row += "-1 ";
+					}
+				}
+				bw.write(row);
+				bw.newLine();
+			}
+			bw.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} 
 	}
 	
 	/**
@@ -209,15 +552,23 @@ public class CollageGenerator {
 	 * is png. This function will convert the file into base64 and return the path.
 	 * @param collage
 	 * @return returnUrl
+	 * @throws IOException 
 	 */
-	private String downloadCollage(Collage collage) {
+	public String downloadCollage(Collage collage) throws IOException {
 
 		String returnUrl = "";
-		
-		BufferedImage before = collage.getCollageImage();
+		//testing
+		BufferedImage before = null;
+		if (!testingDownloadCollage) {
+			 before = collage.getCollageImage();
+		}
+		else {
+			before = downloadCollageDummyImage;
+		}
+	
 		int w = before.getWidth();
 		int h = before.getHeight();
-		
+				
 		//from stackoverflow
 		BufferedImage after = new BufferedImage(w/2, h/2, BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
@@ -227,25 +578,24 @@ public class CollageGenerator {
 		after = scaleOp.filter(before, after);
 		
 		returnUrl = imgToBase64String(after, "png");
-		
 		return returnUrl;
 		
 	}
 	
 	//from stack overflow
-	private static String imgToBase64String(BufferedImage img, final String formatName)
+	public static String imgToBase64String(BufferedImage img, final String formatName) throws IOException
 	{
 	  final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-	  try
-	  {
+//	  try
+//	  {
 	    ImageIO.write(img, formatName, os);
 	    return Base64.getEncoder().encodeToString(os.toByteArray());
-	  }
-	  catch (final IOException ioe)
-	  {
-	    throw new UncheckedIOException(ioe);
-	  }
+//	  }
+//	  catch (final IOException ioe)
+//	  {
+//	    throw new UncheckedIOException(ioe);
+//	  }
 	}
 	
 }

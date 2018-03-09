@@ -9,6 +9,6 @@ public class InsufficientImagesFoundError extends Exception {
 	 * @param i
 	 */
 	InsufficientImagesFoundError(int i) {
-		System.out.println("Current images amount: " + i);
+		// System.out.println("Current images amount: " + i);
 	}
 }
