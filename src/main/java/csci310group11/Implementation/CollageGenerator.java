@@ -177,7 +177,7 @@ public class CollageGenerator {
 	public String collageGeneratorDriver(String topic) throws IOException {
 		
 		//clear all logging files
-//		clearAllLoggingFiles(); UNCOMMENT
+		clearAllLoggingFiles(); 
 		
 		//To check testing flags and enable them if they were set in test case
 		try {
@@ -214,6 +214,17 @@ public class CollageGenerator {
 //		readFromFile(subImagesSizeFile);
 		
 		return returnURL;
+	}
+	
+	
+	//helper method to clear all logging files
+	public void clearAllLoggingFiles() throws FileNotFoundException {
+		ArrayList<String> files = new ArrayList<String>();
+		files.add(rotationFile);
+		files.add(subImagesSizeFile);
+		files.add(collageSizeFile);
+
+		Utility.clearAllLoggingFiles(files);
 	}
 	
 //	//identify path of file
@@ -314,6 +325,11 @@ public class CollageGenerator {
 		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
 
+		//logging method
+		String collageSizeString = this.collageImage.getWidth() + "\n" + this.collageImage.getHeight();
+		Utility.writeToFile(collageSizeString, subImagesSizeFile); 
+		//end of logging
+		
 		for(int r=0; r < 5; r++) { //5 rows of images
 			for(int c = 0; c < 6; c++) { //6 columns of images
 				BufferedImage currImage = borderedImages.get(6*r + c); //retrieves proper borderedImage
@@ -342,7 +358,7 @@ public class CollageGenerator {
 
 				//logging method
 				String subImageSizeString = currImage.getWidth() + "\n" + currImage.getHeight();
-//				writeToFile(subImageSizeString, subImagesSizeFile); //UNCOMMENT
+				Utility.writeToFile(subImageSizeString, subImagesSizeFile); 
 				//end of logging
 				
 				//Helper method to rotate and draw the currImage
@@ -350,14 +366,8 @@ public class CollageGenerator {
 			}
 		}
 		
-		String collageSizeString = this.collageImage.getWidth() + "\n" + this.collageImage.getHeight();
-//		writeToFile(collageSizeString, collageSizeFile);
-		
 		//print size
-		DataBuffer dataBuffer = this.collageImage.getData().getDataBuffer();
-		long sizeBytes = ((long) dataBuffer.getSize()) * 4l;
-		long sizeMB = sizeBytes / (1024l * 1024l);
-//		writeToFile(Long.toString(sizeMB), collageSizeFile);
+		Utility.printImageByteSize(this.collageImage, collageSizeFile);
 		
 	}
 
@@ -391,7 +401,7 @@ public class CollageGenerator {
 		}
 		
 		//write rotations to file
-//		writeToFile(Integer.toString(degree), rotationFile);
+		Utility.writeToFile(Integer.toString(degree), rotationFile);
 		//end of logging
 		 
 		at.rotate(Math.toRadians(degree), image.getWidth()/2, image.getHeight()/2); //rotates image about its origin
@@ -422,68 +432,8 @@ public class CollageGenerator {
 		
 		op.filter(image, this.collageImage); //paints onto collageImage
 	}
-	
-	
-	//helper method to clear all logging files
-	public void clearAllLoggingFiles() throws FileNotFoundException {
-		clearFile(rotationFile);
-		clearFile(collageSizeFile);
-		clearFile(subImagesSizeFile);
-	}
-	
-	
-	//helper method to clear log file 
-	public static void clearFile(String filename) throws FileNotFoundException {
-		PrintWriter writer = new PrintWriter(filename);
-		writer.print("");
-		writer.close();
-	}
-	
-	//helper method to pass degree of rotation to log file
-	public static void writeToFile(String data, String filename) throws IOException {
-		System.out.println("Supposed to write: " + data + " to " + filename);
-		FileWriter fileWriter = new FileWriter(filename, true);
-		BufferedWriter bw = new BufferedWriter(fileWriter);
-		bw.write(data + "\n");
 
-		fileWriter.flush();
-		bw.flush();
-		fileWriter.close();
-		bw.close();
-		
-		//write URL to file
-		FileReader fr = null;
-		try {
-			fr = new FileReader(filename);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-	}
-	
-	//helper method to read from file
-	public void readFromFile(String filename) {
-		System.out.println(filename + " PRINTOUT is: ");
-		String lineRead = "";
-		String fileContents = "";
-	  FileReader fileReader = null;
-	  try {
-			fileReader = new FileReader(filename);
-	    BufferedReader bufferedReader = new BufferedReader(fileReader);
-			while((lineRead = bufferedReader.readLine()) != null) {
-			    
-			    fileContents += lineRead;
-			}
-			
-			bufferedReader.close();
-	
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();   
-		} 
-	  System.out.println(fileContents);
-	}
 	
 	/**
 	 * Responsible for downloading the Collage created to the server filespace.
@@ -530,7 +480,6 @@ public class CollageGenerator {
 	}
 	
 	//from stack overflow
-	//MADE PUBLIC!!!
 	public static String imgToBase64String(BufferedImage img, final String formatName)
 	{
 	  final ByteArrayOutputStream os = new ByteArrayOutputStream();

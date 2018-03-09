@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import csci310group11.Implementation.CollageGenerator;
+import csci310group11.Implementation.Utility;
 
 /**
  * Servlet implementation class CollageGenerationServlet
@@ -37,6 +38,7 @@ public class CollageGenerationServlet extends HttpServlet {
 	//TESTING DATA MEMBERS
 	public Boolean testingServletFlag = false;
 	public long imageToDownloadSize = 0L;
+	public String allCollagesFile = "/home/student/Desktop/imageLogs.txt";
 
 //	private String globalurl = "";
 	/**
@@ -52,7 +54,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		//Verify user is new user	
 		String newUserTruthValue = request.getParameter("newUser");
 
-		Boolean newUser = checkNewUser(newUserTruthValue);
+		checkNewUser(newUserTruthValue);
 		collageGenerator = new CollageGenerator();
 		
 		//Determine which action was requested in the HttpServletRequest object
@@ -80,8 +82,8 @@ public class CollageGenerationServlet extends HttpServlet {
 					
 				responseUrl.print(url);		
 				responseUrl.flush();
-			
-			
+				
+				Utility.printAllCollagesBase64String(allCollages, allCollagesFile);
 		}
 		
 	//Download Collage (to frontend) process
@@ -105,6 +107,9 @@ public class CollageGenerationServlet extends HttpServlet {
 		if (truthValue.equals("true")) {
 			newUser = true;
 			removePreviousCollages();
+		}
+		else {
+			newUser = false;
 		}
 		
 		return newUser;

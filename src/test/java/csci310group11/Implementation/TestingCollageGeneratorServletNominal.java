@@ -24,7 +24,7 @@ public class TestingCollageGeneratorServletNominal {
 	public String TOPIC = "topic";
 	public String DOG = "dog";
 	public String NEW_USER = "newUser";
-	public String TRUE = "true";
+	public String NEW_USER_TRUTH = "false";
 	
 	@Test
 	public void testingCollageGeneratorServletNominal() {
@@ -41,7 +41,7 @@ public class TestingCollageGeneratorServletNominal {
 		//set attributes on request object
 		when(mockHttpServletRequest.getParameter(ACTION_TYPE)).thenReturn(BUILD);
 		when(mockHttpServletRequest.getParameter(TOPIC)).thenReturn(DOG);
-		when(mockHttpServletRequest.getParameter(NEW_USER)).thenReturn(TRUE);
+		when(mockHttpServletRequest.getParameter(NEW_USER)).thenReturn(NEW_USER_TRUTH);
 		
 		//set attributes on response object
 		StringWriter writer = new StringWriter();
