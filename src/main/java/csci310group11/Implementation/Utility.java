@@ -52,7 +52,6 @@ public class Utility {
 	}
 	
 	//helper method to read from file
-	public String readFromFile(String filename) {
 	public static String readFromFile(String filename) throws IOException {
 		System.out.println(filename + " PRINTOUT is: ");
 		String lineRead = "";
@@ -67,11 +66,6 @@ public class Utility {
 			
 			bufferedReader.close();
 	
-<<<<<<< HEAD
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();   
-		} 
 	  System.out.println(fileContents);
 	  
 	  return fileContents;
