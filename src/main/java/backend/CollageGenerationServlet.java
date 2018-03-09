@@ -100,7 +100,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		}
 		
 	//Download Collage (to frontend) process
-		else if (action.equals(Constants.DOWNLOAD_ACTION)) {
+		else {
 //			String url = request.getParameter(Constants.URL);
 			Integer currentCollageId = Integer.valueOf(request.getParameter("currentCollageId"));
 			downloadCollageToUserStorage(currentCollageId);
