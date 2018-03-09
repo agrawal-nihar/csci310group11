@@ -70,7 +70,14 @@ public class CollageGenerationServlet extends HttpServlet {
 				//for testing purposes!
 				String url = null;
 				if (!testingServletFlag) {
-					url = collageGenerator.collageGeneratorDriver(topic) ;
+					try {
+						url = collageGenerator.collageGeneratorDriver(topic) ;
+					} catch (InsufficientImagesFoundError e) {
+						// TODO Auto-generated catch block
+						url = null;
+						//e.printStackTrace();
+					}
+
 				} else {
 					 url = "testUrl";
 				}
@@ -87,7 +94,7 @@ public class CollageGenerationServlet extends HttpServlet {
 		}
 		
 	//Download Collage (to frontend) process
-		else if (action.equals(Constants.DOWNLOAD_ACTION)) {
+		else {
 //			String url = request.getParameter(Constants.URL);
 			Integer currentCollageId = Integer.valueOf(request.getParameter("currentCollageId"));
 			downloadCollageToUserStorage(currentCollageId);

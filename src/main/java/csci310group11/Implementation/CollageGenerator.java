@@ -333,34 +333,31 @@ public class CollageGenerator {
 		}
 	}
 	
-	private void printProxyBorders(int index, BufferedImage img) {
-		try {
-			int num = index + 1;
-			File fout = new File("/Users/allenhuang/Desktop/border" + num + ".txt");
-			FileOutputStream fos = new FileOutputStream(fout);
-		 
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-			
-			for(int r=0; r < img.getHeight(); r++) {
-				String row = "";
-				for(int c=0; c < img.getWidth(); c++) {
-					Color currColor = new Color(img.getRGB(c, r));
-					if(currColor.equals(Color.BLACK)) {
-						row += "1 ";
-					}
-					else if(currColor.equals(Color.WHITE)) {
-						row += "0 ";
-					} else {
-						row += "-1 ";
-					}
+	private void printProxyBorders(int index, BufferedImage img) throws IOException {
+		int num = index + 1;
+		File fout = new File("/Users/allenhuang/Desktop/border" + num + ".txt");
+		FileOutputStream fos = new FileOutputStream(fout);
+	 
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+		
+		for(int r=0; r < img.getHeight(); r++) {
+			String row = "";
+			for(int c=0; c < img.getWidth(); c++) {
+				Color currColor = new Color(img.getRGB(c, r));
+				if(currColor.equals(Color.BLACK)) {
+					row += "1 ";
 				}
-				bw.write(row);
-				bw.newLine();
+				else if(currColor.equals(Color.WHITE)) {
+					row += "0 ";
+				} else {
+					row += "-1 ";
+				}
 			}
-			bw.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} 
+			bw.write(row);
+			bw.newLine();
+		}
+		bw.close();
+
 	}
 
 	/**
@@ -507,9 +504,10 @@ public class CollageGenerator {
 	/**
 	 * Helper function to write the pixel array of Proxy Collage to a file.
 	 * Transforms all white pixels to 0 and all black pixels to 1
+	 * @throws IOException 
 	 */
-	private void printProxyCollage() {
-		try {
+	private void printProxyCollage() throws IOException {
+
 			File fout = new File("/Users/allenhuang/Desktop/background.txt");
 			FileOutputStream fos = new FileOutputStream(fout);
 		 
@@ -532,9 +530,7 @@ public class CollageGenerator {
 				bw.newLine();
 			}
 			bw.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} 
+
 	}
 	
 	/**

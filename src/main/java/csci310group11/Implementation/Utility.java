@@ -42,38 +42,39 @@ public class Utility {
 		fileWriter.close();
 		bw.close();
 		
-		//write URL to file
-		FileReader fr = null;
-		try {
-			fr = new FileReader(filename);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		//write URL to file
+//		FileReader fr = null;
+//		try {
+//			fr = new FileReader(filename);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 	}
 	
 	//helper method to read from file
-	public void readFromFile(String filename) {
+
+	public static String readFromFile(String filename) throws IOException {
+
 		System.out.println(filename + " PRINTOUT is: ");
 		String lineRead = "";
 		String fileContents = "";
 	  FileReader fileReader = null;
-	  try {
-			fileReader = new FileReader(filename);
-	    BufferedReader bufferedReader = new BufferedReader(fileReader);
-			while((lineRead = bufferedReader.readLine()) != null) {
-			    
-			    fileContents += lineRead;
-			}
-			
-			bufferedReader.close();
-	
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();   
-		} 
-	  System.out.println(fileContents);
+		fileReader = new FileReader(filename);
+    BufferedReader bufferedReader = new BufferedReader(fileReader);
+		while((lineRead = bufferedReader.readLine()) != null) {
+		    
+		    fileContents += lineRead;
+		}
+		
+		bufferedReader.close();
+
+	 
+  System.out.println(fileContents);
+	  
+	  return fileContents;
+
 	}
 	
 	public static void printImageByteSize(BufferedImage image, String destination) throws IOException {
