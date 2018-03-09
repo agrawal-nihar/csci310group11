@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -35,7 +36,7 @@ public class TestingNewUserInServlet {
 	public String ONE = "1";
 	
 	@Test
-	public void test() {
+	public void test() throws MalformedURLException, IOException {
 
 		HttpServletRequest mockHttpServletRequest = mock(HttpServletRequest.class);
 		HttpServletResponse mockHttpServletResponse = mock(HttpServletResponse.class);

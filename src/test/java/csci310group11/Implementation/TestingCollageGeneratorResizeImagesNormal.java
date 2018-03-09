@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -11,7 +13,7 @@ import org.junit.Test;
 public class TestingCollageGeneratorResizeImagesNormal {
 
 	@Test
-	public void collageGeneratorResizeImagesNormalTest() {
+	public void collageGeneratorResizeImagesNormalTest() throws MalformedURLException, IOException {
 		CollageGenerator collageGenerator = new CollageGenerator();
 		collageGenerator.testingCollageGeneratorDummyImages = true;
 		

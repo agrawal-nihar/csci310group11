@@ -12,7 +12,7 @@ import org.junit.Test;
 public class TestingCollageGeneratorCompile {
 
 	@Test
-	public void test() throws IOException {
+	public void test() throws IOException, InsufficientImagesFoundError {
 		CollageGenerator collageGenerator = new CollageGenerator();
 		collageGenerator.testingCollageGeneratorDummyImages = true;
 		collageGenerator.testingRotation = true;
@@ -56,6 +56,10 @@ public class TestingCollageGeneratorCompile {
 
 		String actualBase64String = returnURL.substring(0, expectedBase64String.length());
 		// assertEquals(expectedBase64String, actualBase64String);
+		
+		collageGenerator.testingRotation = false;
+		collageGenerator.resizeImages();
+		assertEquals(collageGenerator.images.size(), 30);
 
 	}
 
