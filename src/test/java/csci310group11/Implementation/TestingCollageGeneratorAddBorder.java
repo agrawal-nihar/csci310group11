@@ -4,6 +4,8 @@ package csci310group11.Implementation;
 import static org.junit.Assert.assertEquals;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -17,7 +19,7 @@ public class TestingCollageGeneratorAddBorder {
 	Integer BORDER_WIDTH = 3;
 	
 	@Test
-	public void collageGeneratorAddBorderTest() {
+	public void collageGeneratorAddBorderTest() throws MalformedURLException, IOException {
 		CollageGenerator collageGenerator = new CollageGenerator();
 		collageGenerator.testingCollageGeneratorDummyImages = true;
 		

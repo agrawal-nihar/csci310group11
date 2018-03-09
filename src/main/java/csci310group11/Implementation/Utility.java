@@ -58,7 +58,7 @@ public class Utility {
 	}
 	
 	//helper method to read from file
-	public String readFromFile(String filename) {
+	public static String readFromFile(String filename) {
 		System.out.println(filename + " PRINTOUT is: ");
 		String lineRead = "";
 		String fileContents = "";

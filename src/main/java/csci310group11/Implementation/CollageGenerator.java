@@ -5,15 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,28 +44,28 @@ public class CollageGenerator {
 	public Boolean testingCollageGeneratorDummyImagesWithNull = false; 
 	public Boolean testingRotation = false;
 	public Boolean testingDownloadCollage = false; 
-	public static boolean testMode = false;
-	public static boolean test_degreeAfterRotation = true; // for testing rotation
+	public static  Boolean testingResizeImageReturnNull = false;
+//	public static boolean testMode = false;
 	public String rotationFile = "/home/student/Desktop/rotation.txt";
 	public String subImagesSizeFile = "/home/student/Desktop/size.txt";
 	public String collageSizeFile = "/home/student/Desktop/byte.txt";
 
-	public CollageGenerator() {
+	public CollageGenerator() throws MalformedURLException, IOException {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
 		this.api = new GoogleCustomSearchApi();
 		
 		//testing data members -- 
-		try {
-			downloadCollageDummyImage = ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+		downloadCollageDummyImage = ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"));
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
-		try {
+//		try {
 			dummyImages = new ArrayList<BufferedImage>(Arrays.asList(
 					ImageIO.read(new URL("https://i.imgur.com/Tgywof3.jpg"))
 					,ImageIO.read(new URL("https://i.imgur.com/NINXdNF.jpg"))
@@ -103,11 +97,11 @@ public class CollageGenerator {
 					,ImageIO.read(new URL("https://i.imgur.com/90yLceB.jpg"))
 					,ImageIO.read(new URL("https://i.imgur.com/NFS0WeC.jpg"))
 					,ImageIO.read(new URL("https://i.imgur.com/tl91hI5.gif")) ));
-		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
-		}
+//		} catch (IOException ioe) {
+//			System.out.println("ioe: " + ioe.getMessage());
+//		}
 		
-		try {
+//		try {
 			dummyImagesWithNull = new ArrayList<BufferedImage>(Arrays.asList(
 					null
 					,ImageIO.read(new URL("https://i.imgur.com/NINXdNF.jpg"))
@@ -139,9 +133,9 @@ public class CollageGenerator {
 					,ImageIO.read(new URL("https://i.imgur.com/90yLceB.jpg"))
 					,ImageIO.read(new URL("https://i.imgur.com/NFS0WeC.jpg"))
 					,ImageIO.read(new URL("https://i.imgur.com/tl91hI5.gif")) ));
-		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
-		}
+//		} catch (IOException ioe) {
+//			System.out.println("ioe: " + ioe.getMessage());
+//		}
 	}
 	
 	
@@ -154,12 +148,10 @@ public class CollageGenerator {
 		if (testingCollageGeneratorDummyImages) {
 			this.images = dummyImages;
 			return true;
-		}
-		if (testingCollageGeneratorDummyImagesWithNull) {
+		} else if (testingCollageGeneratorDummyImagesWithNull) {
 			this.images = dummyImagesWithNull;
 			return true;
-		}
-		return false;
+		} else return false;
 	}
 	/**
 	 * Driver method to complete Collage creation process.
@@ -173,23 +165,24 @@ public class CollageGenerator {
 	 * @param topic the String of terms inputted by the user; this will be passed to the API to make th search
 	 * @return URL of the collage on the server's storage system
 	 * @throws IOException 
+	 * @throws InsufficientImagesFoundError 
 	 */
-	public String collageGeneratorDriver(String topic) throws IOException {
+	public String collageGeneratorDriver(String topic) throws IOException, InsufficientImagesFoundError {
 		
 		//clear all logging files
 		clearAllLoggingFiles(); 
 		
 		//To check testing flags and enable them if they were set in test case
-		try {
+//		try {
 			if (!enableTestingFlags()) {
 				this.images = (ArrayList<BufferedImage>) this.api.execute(topic); //API call
 			}
 			else {
 				this.images = dummyImages;
 			}
-		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
-			return null;
-		}
+//		} catch (InsufficientImagesFoundError iife) { //Error is thrown if less than 30 images are found
+//			return null;
+//		}
 
 		this.resizeImages();
 		this.addBorderToImages();
@@ -255,6 +248,9 @@ public class CollageGenerator {
 			BufferedImage img = images.get(i);
 			//New BufferedImage with 1/20th dimensions of collage
 			BufferedImage resizeImg = null;
+			if (testingResizeImageReturnNull) {
+				img = null;
+			}
 			if (img != null) {
 				resizeImg = new BufferedImage(resizeWidth, resizeHeight, img.getType());
 				//Draws the img image into the size of the resizeImg
@@ -407,23 +403,23 @@ public class CollageGenerator {
 		
 				
 		/* if it's in test mode, below codes will exec once, else it won't be invoked */
-		if (testMode) {
-			double alt_x = op.getTransform().getScaleX();
-			double alt_y = op.getTransform().getScaleY();
-			double rad = Math.toRadians(degree);
-			if(degree > 0) {
-						double comp_x = prev_x * Math.cos(rad) + prev_y * Math.sin(rad);
-						double comp_y = -prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
-						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
-						else test_degreeAfterRotation = false;
-					} else {
-						double comp_x = prev_x * Math.cos(rad) - prev_y * Math.sin(rad);
-						double comp_y = prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
-						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
-						else test_degreeAfterRotation = false;
-					}
-				}
-				/* end of test case */
+//		if (testMode) {
+//			double alt_x = op.getTransform().getScaleX();
+//			double alt_y = op.getTransform().getScaleY();
+//			double rad = Math.toRadians(degree);
+//			if(degree > 0) {
+//						double comp_x = prev_x * Math.cos(rad) + prev_y * Math.sin(rad);
+//						double comp_y = -prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
+//						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
+//						else test_degreeAfterRotation = false;
+//					} else {
+//						double comp_x = prev_x * Math.cos(rad) - prev_y * Math.sin(rad);
+//						double comp_y = prev_x * Math.sin(rad) + prev_y * Math.cos(rad);
+//						if (comp_x == alt_x && comp_y == alt_y) test_degreeAfterRotation = true;
+//						else test_degreeAfterRotation = false;
+//					}
+//				}
+		/* end of test case */
 				
 			
 		
@@ -447,8 +443,9 @@ public class CollageGenerator {
 	 * is png. This function will convert the file into base64 and return the path.
 	 * @param collage
 	 * @return returnUrl
+	 * @throws IOException 
 	 */
-	public String downloadCollage(Collage collage) {
+	public String downloadCollage(Collage collage) throws IOException {
 
 		String returnUrl = "";
 		//testing
@@ -477,19 +474,19 @@ public class CollageGenerator {
 	}
 	
 	//from stack overflow
-	public static String imgToBase64String(BufferedImage img, final String formatName)
+	public static String imgToBase64String(BufferedImage img, final String formatName) throws IOException
 	{
 	  final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-	  try
-	  {
+//	  try
+//	  {
 	    ImageIO.write(img, formatName, os);
 	    return Base64.getEncoder().encodeToString(os.toByteArray());
-	  }
-	  catch (final IOException ioe)
-	  {
-	    throw new UncheckedIOException(ioe);
-	  }
+//	  }
+//	  catch (final IOException ioe)
+//	  {
+//	    throw new UncheckedIOException(ioe);
+//	  }
 	}
 	
 }
