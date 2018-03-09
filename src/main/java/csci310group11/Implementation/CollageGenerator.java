@@ -148,12 +148,10 @@ public class CollageGenerator {
 		if (testingCollageGeneratorDummyImages) {
 			this.images = dummyImages;
 			return true;
-		}
-		if (testingCollageGeneratorDummyImagesWithNull) {
+		} else if (testingCollageGeneratorDummyImagesWithNull) {
 			this.images = dummyImagesWithNull;
 			return true;
-		}
-		return false;
+		} else return false;
 	}
 	/**
 	 * Driver method to complete Collage creation process.

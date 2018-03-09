@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import csci310group11.Implementation.CollageGenerator;
+import csci310group11.Implementation.InsufficientImagesFoundError;
 import csci310group11.Implementation.Utility;
 
 /**
@@ -70,7 +71,12 @@ public class CollageGenerationServlet extends HttpServlet {
 				//for testing purposes!
 				String url = null;
 				if (!testingServletFlag) {
-					url = collageGenerator.collageGeneratorDriver(topic) ;
+					try {
+						url = collageGenerator.collageGeneratorDriver(topic) ;
+					} catch (InsufficientImagesFoundError e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else {
 					 url = "testUrl";
 				}
