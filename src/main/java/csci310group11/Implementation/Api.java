@@ -9,7 +9,7 @@ public interface Api {
 
 	static final int HTTP_REQUEST_TIMEOUT = 3 * 600000;
 	
-	static final String GOOGLE_API_KEY = "AIzaSyBUWZ9xZjfhELUbm_PnAkDzgAc8rM7Yqlo";
+	static final String GOOGLE_API_KEY = "AIzaSyDnp4YZ-GmARSzRsJQn9zPAKni2ketcEZQ";
 	static final String SEARCH_ENGINE_ID = "014013525301963847978:symg0aqu3ti";
 	
 	static final String FILE_TYPE = ".png";

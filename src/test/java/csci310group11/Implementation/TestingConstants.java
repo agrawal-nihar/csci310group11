@@ -8,6 +8,7 @@ public class TestingConstants {
 		Assert.assertNotNull(new backend.Constants());
 	}
 	
+	@Test
 	public void testImplementationConstants() {
 		Assert.assertNotNull(new csci310group11.Implementation.Constants());
 	}
