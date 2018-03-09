@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class TestingCollageGeneratorCompile {
 		
 		collageGenerator.collageGeneratorDriver("dog");
 		String returnURL = collageGenerator.returnURL;
-		
+			
 		//validation text
 		String validationFile = "collageBase64String.txt";
 		String lineRead = null;
@@ -53,14 +54,33 @@ public class TestingCollageGeneratorCompile {
 			
 //		System.out.println("Validation base 64 string length: " + expectedBase64String.length());
 //		System.out.println("Actual base 64 string length: " + returnURL.length());
+//
+//    		System.out.println("Expected String: " + expectedBase64String.substring(0, 15));
+//	String expectedBase64StringToTest = returnURL.substring(0, actualBase64String.length());
+   		
+    		String actualBase64String = returnURL;		
+    		String degradedActualBase64String = actualBase64String.substring(0, expectedBase64String.length());
+    		assertEquals(expectedBase64String, degradedActualBase64String);
+    		
+//		 assertEquals(expectedBase64String, actualBase64StringToTest);
 
-		String actualBase64String = returnURL.substring(0, expectedBase64String.length());
-		 assertEquals(expectedBase64String, actualBase64String);
-		
+	}
+	
+	@Test
+	public void testingRotation() {
+		CollageGenerator collageGenerator = null;
+		try {
+			collageGenerator = new CollageGenerator();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		collageGenerator.testingRotation = false;
 		collageGenerator.resizeImages();
 		assertEquals(collageGenerator.images.size(), 30);
-
 	}
 
 }
