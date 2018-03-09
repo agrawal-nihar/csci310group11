@@ -357,7 +357,7 @@ public class CollageGenerator {
 				}
 
 				//logging method
-				String subImageSizeString = currImage.getWidth() + "\n" + currImage.getHeight();
+				String subImageSizeString = images.get(6*r + c).getWidth() + "\n" + images.get(6*r + c).getHeight();
 				Utility.writeToFile(subImageSizeString, subImagesSizeFile); 
 				//end of logging
 				
@@ -365,10 +365,7 @@ public class CollageGenerator {
 				this.rotateAndDrawImage(currImage, row, col);
 			}
 		}
-		
-		//print size
-		Utility.printImageByteSize(this.collageImage, collageSizeFile);
-		
+				
 	}
 
 	/**
