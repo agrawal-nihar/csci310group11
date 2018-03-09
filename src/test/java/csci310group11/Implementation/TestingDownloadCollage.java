@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import backend.CollageGenerationServlet;
 
-public class testingDownloadCollage {
+public class TestingDownloadCollage {
 
 	public String ACTION_TYPE = "action";
 	public String BUILD = "build";

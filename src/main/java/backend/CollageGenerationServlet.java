@@ -139,13 +139,10 @@ public class CollageGenerationServlet extends HttpServlet {
 		long sizeBytes = ((long) dataBuffer.getSize()) * 4l;
 		imageToDownloadSize = sizeBytes / (1024l * 1024l);
 		
-		try {
-				File outputfile = new File(System.getProperty("user.home") + "/Downloads/downloadedCollage" + currentCollageId + ".png");
-		    ImageIO.write(img, "png", outputfile);
-		} 
-		catch (IOException e) {
-		    System.err.println("IOException: " + e);
-		}
+		File outputfile = new File(System.getProperty("user.home") + "/Downloads/downloadedCollage" + currentCollageId + ".png");
+    ImageIO.write(img, "png", outputfile);
+		
+
 			
 	}
 	
