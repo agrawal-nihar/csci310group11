@@ -48,15 +48,23 @@ public class Utility {
 		
 		//write URL to file
 		FileReader fr = null;
+//		try {
+		fr = new FileReader(filename);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 	}
 	
 	//helper method to read from file
+
 	public static String readFromFile(String filename) throws IOException {
 		System.out.println(filename + " PRINTOUT is: ");
 		String lineRead = "";
 		String fileContents = "";
 	  FileReader fileReader = null;
+//	  try {  d
 			fileReader = new FileReader(filename);
 	    BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while((lineRead = bufferedReader.readLine()) != null) {
@@ -69,6 +77,13 @@ public class Utility {
 	  System.out.println(fileContents);
 	  
 	  return fileContents;
+
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();   
+//		} 
+//	  System.out.println(fileContents);
+
 	}
 	
 	public static void printImageByteSize(BufferedImage image, String destination) throws IOException {
