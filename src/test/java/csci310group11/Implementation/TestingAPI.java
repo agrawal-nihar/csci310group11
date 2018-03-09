@@ -22,6 +22,10 @@ public class TestingAPI {
 		}
 		assert(images.size() == sufficientImageAmount);
 		
+	}
+	
+	@Test
+	public void testInsufficientImg() throws MalformedURLException, IOException {
 		GoogleCustomSearchApi.testingInsufficientImagesFoundErrorFlag = true;
 		try {
 			api.execute("cat");

@@ -424,6 +424,7 @@ public class CollageGenerator {
 				//Helper method to rotate and draw the currImage
 				this.rotateAndDrawImage(currImage, row, col);
 			}
+		}
 
 		
 		//print size

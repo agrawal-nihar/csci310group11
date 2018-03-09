@@ -77,7 +77,8 @@ public class CollageGenerationServlet extends HttpServlet {
 						url = collageGenerator.collageGeneratorDriver(topic) ;
 					} catch (InsufficientImagesFoundError e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						url = null;
+						//e.printStackTrace();
 					}
 				} else {
 					 url = "testUrl";

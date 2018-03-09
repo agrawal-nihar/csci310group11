@@ -27,7 +27,7 @@ public class TestingCollageGeneratorCompile {
 		//write URL to file
 		FileReader fr = null;
 		try {
-			fr = new FileReader("collageBase64String.txt");
+			fr = new FileReader(validationFile);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,7 +55,7 @@ public class TestingCollageGeneratorCompile {
 //		System.out.println("Actual base 64 string length: " + returnURL.length());
 
 		String actualBase64String = returnURL.substring(0, expectedBase64String.length());
-		// assertEquals(expectedBase64String, actualBase64String);
+		 assertEquals(expectedBase64String, actualBase64String);
 		
 		collageGenerator.testingRotation = false;
 		collageGenerator.resizeImages();
