@@ -5,15 +5,13 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,6 +29,9 @@ public class CollageGenerator {
 	
 	//changed to public for testing
 	public BufferedImage collageImage;
+	
+	//proxy for blackbox
+	public BufferedImage proxyCollage;
 	
 	private GoogleCustomSearchApi api;
 	
@@ -52,14 +53,15 @@ public class CollageGenerator {
 	public Boolean testingDownloadCollage = false; 
 	public static boolean testMode = false;
 	public static boolean test_degreeAfterRotation = true; // for testing rotation
-	public String rotationFile = "/home/student/Desktop/rotation.txt";
-	public String subImagesSizeFile = "/home/student/Desktop/size.txt";
-	public String collageSizeFile = "/home/student/Desktop/byte.txt";
+	public String rotationFile = "/Users/allenhuang/Desktop/rotation.txt";
+	public String subImagesSizeFile = "/Users/allenhuang/Desktop/size.txt";
+	public String collageSizeFile = "/Users/allenhuang/Desktop/byte.txt";
 
 	public CollageGenerator() {
 		this.images = new ArrayList<BufferedImage>();
 		this.borderedImages = new ArrayList<BufferedImage>();
 		this.collageImage = new BufferedImage(1000, 750, BufferedImage.TYPE_INT_ARGB);
+		this.proxyCollage = this.collageImage;
 		this.api = new GoogleCustomSearchApi();
 		
 		//testing data members -- 
@@ -324,6 +326,11 @@ public class CollageGenerator {
 		Graphics2D graphics = this.collageImage.createGraphics();
 		graphics.setPaint(Color.WHITE); //check for "whitespace"
 		graphics.fillRect(0, 0, this.collageImage.getWidth(), this.collageImage.getHeight());
+		
+		//BLACKBOX PROXY
+		Graphics2D proxyGraphics = this.proxyCollage.createGraphics();
+		graphics.setPaint(Color.WHITE); //check for "whitespace"
+		graphics.fillRect(0, 0, proxyCollage.getWidth(), proxyCollage.getHeight());
 
 		//logging method
 		String collageSizeString = this.collageImage.getWidth() + "\n" + this.collageImage.getHeight();
@@ -368,6 +375,9 @@ public class CollageGenerator {
 		
 		//print size
 		Utility.printImageByteSize(this.collageImage, collageSizeFile);
+		
+		//write proxy image
+		this.printProxyCollage();
 		
 	}
 
@@ -431,9 +441,48 @@ public class CollageGenerator {
 			
 		
 		op.filter(image, this.collageImage); //paints onto collageImage
+		
+		//PROXY PAINTS ALL BLACK IMAGE ONTO PROXYCOLLAGE
+		BufferedImage proxy = image;
+		Graphics2D proxyGraphics = proxy.createGraphics();
+		proxyGraphics.setPaint(Color.BLACK); 
+		proxyGraphics.fillRect(0, 0, proxy.getWidth(), proxy.getHeight());
+		op.filter(proxy, this.proxyCollage);
+		
 	}
 
-
+	/**
+	 * Helper function to write the pixel array of Proxy Collage to a file.
+	 * Transforms all white pixels to 0 and all black pixels to 1
+	 */
+	private void printProxyCollage() {
+		try {
+			File fout = new File("/Users/allenhuang/Desktop/background.txt");
+			FileOutputStream fos = new FileOutputStream(fout);
+		 
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			
+			for(int r=0; r < this.proxyCollage.getHeight(); r++) {
+				String row = "";
+				for(int c=0; c < this.proxyCollage.getWidth(); c++) {
+					Color currColor = new Color(this.proxyCollage.getRGB(c, r));
+					if(currColor.equals(Color.BLACK)) {
+						row += "1 ";
+					}
+					else if(currColor.equals(Color.WHITE)) {
+						row += "0 ";
+					} else {
+						row += "-1 ";
+					}
+				}
+				bw.write(row);
+				bw.newLine();
+			}
+			bw.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} 
+	}
 	
 	/**
 	 * Responsible for downloading the Collage created to the server filespace.
