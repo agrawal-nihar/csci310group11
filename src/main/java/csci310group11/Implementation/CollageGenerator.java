@@ -287,8 +287,9 @@ public class CollageGenerator {
 	 * 
 	 * Sets the graphics of the larger BufferedImage to white. Paints the original image onto the 
 	 * new BufferedImage to create a 3px "border". Adds the bordered BuffereImage to this.borderedImages.
+	 * @throws IOException 
 	 */
-	public void addBorderToImages() {
+	public void addBorderToImages() throws IOException {
 		
 		//To check testing flags and enable them if they were set in test case
 		enableTestingFlags();
@@ -326,7 +327,6 @@ public class CollageGenerator {
 			this.borderedImages.add(borderedImage);	
 			
 			this.printProxyBorders(i, proxyBordered);
-			
 			graphics.dispose(); //releases the resources used by graphics
 			proxyGraphics.dispose();
 			proxyBorderedGraphics.dispose();
@@ -335,7 +335,7 @@ public class CollageGenerator {
 	
 	private void printProxyBorders(int index, BufferedImage img) throws IOException {
 		int num = index + 1;
-		File fout = new File("/Users/allenhuang/Desktop/border" + num + ".txt");
+		File fout = new File("/home/student/Desktop/border" + num + ".txt");
 		FileOutputStream fos = new FileOutputStream(fout);
 	 
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
@@ -508,7 +508,7 @@ public class CollageGenerator {
 	 */
 	private void printProxyCollage() throws IOException {
 
-			File fout = new File("/Users/allenhuang/Desktop/background.txt");
+			File fout = new File("/home/student/Desktop/background.txt");
 			FileOutputStream fos = new FileOutputStream(fout);
 		 
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
